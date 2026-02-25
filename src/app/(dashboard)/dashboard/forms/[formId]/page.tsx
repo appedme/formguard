@@ -1,0 +1,33 @@
+import { stackServerApp } from "@/stack/server";
+import { redirect, notFound } from "next/navigation";
+import { getUserByStackAuthId } from "@/db/actions/user.actions";
+import { getFormById } from "@/db/actions/form.actions";
+import { getFormSubmissions } from "@/db/actions/submission.actions";
+import { FormDetailClient } from "@/components/dashboard/form-detail-client";
+
+export default async function FormDetailPage({
+	params,
+}: {
+	params: Promise<{ formId: string }>;
+}) {
+	const stackUser = await stackServerApp.getUser();
+	if (!stackUser) redirect("/handler/sign-in");
+
+	const dbUser = await getUserByStackAuthId(stackUser.id);
+	if (!dbUser) redirect("/handler/sign-in");
+
+	const { formId } = await params;
+	const form = await getFormById(formId, dbUser.id);
+	if (!form) notFound();
+
+	const { submissions, total, totalPages } = await getFormSubmissions(formId, 1, 20);
+
+	return (
+		<FormDetailClient
+			form={form}
+			initialSubmissions={JSON.parse(JSON.stringify(submissions))}
+			totalSubmissions={total}
+			totalPages={totalPages}
+		/>
+	);
+}
