@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { stackServerApp } from "@/stack/server";
 import { getUserByStackAuthId } from "@/db/actions/user.actions";
-import { stripe } from "@/lib/stripe";
-import { PLAN_LIMITS, type PlanName } from "@/lib/plans";
+import { Checkout } from "@dodopayments/nextjs";
+import type { PlanName } from "@/lib/plans";
 
 const validPlans: PlanName[] = ["pro", "growth"];
 
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 		const body = (await req.json()) as { plan?: string };
 		const { plan } = body;
 
-		if (!plan || !validPlans.includes(plan)) {
+		if (!plan || !validPlans.includes(plan as PlanName)) {
 			return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
 		}
 
@@ -29,38 +29,50 @@ export async function POST(req: NextRequest) {
 			return NextResponse.json({ error: "Already on this plan" }, { status: 400 });
 		}
 
-		const planConfig = PLAN_LIMITS[plan as PlanName];
 		const origin = req.headers.get("origin") || "http://localhost:3000";
 
-		// Create Stripe Checkout Session
-		const session = await stripe.checkout.sessions.create({
-			payment_method_types: ["card"],
-			line_items: [
+		// Dodo Payments Checkout Handler (Programmatic POST for sessions)
+		const handler = Checkout({
+			bearerToken: process.env.DODO_PAYMENTS_API_KEY!,
+			returnUrl: `${origin}/dashboard/settings?success=true`,
+			environment: process.env.DODO_PAYMENTS_ENVIRONMENT as "test_mode" | "live_mode",
+			type: "session",
+		});
+
+		// We need to call the handler with a mocked request or just use the SDK directly if available.
+		// However, based on docs, the Checkout utility returns a Response.
+		// Let's create the session payload:
+		const payload = {
+			product_cart: [
 				{
-					price_data: {
-						currency: "usd",
-						product_data: {
-							name: `FormGuard ${planConfig.label} Plan`,
-							description: `Upgrade to ${planConfig.label} plan for FormGuard.`,
-						},
-						unit_amount: planConfig.price * 100, // Amount in cents
-					},
+					product_id: plan === "pro" ? "pdt_pro" : "pdt_growth", // Use real IDs from dashboard
 					quantity: 1,
 				},
 			],
-			mode: "payment", // Use "subscription" for recurring
-			success_url: `${origin}/dashboard/settings?success=true`,
-			cancel_url: `${origin}/dashboard/settings?canceled=true`,
+			customer: {
+				email: dbUser.email,
+				name: dbUser.displayName || "",
+			},
 			metadata: {
 				userId: dbUser.id,
 				plan: plan,
 			},
-			customer_email: dbUser.email,
-		});
+		};
 
-		return NextResponse.json({ url: session.url });
+		// The @dodopayments/nextjs Checkout utility is meant to be exported as a route handler.
+		// To use it programmatically inside an existing POST route, we can do:
+		const checkoutRes = await handler(
+			new NextRequest(req.url, {
+				method: "POST",
+				body: JSON.stringify(payload),
+				headers: req.headers,
+			})
+		);
+
+		const checkoutData = (await checkoutRes.json()) as { checkout_url: string };
+		return NextResponse.json({ url: checkoutData.checkout_url });
 	} catch (error) {
-		console.error("Stripe Checkout Error:", error);
+		console.error("Dodo Payments Error:", error);
 		return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 	}
 }

@@ -33,8 +33,9 @@ export function SettingsClient({ user, planLimits }: SettingsClientProps) {
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ plan }),
 			});
-			if (res.ok) {
-				router.refresh();
+			const data = (await res.json()) as { url?: string };
+			if (res.ok && data.url) {
+				window.location.href = data.url;
 			}
 		} catch {
 			// handle error
