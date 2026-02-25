@@ -14,10 +14,10 @@ FormGuard is a developer-first SaaS that replaces traditional form infrastructur
 
 Instead of building:
 
-* backend APIs
-* validation layers
-* analytics pipelines
-* messy CSV workflows
+- backend APIs
+- validation layers
+- analytics pipelines
+- messy CSV workflows
 
 You create a form, copy an endpoint, and start receiving structured insights instantly.
 
@@ -29,9 +29,9 @@ You create a form, copy an endpoint, and start receiving structured insights ins
 
 Create form endpoints that run globally on Cloudflare Workers.
 
-* Ultra-fast submissions
-* Zero server management
-* Rate limiting + validation
+- Ultra-fast submissions
+- Zero server management
+- Rate limiting + validation
 
 ---
 
@@ -39,10 +39,10 @@ Create form endpoints that run globally on Cloudflare Workers.
 
 Transform submissions into actionable summaries.
 
-* Detect repeated requests
-* Summarize feedback
-* Highlight sentiment trends
-* Weekly insights
+- Detect repeated requests
+- Summarize feedback
+- Highlight sentiment trends
+- Weekly insights
 
 ---
 
@@ -50,9 +50,9 @@ Transform submissions into actionable summaries.
 
 Built-in filtering at the edge.
 
-* Basic bot detection
-* Rate limiting
-* Clean data storage
+- Basic bot detection
+- Rate limiting
+- Clean data storage
 
 ---
 
@@ -60,10 +60,10 @@ Built-in filtering at the edge.
 
 Minimal brutal UI built with shadcn.
 
-* Forms overview
-* Submission viewer
-* Insights tab
-* Usage limits
+- Forms overview
+- Submission viewer
+- Insights tab
+- Usage limits
 
 ---
 
@@ -71,9 +71,9 @@ Minimal brutal UI built with shadcn.
 
 India-friendly subscription system.
 
-* Free → Pro → Growth
-* Edge-enforced limits
-* Secure billing
+- Free → Pro → Growth
+- Edge-enforced limits
+- Secure billing
 
 ---
 
@@ -81,27 +81,27 @@ India-friendly subscription system.
 
 Frontend:
 
-* Next.js App Router
-* shadcn/ui
-* Server Components
-* TailwindCSS
+- Next.js App Router
+- shadcn/ui
+- Server Components
+- TailwindCSS
 
 Backend:
 
-* Cloudflare Workers
-* Edge runtime APIs
+- Cloudflare Workers
+- Edge runtime APIs
 
 Auth:
 
-* StackAuth
+- StackAuth
 
 Database:
 
-* Cloudflare D1 or Postgres
+- Cloudflare D1 or Postgres
 
 Payments:
 
-* Razorpay Subscriptions
+- Razorpay Subscriptions
 
 ---
 
@@ -109,23 +109,23 @@ Payments:
 
 Frontend (Next.js)
 
-* Landing pages
-* Dashboard UI
-* Pricing
+- Landing pages
+- Dashboard UI
+- Pricing
 
 Worker API (Edge)
 
-* Submission endpoints
-* AI processing
-* Usage enforcement
+- Submission endpoints
+- AI processing
+- Usage enforcement
 
 Database
 
-* Users
-* Forms
-* Submissions
-* Plans
-* Insights
+- Users
+- Forms
+- Submissions
+- Plans
+- Insights
 
 ---
 
@@ -145,8 +145,8 @@ workers/
 
 Key idea:
 
-* UI lives in Next.js
-* Product logic lives in Workers
+- UI lives in Next.js
+- Product logic lives in Workers
 
 ---
 
@@ -206,13 +206,13 @@ wrangler dev
 
 Inside dashboard:
 
-* Click “Create Form”
-* Get unique endpoint
+- Click “Create Form”
+- Get unique endpoint
 
 Example:
 
 ```
-https://api.formguard.strivio.world/api/submit/abc123
+https://formguard.strivio.world/api/submit/abc123
 ```
 
 ---
@@ -222,7 +222,7 @@ https://api.formguard.strivio.world/api/submit/abc123
 Example HTML form:
 
 ```
-<form action="https://api.formguard.strivio.world/api/submit/abc123" method="POST">
+<form action="https://formguard.strivio.world/api/submit/abc123" method="POST">
   <input name="email" />
   <button type="submit">Submit</button>
 </form>
@@ -236,9 +236,9 @@ Worker stores submission and applies limits.
 
 From dashboard:
 
-* Click “Generate Insight”
-* Worker batches submissions
-* AI returns structured summary
+- Click “Generate Insight”
+- Worker batches submissions
+- AI returns structured summary
 
 ---
 
@@ -246,17 +246,17 @@ From dashboard:
 
 ## Server-First Design
 
-* Default to Server Components
-* Avoid unnecessary client JS
+- Default to Server Components
+- Avoid unnecessary client JS
 
 ---
 
 ## Edge-First Logic
 
-* Validation
-* Rate limiting
-* AI processing
-* Usage enforcement
+- Validation
+- Rate limiting
+- AI processing
+- Usage enforcement
 
 All handled in Workers.
 
@@ -264,22 +264,22 @@ All handled in Workers.
 
 ## Minimal UI Philosophy
 
-* Brutalist layout
-* Typography first
-* No heavy animations
-* Performance over visuals
+- Brutalist layout
+- Typography first
+- No heavy animations
+- Performance over visuals
 
 ---
 
 # Next.js Best Practices Used
 
-* App Router only
-* Route groups `(landing)` and `(dashboard)`
-* Edge runtime where possible
-* Static landing pages
-* Zero DB calls on marketing pages
-* next/font optimization
-* Lazy client components
+- App Router only
+- Route groups `(landing)` and `(dashboard)`
+- Edge runtime where possible
+- Static landing pages
+- Zero DB calls on marketing pages
+- next/font optimization
+- Lazy client components
 
 ---
 
@@ -296,28 +296,28 @@ All handled in Workers.
 
 users
 
-* id
-* email
-* plan
+- id
+- email
+- plan
 
 forms
 
-* id
-* owner_id
-* endpoint_id
+- id
+- owner_id
+- endpoint_id
 
 submissions
 
-* id
-* form_id
-* payload
-* created_at
+- id
+- form_id
+- payload
+- created_at
 
 insights
 
-* form_id
-* summary
-* updated_at
+- form_id
+- summary
+- updated_at
 
 ---
 
@@ -337,7 +337,7 @@ wrangler deploy
 
 Database:
 
-* Cloudflare D1 migration or Postgres migration
+- Cloudflare D1 migration or Postgres migration
 
 ---
 
@@ -345,11 +345,11 @@ Database:
 
 Planned:
 
-* Custom domains
-* Webhook automation
-* Referral system
-* Advanced analytics
-* Team workspaces
+- Custom domains
+- Webhook automation
+- Referral system
+- Advanced analytics
+- Team workspaces
 
 ---
 
@@ -359,9 +359,9 @@ Contributions welcome.
 
 Guidelines:
 
-* Keep components server-first
-* Avoid adding heavy dependencies
-* Maintain brutal minimal design
+- Keep components server-first
+- Avoid adding heavy dependencies
+- Maintain brutal minimal design
 
 ---
 
@@ -375,8 +375,8 @@ MIT License
 
 FormGuard is built for builders who want:
 
-* fewer servers
-* faster launches
-* clearer user feedback
+- fewer servers
+- faster launches
+- clearer user feedback
 
 One endpoint. Clean insights. Ship faster.

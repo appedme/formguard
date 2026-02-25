@@ -1,0 +1,152 @@
+"use client";
+
+import Link from "next/link";
+
+const plans = [
+	{
+		name: "Free",
+		price: "₹0",
+		period: "",
+		description: "Perfect for trying it out.",
+		features: ["100 submissions / month", "Basic dashboard", "1 form"],
+		cta: "Start Free",
+		href: "/handler/sign-up",
+		highlighted: false,
+		badge: null,
+		ctaAttr: "start-free-pricing",
+	},
+	{
+		name: "Pro",
+		price: "₹399",
+		period: "/month",
+		description: "For makers and indie devs.",
+		features: [
+			"5,000 submissions / month",
+			"AI summaries",
+			"Spam filtering",
+			"Export tools",
+			"10 forms",
+		],
+		cta: "Upgrade to Pro",
+		href: "/handler/sign-up",
+		highlighted: true,
+		badge: "MOST POPULAR",
+		ctaAttr: "upgrade-pro",
+	},
+	{
+		name: "Growth",
+		price: "₹999",
+		period: "/month",
+		description: "For teams shipping fast.",
+		features: [
+			"Unlimited submissions",
+			"Weekly insight reports",
+			"Team workspace",
+			"Priority edge processing",
+			"Custom webhook automation",
+		],
+		cta: "Go Growth",
+		href: "/handler/sign-up",
+		highlighted: false,
+		badge: null,
+		ctaAttr: "go-growth",
+	},
+];
+
+export default function Pricing() {
+	return (
+		<section id="pricing" className="py-24 border-b border-black/10">
+			<div className="mx-auto max-w-6xl px-6">
+				<p className="text-xs font-mono uppercase tracking-widest text-gray-400 mb-4">
+					Pricing
+				</p>
+				<h2 className="text-3xl font-black text-black mb-4">
+					Pay for what you need.
+					<br />
+					<span className="text-gray-400">Cancel anytime.</span>
+				</h2>
+				<p className="text-sm text-gray-500 font-mono mb-14">
+					Razorpay secure billing · No hidden fees
+				</p>
+
+				<div className="grid md:grid-cols-3 gap-6">
+					{plans.map((plan) => (
+						<div
+							key={plan.name}
+							className={`relative border p-8 flex flex-col ${
+								plan.highlighted
+									? "border-black bg-black text-white"
+									: "border-black/10 bg-white text-black"
+							}`}
+						>
+							{/* Badge */}
+							{plan.badge && (
+								<span className="absolute -top-3 left-8 bg-white text-black text-xs font-mono font-bold px-3 py-1 border border-black">
+									{plan.badge}
+								</span>
+							)}
+
+							<div className="mb-8">
+								<p
+									className={`text-xs font-mono uppercase tracking-widest mb-3 ${
+										plan.highlighted ? "text-gray-400" : "text-gray-400"
+									}`}
+								>
+									{plan.name}
+								</p>
+								<div className="flex items-baseline gap-1 mb-2">
+									<span className="text-4xl font-black">{plan.price}</span>
+									<span
+										className={`text-sm font-mono ${
+											plan.highlighted ? "text-gray-400" : "text-gray-500"
+										}`}
+									>
+										{plan.period}
+									</span>
+								</div>
+								<p
+									className={`text-sm ${
+										plan.highlighted ? "text-gray-400" : "text-gray-500"
+									}`}
+								>
+									{plan.description}
+								</p>
+							</div>
+
+							<ul className="space-y-3 mb-10 flex-grow">
+								{plan.features.map((f) => (
+									<li key={f} className="flex items-center gap-3 text-sm">
+										<span
+											className={`font-mono ${
+												plan.highlighted ? "text-green-400" : "text-black"
+											}`}
+										>
+											✓
+										</span>
+										{f}
+									</li>
+								))}
+							</ul>
+
+							<Link
+								href={plan.href}
+								data-cta={plan.ctaAttr}
+								className={`w-full inline-flex items-center justify-center h-11 text-sm font-semibold transition-colors ${
+									plan.highlighted
+										? "bg-white text-black hover:bg-gray-100"
+										: "bg-black text-white hover:bg-gray-800"
+								}`}
+							>
+								{plan.cta}
+							</Link>
+						</div>
+					))}
+				</div>
+
+				<p className="text-center text-xs text-gray-400 font-mono mt-8">
+					Cancel anytime. Razorpay secure billing. No credit card for free plan.
+				</p>
+			</div>
+		</section>
+	);
+}
