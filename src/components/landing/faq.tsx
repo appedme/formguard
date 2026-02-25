@@ -23,29 +23,29 @@ const faqs = [
 
 export default function FAQ() {
 	return (
-		<section className="py-24 border-b border-black/10">
+		<section className="py-24 border-b border-border bg-background">
 			<div className="mx-auto max-w-6xl px-6">
-				<p className="text-xs font-mono uppercase tracking-widest text-gray-400 mb-4">
+				<p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-4">
 					FAQ
 				</p>
-				<h2 className="text-3xl font-black text-black mb-14">
+				<h2 className="text-3xl font-black text-foreground mb-14">
 					Common questions.
 				</h2>
 
-				<div className="space-y-px bg-black/5">
+				<div className="space-y-px bg-border">
 					{faqs.map((faq, i) => (
 						<details
 							key={i}
-							className="group bg-white border-b border-black/10 last:border-b-0"
+							className="group bg-background border-b border-border last:border-b-0"
 						>
-							<summary className="flex items-center justify-between cursor-pointer px-8 py-6 text-base font-semibold text-black list-none hover:bg-gray-50 transition-colors">
+							<summary className="flex items-center justify-between cursor-pointer px-8 py-6 text-base font-semibold text-foreground list-none hover:bg-accent transition-colors">
 								{faq.q}
-								<span className="font-mono text-gray-400 group-open:rotate-45 transition-transform text-xl leading-none">
+								<span className="font-mono text-muted-foreground group-open:rotate-45 transition-transform text-xl leading-none">
 									+
 								</span>
 							</summary>
 							<div className="px-8 pb-6">
-								<p className="text-sm text-gray-600 leading-relaxed">{faq.a}</p>
+								<p className="text-sm text-muted-foreground leading-relaxed">{faq.a}</p>
 							</div>
 						</details>
 					))}

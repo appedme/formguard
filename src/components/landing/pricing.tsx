@@ -55,17 +55,17 @@ const plans = [
 
 export default function Pricing() {
 	return (
-		<section id="pricing" className="py-24 border-b border-black/10">
+		<section id="pricing" className="py-24 border-b border-border bg-background">
 			<div className="mx-auto max-w-6xl px-6">
-				<p className="text-xs font-mono uppercase tracking-widest text-gray-400 mb-4">
+				<p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-4">
 					Pricing
 				</p>
-				<h2 className="text-3xl font-black text-black mb-4">
+				<h2 className="text-3xl font-black text-foreground mb-4">
 					Pay for what you need.
 					<br />
-					<span className="text-gray-400">Cancel anytime.</span>
+					<span className="text-muted-foreground">Cancel anytime.</span>
 				</h2>
-				<p className="text-sm text-gray-500 font-mono mb-14">
+				<p className="text-sm text-muted-foreground font-mono mb-14">
 					Razorpay secure billing · No hidden fees
 				</p>
 
@@ -75,40 +75,28 @@ export default function Pricing() {
 							key={plan.name}
 							className={`relative border p-8 flex flex-col ${
 								plan.highlighted
-									? "border-black bg-black text-white"
-									: "border-black/10 bg-white text-black"
+									? "border-foreground bg-primary text-primary-foreground"
+									: "border-border bg-card text-card-foreground"
 							}`}
 						>
 							{/* Badge */}
 							{plan.badge && (
-								<span className="absolute -top-3 left-8 bg-white text-black text-xs font-mono font-bold px-3 py-1 border border-black">
+								<span className="absolute -top-3 left-8 bg-background text-foreground text-xs font-mono font-bold px-3 py-1 border border-border">
 									{plan.badge}
 								</span>
 							)}
 
 							<div className="mb-8">
-								<p
-									className={`text-xs font-mono uppercase tracking-widest mb-3 ${
-										plan.highlighted ? "text-gray-400" : "text-gray-400"
-									}`}
-								>
+								<p className={`text-xs font-mono uppercase tracking-widest mb-3 ${plan.highlighted ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
 									{plan.name}
 								</p>
 								<div className="flex items-baseline gap-1 mb-2">
 									<span className="text-4xl font-black">{plan.price}</span>
-									<span
-										className={`text-sm font-mono ${
-											plan.highlighted ? "text-gray-400" : "text-gray-500"
-										}`}
-									>
+									<span className={`text-sm font-mono ${plan.highlighted ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
 										{plan.period}
 									</span>
 								</div>
-								<p
-									className={`text-sm ${
-										plan.highlighted ? "text-gray-400" : "text-gray-500"
-									}`}
-								>
+								<p className={`text-sm ${plan.highlighted ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
 									{plan.description}
 								</p>
 							</div>
@@ -116,11 +104,7 @@ export default function Pricing() {
 							<ul className="space-y-3 mb-10 flex-grow">
 								{plan.features.map((f) => (
 									<li key={f} className="flex items-center gap-3 text-sm">
-										<span
-											className={`font-mono ${
-												plan.highlighted ? "text-green-400" : "text-black"
-											}`}
-										>
+										<span className={`font-mono ${plan.highlighted ? "text-green-300" : "text-foreground"}`}>
 											✓
 										</span>
 										{f}
@@ -133,8 +117,8 @@ export default function Pricing() {
 								data-cta={plan.ctaAttr}
 								className={`w-full inline-flex items-center justify-center h-11 text-sm font-semibold transition-colors ${
 									plan.highlighted
-										? "bg-white text-black hover:bg-gray-100"
-										: "bg-black text-white hover:bg-gray-800"
+										? "bg-background text-foreground hover:bg-accent"
+										: "bg-primary text-primary-foreground hover:bg-primary/90"
 								}`}
 							>
 								{plan.cta}
@@ -143,7 +127,7 @@ export default function Pricing() {
 					))}
 				</div>
 
-				<p className="text-center text-xs text-gray-400 font-mono mt-8">
+				<p className="text-center text-xs text-muted-foreground font-mono mt-8">
 					Cancel anytime. Razorpay secure billing. No credit card for free plan.
 				</p>
 			</div>

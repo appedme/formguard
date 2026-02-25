@@ -1,51 +1,44 @@
 import Link from "next/link";
+import { ThemeToggle } from "./theme-toggle";
 
 export default function Navbar() {
 	return (
-		<header className="sticky top-0 z-50 border-b border-black/10 bg-white/95 backdrop-blur-sm">
+		<header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
 			<div className="mx-auto max-w-6xl px-6 flex items-center justify-between h-16">
 				{/* Logo */}
-				<Link href="/" className="text-lg font-black tracking-tight text-black">
-					Form<span className="font-normal">Guard</span>
+				<Link href="/" className="text-lg font-black tracking-tight text-foreground">
+					Form<span className="font-normal text-muted-foreground">Guard</span>
 				</Link>
 
 				{/* Nav Links */}
 				<nav className="hidden md:flex items-center gap-8">
-					<Link
-						href="#features"
-						className="text-sm text-gray-600 hover:text-black transition-colors"
-					>
+					<Link href="/features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
 						Features
 					</Link>
-					<Link
-						href="#pricing"
-						className="text-sm text-gray-600 hover:text-black transition-colors"
-					>
+					<Link href="/pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
 						Pricing
 					</Link>
-					<Link
-						href="#"
-						className="text-sm text-gray-600 hover:text-black transition-colors"
-					>
+					<Link href="/docs" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
 						Docs
 					</Link>
-					<Link
-						href="/handler/sign-in"
-						className="text-sm text-gray-600 hover:text-black transition-colors"
-					>
+					<Link href="/handler/sign-in" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
 						Login
 					</Link>
 				</nav>
 
-				{/* CTA */}
-				<Link
-					href="/handler/sign-up"
-					data-cta="start-free-nav"
-					className="inline-flex items-center justify-center h-9 px-5 text-sm font-semibold bg-black text-white rounded-none hover:bg-gray-800 transition-colors"
-				>
-					Start Free
-				</Link>
+				{/* Right: toggle + CTA */}
+				<div className="flex items-center gap-3">
+					<ThemeToggle />
+					<Link
+						href="/handler/sign-up"
+						data-cta="start-free-nav"
+						className="inline-flex items-center justify-center h-9 px-5 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+					>
+						Start Free
+					</Link>
+				</div>
 			</div>
 		</header>
 	);
 }
+
