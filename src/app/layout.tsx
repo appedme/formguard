@@ -33,6 +33,9 @@ export const metadata: Metadata = {
 	],
 	authors: [{ name: "FormGuard Team", url: "https://formguard.strivio.world" }],
 	creator: "FormGuard",
+	alternates: {
+		canonical: "/",
+	},
 	openGraph: {
 		type: "website",
 		locale: "en_US",
@@ -70,6 +73,17 @@ export const metadata: Metadata = {
 		apple: "/apple-touch-icon.png",
 	},
 	manifest: "/manifest.webmanifest",
+	robots: {
+		index: true,
+		follow: true,
+		googleBot: {
+			index: true,
+			follow: true,
+			"max-video-preview": -1,
+			"max-image-preview": "large",
+			"max-snippet": -1,
+		},
+	},
 };
 
 export const viewport = {
@@ -88,7 +102,6 @@ export default function RootLayout({
 		<html lang="en" suppressHydrationWarning>
 			<head>
 				<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-				<link rel="canonical" href="https://formguard.strivio.world" />
 				<script
 					type="application/ld+json"
 					dangerouslySetInnerHTML={{
@@ -97,7 +110,7 @@ export default function RootLayout({
 							"@type": "Organization",
 							"name": "FormGuard",
 							"url": "https://formguard.strivio.world",
-							"logo": "https://formguard.strivio.world/logo.png",
+							"logo": "https://formguard.strivio.world/favicon.svg",
 							"description": "Stop building form backends. FormGuard captures submissions, blocks spam, and turns raw responses into AI insights — powered by Cloudflare edge infrastructure.",
 							"sameAs": [
 								"https://twitter.com/formguard",
@@ -108,23 +121,6 @@ export default function RootLayout({
 				/>
 			</head>
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}>
-				<script
-					type="application/ld+json"
-					dangerouslySetInnerHTML={{
-						__html: JSON.stringify({
-							"@context": "https://schema.org",
-							"@type": "Organization",
-							"name": "FormGuard",
-							"url": "https://formguard.strivio.world",
-							"logo": "https://formguard.strivio.world/favicon.svg",
-							"sameAs": [
-								"https://twitter.com/formguard",
-								"https://github.com/formguard"
-							],
-							"description": "AI-powered form backend for builders. Capture submissions, block spam, and generate AI insights."
-						})
-					}}
-				/>
 				<Providers>
 					<StackProvider app={stackClientApp}>
 						<StackTheme>{children}</StackTheme>
