@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
 		const payload = {
 			product_cart: [
 				{
-					product_id: plan === "pro" ? "pdt_pro" : "pdt_growth", // Use real IDs from dashboard
+					product_id: plan === "pro" ? "pdt_0NZH8jZJDtXkerKovWdDw" : "pdt_0NZH94BiE9oVPap4qFR15", // Real Dodo Payments IDs
 					quantity: 1,
 				},
 			],
