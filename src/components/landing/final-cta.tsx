@@ -1,6 +1,11 @@
 import Link from "next/link";
+import { User } from "@stackframe/stack";
 
-export default function FinalCTA() {
+interface FinalCTAProps {
+	user?: User | null;
+}
+
+export default function FinalCTA({ user }: FinalCTAProps) {
 	return (
 		// Always-dark section — inverted for maximum impact
 		<div className="dark">
@@ -17,13 +22,22 @@ export default function FinalCTA() {
 					<p className="text-muted-foreground text-base mb-12 font-mono">
 						No credit card required.
 					</p>
-					<Link
-						href="/handler/sign-up"
-						data-cta="start-free-final"
-						className="inline-flex items-center justify-center h-14 px-10 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-					>
-						Start Free — Deploy in Minutes
-					</Link>
+					{user ? (
+						<Link
+							href="/dashboard"
+							className="inline-flex items-center justify-center h-14 px-10 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+						>
+							Go to Dashboard
+						</Link>
+					) : (
+						<Link
+							href="/handler/sign-up"
+							data-cta="start-free-final"
+							className="inline-flex items-center justify-center h-14 px-10 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+						>
+							Start Free — Deploy in Minutes
+						</Link>
+					)}
 				</div>
 			</section>
 		</div>

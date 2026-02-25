@@ -1,6 +1,11 @@
 import Link from "next/link";
+import { User } from "@stackframe/stack";
 
-export default function Hero() {
+interface HeroProps {
+	user?: User | null;
+}
+
+export default function Hero({ user }: HeroProps) {
 	return (
 		<section className="py-24 border-b border-border bg-background">
 			<div className="mx-auto max-w-6xl px-6">
@@ -29,13 +34,22 @@ export default function Hero() {
 
 				{/* CTAs */}
 				<div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6">
-					<Link
-						href="/handler/sign-up"
-						data-cta="start-free-hero"
-						className="inline-flex items-center justify-center h-12 px-8 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-					>
-						Start Free — No Credit Card
-					</Link>
+					{user ? (
+						<Link
+							href="/dashboard"
+							className="inline-flex items-center justify-center h-12 px-8 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+						>
+							Go to Dashboard
+						</Link>
+					) : (
+						<Link
+							href="/handler/sign-up"
+							data-cta="start-free-hero"
+							className="inline-flex items-center justify-center h-12 px-8 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+						>
+							Start Free — No Credit Card
+						</Link>
+					)}
 					<Link
 						href="#how-it-works"
 						className="inline-flex items-center justify-center h-12 px-8 text-base font-semibold border border-border text-foreground hover:bg-accent transition-colors"

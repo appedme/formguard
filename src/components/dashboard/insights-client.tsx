@@ -39,7 +39,7 @@ export function InsightsClient({ forms, plan }: InsightsClientProps) {
 				method: "POST",
 			});
 			if (!res.ok) {
-				const data = await res.json();
+				const data = (await res.json()) as { error?: string };
 				throw new Error(data.error ?? "Failed to generate insight");
 			}
 			router.refresh();

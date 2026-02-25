@@ -5,10 +5,11 @@ import type { PlanName } from "@/lib/plans";
 export const POST = Webhooks({
 	webhookKey: process.env.DODO_PAYMENTS_WEBHOOK_SECRET!,
 	onPaymentSucceeded: async (payload) => {
-		const data = payload.data as any;
-		const metadata = data?.metadata;
-		const userId = metadata?.userId;
-		const plan = metadata?.plan as PlanName;
+		// Dodo Payments metadata is available directly on the payload or data object depending on version
+		// Based on standard webhook patterns for Dodo, it's often in payload.metadata
+		const metadata = (payload as any).metadata || (payload.data as any).metadata;
+		const userId = metadata?.userId as string | undefined;
+		const plan = metadata?.plan as PlanName | undefined;
 
 		if (userId && plan) {
 			await upgradePlan(userId, plan);

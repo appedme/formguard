@@ -9,15 +9,18 @@ import Pricing from "@/components/landing/pricing";
 import FAQ from "@/components/landing/faq";
 import FinalCTA from "@/components/landing/final-cta";
 import Footer from "@/components/landing/footer";
+import { stackServerApp } from "@/stack/server";
 
 export const runtime = "edge";
 
-export default function LandingPage() {
+export default async function LandingPage() {
+	const user = await stackServerApp.getUser();
+
 	return (
 		<>
-			<Navbar />
+			<Navbar user={user} />
 			<main>
-				<Hero />
+				<Hero user={user} />
 				<SocialProof />
 				<ProblemSolution />
 				<HowItWorks />
@@ -25,7 +28,7 @@ export default function LandingPage() {
 				<AiSection />
 				<Pricing />
 				<FAQ />
-				<FinalCTA />
+				<FinalCTA user={user} />
 			</main>
 			<Footer />
 		</>

@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 			);
 		}
 
-		const body = await req.json();
+		const body = (await req.json()) as { name?: string };
 		const { name } = body;
 
 		if (!name || typeof name !== "string" || name.trim().length === 0) {
