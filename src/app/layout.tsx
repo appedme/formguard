@@ -16,8 +16,58 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "FormGuard — AI Form Backend for Builders",
+	metadataBase: new URL("https://formguard.strivio.world"),
+	title: {
+		default: "FormGuard — AI Form Backend for Builders",
+		template: "%s | FormGuard",
+	},
 	description: "Stop building form backends. FormGuard captures submissions, blocks spam, and turns raw responses into AI insights — powered by Cloudflare edge infrastructure.",
+	keywords: [
+		"form backend",
+		"AI form insights",
+		"spam protection",
+		"Cloudflare forms",
+		"serverless forms",
+		"form builder API",
+		"developer tools",
+	],
+	authors: [{ name: "FormGuard Team", url: "https://formguard.strivio.world" }],
+	creator: "FormGuard",
+	openGraph: {
+		type: "website",
+		locale: "en_US",
+		url: "https://formguard.strivio.world",
+		title: "FormGuard — AI Form Backend for Builders",
+		description: "Capture submissions, block spam, and turn raw responses into AI insights — powered by Cloudflare edge infrastructure.",
+		siteName: "FormGuard",
+		images: [
+			{
+				url: "/og-image.png",
+				width: 1200,
+				height: 630,
+				alt: "FormGuard - AI Form Backend",
+			},
+		],
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "FormGuard — AI Form Backend for Builders",
+		description: "Capture submissions, block spam, and turn raw responses into AI insights.",
+		images: ["/og-image.png"],
+		creator: "@formguard",
+	},
+	icons: {
+		icon: "/favicon.svg",
+		apple: "/apple-touch-icon.png",
+	},
+	manifest: "/manifest.webmanifest",
+};
+
+export const viewport = {
+	themeColor: [
+		{ media: "(prefers-color-scheme: light)", color: "#ffffff" },
+		{ media: "(prefers-color-scheme: dark)", color: "#000000" },
+	],
 };
 
 export default function RootLayout({

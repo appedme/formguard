@@ -6,11 +6,10 @@ import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
-	CardDescription,
-	CardHeader,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { Plus, ChevronRight, Inbox, LayoutDashboard, Zap } from "lucide-react";
 
 export default async function DashboardPage() {
 	const stackUser = await stackServerApp.getUser();
@@ -20,95 +19,116 @@ export default async function DashboardPage() {
 	if (!dbUser) redirect("/handler/sign-in");
 
 	const userForms = await getUserForms(dbUser.id);
-
 	const totalSubmissions = userForms.reduce((sum, f) => sum + f.submissions, 0);
 
 	return (
-		<div className="p-8">
+		<div className="p-6 md:p-10 max-w-7xl mx-auto w-full">
 			{/* Header */}
-			<div className="flex items-center justify-between mb-8">
+			<div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
 				<div>
-					<h1 className="text-2xl font-black text-foreground">Your Forms</h1>
-					<p className="text-muted-foreground text-sm mt-1">
-						Create a form and get an edge endpoint in seconds.
+					<h1 className="text-2xl font-semibold tracking-tight text-foreground">Overview</h1>
+					<p className="text-muted-foreground text-sm">
+						Manage your forms and view recent activity.
 					</p>
 				</div>
-				<Button asChild>
-					<Link href="/dashboard/forms/new">+ Create Form</Link>
+				<Button asChild size="sm" className="rounded-full px-4">
+					<Link href="/dashboard/forms/new">
+						<Plus className="w-4 h-4 mr-2" />
+						New Form
+					</Link>
 				</Button>
 			</div>
 
 			{/* Stats row */}
-			<div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
 				{[
-					{ label: "Total Forms", value: String(userForms.length) },
-					{ label: "Total Submissions", value: String(totalSubmissions) },
-					{ label: "Plan", value: dbUser.plan.charAt(0).toUpperCase() + dbUser.plan.slice(1) },
-					{ label: "AI Insights Used", value: "0" },
+					{ label: "Total Forms", value: userForms.length, icon: LayoutDashboard },
+					{ label: "Submissions", value: totalSubmissions, icon: Inbox },
+					{ label: "Current Plan", value: dbUser.plan.charAt(0).toUpperCase() + dbUser.plan.slice(1), icon: Zap },
+					{ label: "Insights Used", value: "0", icon: Zap },
 				].map((stat) => (
-					<Card key={stat.label} className="border-border">
-						<CardHeader className="pb-1">
-							<CardDescription className="text-xs font-mono uppercase tracking-wider">
-								{stat.label}
-							</CardDescription>
-						</CardHeader>
-						<CardContent>
-							<p className="text-2xl font-black text-foreground">{stat.value}</p>
+					<Card key={stat.label} className="bg-card/50 shadow-none border-border/60">
+						<CardContent className="p-5">
+							<div className="flex items-center justify-between mb-2">
+								<p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+									{stat.label}
+								</p>
+								<stat.icon className="w-3.5 h-3.5 text-muted-foreground/50" />
+							</div>
+							<p className="text-xl font-semibold text-foreground">{stat.value}</p>
 						</CardContent>
 					</Card>
 				))}
 			</div>
 
-			{/* Forms list / empty state */}
-			{userForms.length === 0 ? (
-				<Card className="border-border border-dashed">
-					<CardContent className="flex flex-col items-center justify-center py-24 text-center">
-						<p className="text-4xl mb-4">📋</p>
-						<h3 className="text-lg font-bold text-foreground mb-2">No forms yet</h3>
-						<p className="text-muted-foreground text-sm mb-6 max-w-sm">
-							Create your first form and get a unique edge endpoint in under 30
-							seconds.
-						</p>
-						<Button asChild>
-							<Link href="/dashboard/forms/new">Create your first form</Link>
-						</Button>
-					</CardContent>
-				</Card>
-			) : (
-				<div className="space-y-3">
-					{userForms.map((form) => (
-						<Card
-							key={form.id}
-							className="border-border hover:border-foreground/30 transition-colors"
-						>
-							<CardContent className="flex items-center justify-between p-6">
-								<div>
-									<div className="flex items-center gap-3 mb-1">
-										<h3 className="font-bold text-foreground">{form.name}</h3>
-										<Badge variant="secondary" className="font-mono text-xs">
-											{form.endpointId}
-										</Badge>
-									</div>
-									<p className="text-xs font-mono text-muted-foreground truncate max-w-md">
-										/api/submit/{form.endpointId}
-									</p>
-								</div>
-								<div className="flex items-center gap-6">
-									<div className="text-right hidden sm:block">
-										<p className="text-lg font-bold text-foreground">
-											{form.submissions}
-										</p>
-										<p className="text-xs text-muted-foreground">submissions</p>
-									</div>
-									<Button variant="outline" size="sm" asChild>
-										<Link href={`/dashboard/forms/${form.id}`}>View →</Link>
-									</Button>
-								</div>
-							</CardContent>
-						</Card>
-					))}
+			{/* Forms Section */}
+			<div className="space-y-4">
+				<div className="flex items-center justify-between">
+					<h2 className="text-sm font-medium text-foreground">Recent Forms</h2>
+					{userForms.length > 0 && (
+						<p className="text-xs text-muted-foreground">{userForms.length} total</p>
+					)}
 				</div>
-			)}
+
+				{userForms.length === 0 ? (
+					<Card className="border-dashed border-2 bg-transparent shadow-none">
+						<CardContent className="flex flex-col items-center justify-center py-20 text-center">
+							<div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
+								<Plus className="w-6 h-6 text-muted-foreground" />
+							</div>
+							<h3 className="text-sm font-medium text-foreground mb-1">No forms yet</h3>
+							<p className="text-muted-foreground text-xs mb-6 max-w-[240px]">
+								Create your first form to start collecting submissions instantly.
+							</p>
+							<Button asChild variant="outline" size="sm" className="rounded-full">
+								<Link href="/dashboard/forms/new">Create your first form</Link>
+							</Button>
+						</CardContent>
+					</Card>
+				) : (
+					<div className="grid grid-cols-1 gap-3">
+						{userForms.map((form) => (
+							<Link
+								key={form.id}
+								href={`/dashboard/forms/${form.id}`}
+								className="group"
+							>
+								<Card className="bg-card/50 hover:bg-accent/30 transition-all duration-200 border-border/60 shadow-none">
+									<CardContent className="flex items-center justify-between p-4 sm:p-5">
+										<div className="flex items-center gap-4">
+											<div className="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center border border-primary/10 text-primary">
+												<LayoutDashboard className="w-5 h-5" />
+											</div>
+											<div>
+												<div className="flex items-center gap-2 mb-0.5">
+													<h3 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+														{form.name}
+													</h3>
+													<Badge variant="outline" className="text-[9px] h-4 px-1.5 font-mono uppercase tracking-tighter bg-background/50">
+														{form.endpointId}
+													</Badge>
+												</div>
+												<p className="text-[11px] font-mono text-muted-foreground/70 truncate max-w-[200px] sm:max-w-md">
+													/api/submit/{form.endpointId}
+												</p>
+											</div>
+										</div>
+										<div className="flex items-center gap-6">
+											<div className="text-right hidden sm:block">
+												<p className="text-sm font-semibold text-foreground">
+													{form.submissions}
+												</p>
+												<p className="text-[10px] text-muted-foreground uppercase tracking-wider">submissions</p>
+											</div>
+											<ChevronRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-foreground group-hover:translate-x-0.5 transition-all" />
+										</div>
+									</CardContent>
+								</Card>
+							</Link>
+						))}
+					</div>
+				)}
+			</div>
 		</div>
 	);
 }
