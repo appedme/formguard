@@ -2,7 +2,7 @@ import Navbar from "@/components/landing/navbar";
 import Footer from "@/components/landing/footer";
 
 export const metadata = {
-	title: "Privacy Policy — FormGuard",
+	title: "Privacy Policy",
 	description: "FormGuard Privacy Policy — how we collect, use, and protect your data.",
 };
 

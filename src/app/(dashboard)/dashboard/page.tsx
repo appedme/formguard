@@ -10,6 +10,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Plus, ChevronRight, Inbox, LayoutDashboard, Zap, Share2, Sparkles } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "Overview",
+};
 
 export default async function DashboardPage() {
 	const stackUser = await stackServerApp.getUser();

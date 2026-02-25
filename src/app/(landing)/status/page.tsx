@@ -2,7 +2,7 @@ import Navbar from "@/components/landing/navbar";
 import Footer from "@/components/landing/footer";
 
 export const metadata = {
-	title: "Status — FormGuard",
+	title: "Status",
 	description: "FormGuard system status — check uptime and incidents.",
 };
 

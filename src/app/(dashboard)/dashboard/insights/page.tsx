@@ -4,6 +4,11 @@ import { getUserByStackAuthId } from "@/db/actions/user.actions";
 import { getUserForms } from "@/db/actions/form.actions";
 import { getFormInsights } from "@/db/actions/insight.actions";
 import { InsightsClient } from "@/components/dashboard/insights-client";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "Insights",
+};
 
 export default async function InsightsPage() {
 	const stackUser = await stackServerApp.getUser();

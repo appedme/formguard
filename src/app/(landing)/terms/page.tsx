@@ -2,7 +2,7 @@ import Navbar from "@/components/landing/navbar";
 import Footer from "@/components/landing/footer";
 
 export const metadata = {
-	title: "Terms of Service — FormGuard",
+	title: "Terms of Service",
 	description: "FormGuard Terms of Service.",
 };
 
