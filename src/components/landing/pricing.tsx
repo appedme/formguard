@@ -5,7 +5,7 @@ import Link from "next/link";
 const plans = [
 	{
 		name: "Free",
-		price: "₹0",
+		price: "$0",
 		period: "",
 		description: "Perfect for trying it out.",
 		features: ["100 submissions / month", "Basic dashboard", "1 form"],
@@ -17,7 +17,7 @@ const plans = [
 	},
 	{
 		name: "Pro",
-		price: "₹399",
+		price: "$9",
 		period: "/month",
 		description: "For makers and indie devs.",
 		features: [
@@ -35,7 +35,7 @@ const plans = [
 	},
 	{
 		name: "Growth",
-		price: "₹999",
+		price: "$29",
 		period: "/month",
 		description: "For teams shipping fast.",
 		features: [
@@ -66,7 +66,7 @@ export default function Pricing() {
 					<span className="text-muted-foreground">Cancel anytime.</span>
 				</h2>
 				<p className="text-sm text-muted-foreground font-mono mb-14">
-					Razorpay secure billing · No hidden fees
+					Secure billing · No hidden fees
 				</p>
 
 				<div className="grid md:grid-cols-3 gap-6">
@@ -128,7 +128,7 @@ export default function Pricing() {
 				</div>
 
 				<p className="text-center text-xs text-muted-foreground font-mono mt-8">
-					Cancel anytime. Razorpay secure billing. No credit card for free plan.
+					Cancel anytime. Secure billing. No credit card for free plan.
 				</p>
 			</div>
 		</section>
