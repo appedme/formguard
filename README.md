@@ -1,48 +1,382 @@
-# OpenNext Starter
+# FormGuard
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+**Edge-Powered AI Form Backend for Builders**
 
-## Getting Started
+Stop building form backends. Ship faster with a single endpoint that captures submissions, blocks spam, and converts raw responses into clear AI insights.
 
-Read the documentation at https://opennext.js.org/cloudflare.
+Built using **Cloudflare Workers, Next.js App Router, StackAuth, shadcn/ui, and Razorpay** — optimized for speed, simplicity, and high profit margins.
 
-## Develop
+---
 
-Run the Next.js development server:
+# Overview
 
-```bash
+FormGuard is a developer-first SaaS that replaces traditional form infrastructure with a lightweight edge API and a minimal dashboard.
+
+Instead of building:
+
+* backend APIs
+* validation layers
+* analytics pipelines
+* messy CSV workflows
+
+You create a form, copy an endpoint, and start receiving structured insights instantly.
+
+---
+
+# Core Features
+
+## Edge Form Endpoints
+
+Create form endpoints that run globally on Cloudflare Workers.
+
+* Ultra-fast submissions
+* Zero server management
+* Rate limiting + validation
+
+---
+
+## AI Insights
+
+Transform submissions into actionable summaries.
+
+* Detect repeated requests
+* Summarize feedback
+* Highlight sentiment trends
+* Weekly insights
+
+---
+
+## Spam Protection
+
+Built-in filtering at the edge.
+
+* Basic bot detection
+* Rate limiting
+* Clean data storage
+
+---
+
+## Simple Dashboard
+
+Minimal brutal UI built with shadcn.
+
+* Forms overview
+* Submission viewer
+* Insights tab
+* Usage limits
+
+---
+
+## Razorpay Paywall
+
+India-friendly subscription system.
+
+* Free → Pro → Growth
+* Edge-enforced limits
+* Secure billing
+
+---
+
+# Tech Stack
+
+Frontend:
+
+* Next.js App Router
+* shadcn/ui
+* Server Components
+* TailwindCSS
+
+Backend:
+
+* Cloudflare Workers
+* Edge runtime APIs
+
+Auth:
+
+* StackAuth
+
+Database:
+
+* Cloudflare D1 or Postgres
+
+Payments:
+
+* Razorpay Subscriptions
+
+---
+
+# Architecture
+
+Frontend (Next.js)
+
+* Landing pages
+* Dashboard UI
+* Pricing
+
+Worker API (Edge)
+
+* Submission endpoints
+* AI processing
+* Usage enforcement
+
+Database
+
+* Users
+* Forms
+* Submissions
+* Plans
+* Insights
+
+---
+
+# Project Structure
+
+```
+app/
+  (landing)/
+  (dashboard)/
+  (auth)/
+components/
+  landing/
+  dashboard/
+lib/
+workers/
+```
+
+Key idea:
+
+* UI lives in Next.js
+* Product logic lives in Workers
+
+---
+
+# Getting Started
+
+## 1. Clone Repository
+
+```
+git clone https://github.com/appedme/formguard
+cd formguard
+```
+
+---
+
+## 2. Install Dependencies
+
+```
+npm install
+```
+
+---
+
+## 3. Setup Environment Variables
+
+Create `.env.local`
+
+```
+NEXT_PUBLIC_APP_URL=
+STACKAUTH_SECRET=
+RAZORPAY_KEY_ID=
+RAZORPAY_KEY_SECRET=
+DATABASE_URL=
+WORKER_API_URL=
+```
+
+---
+
+## 4. Run Development Server
+
+```
 npm run dev
-# or similar package manager command
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 5. Run Cloudflare Worker
 
-## Preview
-
-Preview the application locally on the Cloudflare runtime:
-
-```bash
-npm run preview
-# or similar package manager command
+```
+wrangler dev
 ```
 
-## Deploy
+---
 
-Deploy the application to Cloudflare:
+# How It Works
 
-```bash
-npm run deploy
-# or similar package manager command
+## Create a Form
+
+Inside dashboard:
+
+* Click “Create Form”
+* Get unique endpoint
+
+Example:
+
+```
+https://api.formguard.strivio.world/api/submit/abc123
 ```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Send Submissions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Example HTML form:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-# formguard
+```
+<form action="https://api.formguard.strivio.world/api/submit/abc123" method="POST">
+  <input name="email" />
+  <button type="submit">Submit</button>
+</form>
+```
+
+Worker stores submission and applies limits.
+
+---
+
+## Generate AI Insights
+
+From dashboard:
+
+* Click “Generate Insight”
+* Worker batches submissions
+* AI returns structured summary
+
+---
+
+# Development Principles
+
+## Server-First Design
+
+* Default to Server Components
+* Avoid unnecessary client JS
+
+---
+
+## Edge-First Logic
+
+* Validation
+* Rate limiting
+* AI processing
+* Usage enforcement
+
+All handled in Workers.
+
+---
+
+## Minimal UI Philosophy
+
+* Brutalist layout
+* Typography first
+* No heavy animations
+* Performance over visuals
+
+---
+
+# Next.js Best Practices Used
+
+* App Router only
+* Route groups `(landing)` and `(dashboard)`
+* Edge runtime where possible
+* Static landing pages
+* Zero DB calls on marketing pages
+* next/font optimization
+* Lazy client components
+
+---
+
+# Payments Flow
+
+1. User selects Pro or Growth.
+2. Razorpay Checkout opens.
+3. Webhook updates plan in DB.
+4. Worker enforces limits based on plan.
+
+---
+
+# Database Models (Conceptual)
+
+users
+
+* id
+* email
+* plan
+
+forms
+
+* id
+* owner_id
+* endpoint_id
+
+submissions
+
+* id
+* form_id
+* payload
+* created_at
+
+insights
+
+* form_id
+* summary
+* updated_at
+
+---
+
+# Deployment
+
+Frontend:
+
+```
+vercel deploy
+```
+
+Worker:
+
+```
+wrangler deploy
+```
+
+Database:
+
+* Cloudflare D1 migration or Postgres migration
+
+---
+
+# Roadmap
+
+Planned:
+
+* Custom domains
+* Webhook automation
+* Referral system
+* Advanced analytics
+* Team workspaces
+
+---
+
+# Contributing
+
+Contributions welcome.
+
+Guidelines:
+
+* Keep components server-first
+* Avoid adding heavy dependencies
+* Maintain brutal minimal design
+
+---
+
+# License
+
+MIT License
+
+---
+
+# Philosophy
+
+FormGuard is built for builders who want:
+
+* fewer servers
+* faster launches
+* clearer user feedback
+
+One endpoint. Clean insights. Ship faster.
