@@ -22,8 +22,7 @@ export const metadata: Metadata = {
 };
 
 export default async function LandingPage() {
-	// const user = await stackServerApp.getUser();
-	const user = null;
+	const user = await stackServerApp.getUser();
 
 	return (
 		<>
