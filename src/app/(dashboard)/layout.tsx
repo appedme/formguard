@@ -26,8 +26,12 @@ export default async function DashboardLayout({
 					primaryEmail: dbUser.email,
 				}}
 			/>
-			<main className="flex-1 overflow-y-auto">
-				{children}
+			<main className="flex-1 overflow-y-auto relative">
+				{/* Subtle mesh background */}
+				<div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff10_1px,transparent_1px)] [background-size:16px_16px]"></div>
+				<div className="min-h-full flex flex-col backdrop-blur-[2px]">
+					{children}
+				</div>
 			</main>
 		</div>
 	);
