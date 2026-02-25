@@ -4,7 +4,7 @@
 
 Stop building form backends. Ship faster with a single endpoint that captures submissions, blocks spam, and converts raw responses into clear AI insights.
 
-Built using **Cloudflare Workers, Next.js App Router, StackAuth, shadcn/ui, and Razorpay** — optimized for speed, simplicity, and high profit margins.
+Built using **Cloudflare Workers, Next.js App Router, StackAuth, shadcn/ui, and Dodo Payments** — optimized for speed, simplicity, and high profit margins.
 
 ---
 
@@ -37,12 +37,12 @@ Create form endpoints that run globally on Cloudflare Workers.
 
 ## AI Insights
 
-Transform submissions into actionable summaries.
+Transform submissions into actionable summaries powered by **Google Gemini**.
 
 - Detect repeated requests
 - Summarize feedback
 - Highlight sentiment trends
-- Weekly insights
+- On-demand AI insights per form
 
 ---
 
@@ -58,74 +58,34 @@ Built-in filtering at the edge.
 
 ## Simple Dashboard
 
-Minimal brutal UI built with shadcn.
+Minimal brutalist UI built with shadcn.
 
 - Forms overview
 - Submission viewer
-- Insights tab
-- Usage limits
+- AI Insights tab
+- Usage analytics and plan limits
 
 ---
 
-## Razorpay Paywall
+## Dodo Payments Integration
 
-India-friendly subscription system.
+Secure, global, and India-friendly billing system.
 
-- Free → Pro → Growth
-- Edge-enforced limits
-- Secure billing
+- Free → Pro → Growth plans
+- Edge-enforced usage limits
+- Secure checkout and webhook automation
 
 ---
 
 # Tech Stack
 
-Frontend:
-
-- Next.js App Router
-- shadcn/ui
-- Server Components
-- TailwindCSS
-
-Backend:
-
-- Cloudflare Workers
-- Edge runtime APIs
-
-Auth:
-
-- StackAuth
-
-Database:
-
-- Cloudflare D1 or Postgres
-
-Payments:
-
-- Razorpay Subscriptions
-
----
-
-# Architecture
-
-Frontend (Next.js)
-
-- Landing pages
-- Dashboard UI
-- Pricing
-
-Worker API (Edge)
-
-- Submission endpoints
-- AI processing
-- Usage enforcement
-
-Database
-
-- Users
-- Forms
-- Submissions
-- Plans
-- Insights
+- **Frontend**: Next.js App Router, TailwindCSS, shadcn/ui
+- **Backend**: Cloudflare Workers (Edge runtime)
+- **Auth**: StackAuth
+- **Database**: Neon Postgres with Drizzle ORM
+- **AI**: Google Gemini Pro (LLM)
+- **Payments**: Dodo Payments
+- **Language**: TypeScript
 
 ---
 
@@ -133,20 +93,14 @@ Database
 
 ```
 app/
-  (landing)/
-  (dashboard)/
-  (auth)/
-components/
-  landing/
-  dashboard/
-lib/
-workers/
+  (landing)/    - Public marketing pages
+  (dashboard)/  - Protected user dashboard
+  api/          - Billing & Submission endpoints
+components/     - Reusable UI (shadcn)
+db/             - Database schema & server actions
+lib/            - Shared utilities (AI, Plans)
+public/         - Assets, PWA manifest, Favicons
 ```
-
-Key idea:
-
-- UI lives in Next.js
-- Product logic lives in Workers
 
 ---
 
@@ -154,220 +108,54 @@ Key idea:
 
 ## 1. Clone Repository
 
-```
+```bash
 git clone https://github.com/appedme/formguard
 cd formguard
 ```
 
----
-
 ## 2. Install Dependencies
 
-```
-npm install
-```
+We use **Bun** for maximum performance.
 
----
+```bash
+bun install
+```
 
 ## 3. Setup Environment Variables
 
-Create `.env.local`
+Create `.env` based on `.env.example`:
 
-```
-NEXT_PUBLIC_APP_URL=
-STACKAUTH_SECRET=
-RAZORPAY_KEY_ID=
-RAZORPAY_KEY_SECRET=
+```bash
+NEXT_PUBLIC_STACK_PROJECT_ID=
+STACK_SECRET_SERVER_KEY=
 DATABASE_URL=
-WORKER_API_URL=
+GEMINI_API_KEY=
+DODO_PAYMENTS_API_KEY=
+DODO_PAYMENTS_WEBHOOK_SECRET=
+DODO_PAYMENTS_ENVIRONMENT=test_mode
 ```
-
----
 
 ## 4. Run Development Server
 
-```
-npm run dev
+```bash
+bun dev
 ```
 
----
+## 5. Deployment
 
-## 5. Run Cloudflare Worker
+Deploy to Cloudflare via GitHub Actions or Wrangler:
 
-```
-wrangler dev
+```bash
+bun run deploy
 ```
 
 ---
 
 # How It Works
 
-## Create a Form
-
-Inside dashboard:
-
-- Click “Create Form”
-- Get unique endpoint
-
-Example:
-
-```
-https://formguard.strivio.world/api/submit/abc123
-```
-
----
-
-## Send Submissions
-
-Example HTML form:
-
-```
-<form action="https://formguard.strivio.world/api/submit/abc123" method="POST">
-  <input name="email" />
-  <button type="submit">Submit</button>
-</form>
-```
-
-Worker stores submission and applies limits.
-
----
-
-## Generate AI Insights
-
-From dashboard:
-
-- Click “Generate Insight”
-- Worker batches submissions
-- AI returns structured summary
-
----
-
-# Development Principles
-
-## Server-First Design
-
-- Default to Server Components
-- Avoid unnecessary client JS
-
----
-
-## Edge-First Logic
-
-- Validation
-- Rate limiting
-- AI processing
-- Usage enforcement
-
-All handled in Workers.
-
----
-
-## Minimal UI Philosophy
-
-- Brutalist layout
-- Typography first
-- No heavy animations
-- Performance over visuals
-
----
-
-# Next.js Best Practices Used
-
-- App Router only
-- Route groups `(landing)` and `(dashboard)`
-- Edge runtime where possible
-- Static landing pages
-- Zero DB calls on marketing pages
-- next/font optimization
-- Lazy client components
-
----
-
-# Payments Flow
-
-1. User selects Pro or Growth.
-2. Razorpay Checkout opens.
-3. Webhook updates plan in DB.
-4. Worker enforces limits based on plan.
-
----
-
-# Database Models (Conceptual)
-
-users
-
-- id
-- email
-- plan
-
-forms
-
-- id
-- owner_id
-- endpoint_id
-
-submissions
-
-- id
-- form_id
-- payload
-- created_at
-
-insights
-
-- form_id
-- summary
-- updated_at
-
----
-
-# Deployment
-
-Frontend:
-
-```
-vercel deploy
-```
-
-Worker:
-
-```
-wrangler deploy
-```
-
-Database:
-
-- Cloudflare D1 migration or Postgres migration
-
----
-
-# Roadmap
-
-Planned:
-
-- Custom domains
-- Webhook automation
-- Referral system
-- Advanced analytics
-- Team workspaces
-
----
-
-# Contributing
-
-Contributions welcome.
-
-Guidelines:
-
-- Keep components server-first
-- Avoid adding heavy dependencies
-- Maintain brutal minimal design
-
----
-
-# License
-
-MIT License
+1. **Create a Form**: Get a unique `endpointId` from the dashboard.
+2. **Post Data**: Send POST requests to `https://formguard.strivio.world/api/submit/:endpointId`.
+3. **Analyze**: Use the AI Insight engine to summarize 100s of responses in seconds.
 
 ---
 
@@ -375,8 +163,14 @@ MIT License
 
 FormGuard is built for builders who want:
 
-- fewer servers
-- faster launches
-- clearer user feedback
+- **Zero infra**: Just drop an endpoint.
+- **Clear feedback**: AI-summarized insights, not raw data.
+- **Global scale**: Runs on the edge.
 
 One endpoint. Clean insights. Ship faster.
+
+---
+
+# License
+
+MIT License

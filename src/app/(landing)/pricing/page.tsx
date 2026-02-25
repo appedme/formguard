@@ -4,7 +4,7 @@ import Footer from "@/components/landing/footer";
 import FAQ from "@/components/landing/faq";
 
 export const metadata = {
-	title: "Pricing — FormGuard",
+	title: "Pricing",
 	description: "Simple, transparent pricing. Free tier, Pro at $9/month, Growth at $29/month. Cancel anytime.",
 };
 

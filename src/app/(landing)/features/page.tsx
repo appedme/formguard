@@ -4,7 +4,7 @@ import Footer from "@/components/landing/footer";
 import Link from "next/link";
 
 export const metadata = {
-	title: "Features — FormGuard",
+	title: "Features",
 	description: "Everything FormGuard does: edge processing, AI summaries, spam protection, webhook automation, and more.",
 };
 

@@ -17,7 +17,7 @@ import type { Metadata } from "next";
 export const runtime = "edge";
 
 export const metadata: Metadata = {
-	title: "FormGuard — The Modern Form Backend for Developers",
+	title: "The Modern Form Backend for Developers",
 	description: "The intelligent way to capture form submissions. Built-in AI spam protection, automated insights, and lightning-fast edge performance.",
 };
 

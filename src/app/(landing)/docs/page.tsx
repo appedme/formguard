@@ -2,7 +2,7 @@ import Navbar from "@/components/landing/navbar";
 import Footer from "@/components/landing/footer";
 
 export const metadata = {
-	title: "Docs — FormGuard",
+	title: "Docs",
 	description: "FormGuard documentation — integration guides, API reference, and examples.",
 };
 
