@@ -42,10 +42,16 @@ export const metadata: Metadata = {
 		siteName: "FormGuard",
 		images: [
 			{
-				url: "/og-image.png",
+				url: "/og-image-1.png",
 				width: 1200,
 				height: 630,
-				alt: "FormGuard - AI Form Backend",
+				alt: "FormGuard - AI Form Backend Overview",
+			},
+			{
+				url: "/og-image-2.png",
+				width: 1200,
+				height: 630,
+				alt: "FormGuard - Dashboard and AI Insights",
 			},
 		],
 	},
@@ -53,11 +59,14 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "FormGuard — AI Form Backend for Builders",
 		description: "Capture submissions, block spam, and turn raw responses into AI insights.",
-		images: ["/og-image.png"],
+		images: ["/og-image-1.png"],
 		creator: "@formguard",
 	},
 	icons: {
-		icon: "/favicon.svg",
+		icon: [
+			{ url: "/favicon.svg", type: "image/svg+xml" },
+			{ url: "/favicon.png", type: "image/png" },
+		],
 		apple: "/apple-touch-icon.png",
 	},
 	manifest: "/manifest.webmanifest",
