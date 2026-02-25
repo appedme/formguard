@@ -4,6 +4,11 @@ import { getUserByStackAuthId } from "@/db/actions/user.actions";
 import { getSubmissionStats } from "@/db/actions/analytics.actions";
 import { AnalyticsClient } from "@/components/dashboard/analytics-client";
 import { PLAN_LIMITS } from "@/lib/plans";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "Analytics",
+};
 
 export default async function SubmissionsPage() {
 	const stackUser = await stackServerApp.getUser();

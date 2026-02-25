@@ -8,6 +8,11 @@ import { PLAN_LIMITS } from "@/lib/plans";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BarChart3, Zap, ShieldCheck, PieChart, Layers } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "Usage & Limits",
+};
 
 export default async function UsagePage() {
 	const stackUser = await stackServerApp.getUser();

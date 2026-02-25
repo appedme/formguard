@@ -4,12 +4,31 @@ import { getUserByStackAuthId } from "@/db/actions/user.actions";
 import { getFormById } from "@/db/actions/form.actions";
 import { getFormSubmissions } from "@/db/actions/submission.actions";
 import { FormDetailClient } from "@/components/dashboard/form-detail-client";
+import type { Metadata } from "next";
+
+interface Props {
+	params: Promise<{ formId: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+	const stackUser = await stackServerApp.getUser();
+	if (!stackUser) return { title: "Form Details" };
+
+	const dbUser = await getUserByStackAuthId(stackUser.id);
+	if (!dbUser) return { title: "Form Details" };
+
+	const { formId } = await params;
+	const form = await getFormById(formId, dbUser.id);
+	if (!form) return { title: "Form Not Found" };
+
+	return {
+		title: form.name,
+	};
+}
 
 export default async function FormDetailPage({
 	params,
-}: {
-	params: Promise<{ formId: string }>;
-}) {
+}: Props) {
 	const stackUser = await stackServerApp.getUser();
 	if (!stackUser) redirect("/handler/sign-in");
 
