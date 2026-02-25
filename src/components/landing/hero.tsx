@@ -38,6 +38,7 @@ export default function Hero({ user }: HeroProps) {
 						<Link
 							href="/dashboard"
 							className="inline-flex items-center justify-center h-12 px-8 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+							aria-label="Go to Dashboard"
 						>
 							Go to Dashboard
 						</Link>
@@ -46,6 +47,7 @@ export default function Hero({ user }: HeroProps) {
 							href="/handler/sign-up"
 							data-cta="start-free-hero"
 							className="inline-flex items-center justify-center h-12 px-8 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+							aria-label="Start your free trial today"
 						>
 							Start Free — No Credit Card
 						</Link>
@@ -53,6 +55,7 @@ export default function Hero({ user }: HeroProps) {
 					<Link
 						href="#how-it-works"
 						className="inline-flex items-center justify-center h-12 px-8 text-base font-semibold border border-border text-foreground hover:bg-accent transition-colors"
+						aria-label="Learn how FormGuard works"
 					>
 						See How It Works →
 					</Link>

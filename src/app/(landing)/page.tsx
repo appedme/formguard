@@ -4,6 +4,7 @@ import SocialProof from "@/components/landing/social-proof";
 import ProblemSolution from "@/components/landing/problem-solution";
 import HowItWorks from "@/components/landing/how-it-works";
 import Features from "@/components/landing/features";
+import Integrations from "@/components/landing/integrations";
 import AiSection from "@/components/landing/ai-section";
 import Pricing from "@/components/landing/pricing";
 import FAQ from "@/components/landing/faq";
@@ -11,7 +12,14 @@ import FinalCTA from "@/components/landing/final-cta";
 import Footer from "@/components/landing/footer";
 import { stackServerApp } from "@/stack/server";
 
+import type { Metadata } from "next";
+
 export const runtime = "edge";
+
+export const metadata: Metadata = {
+	title: "FormGuard — The Modern Form Backend for Developers",
+	description: "The intelligent way to capture form submissions. Built-in AI spam protection, automated insights, and lightning-fast edge performance.",
+};
 
 export default async function LandingPage() {
 	const user = await stackServerApp.getUser();
@@ -25,6 +33,7 @@ export default async function LandingPage() {
 				<ProblemSolution />
 				<HowItWorks />
 				<Features />
+				<Integrations />
 				<AiSection />
 				<Pricing />
 				<FAQ />

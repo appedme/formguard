@@ -24,7 +24,7 @@ const plans = [
 			"5,000 submissions / month",
 			"AI summaries",
 			"Spam filtering",
-			"Export tools",
+			"App Integrations (Notion, Sheets)",
 			"10 forms",
 		],
 		cta: "Upgrade to Pro",
@@ -41,7 +41,7 @@ const plans = [
 		features: [
 			"Unlimited submissions",
 			"Weekly insight reports",
-			"Team workspace",
+			"100+ App Integrations",
 			"Priority edge processing",
 			"Custom webhook automation",
 		],

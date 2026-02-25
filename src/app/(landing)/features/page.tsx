@@ -78,12 +78,17 @@ export default function FeaturesPage() {
 							</p>
 						</div>
 						<div>
-							<h2 className="text-2xl font-black text-foreground mb-4">Webhook Automation</h2>
+							<h2 className="text-2xl font-black text-foreground mb-4">App Integrations</h2>
 							<p className="text-muted-foreground text-sm leading-relaxed mb-4">
-								Send every submission to Slack, Notion, Discord, or any HTTPS
-								endpoint. Configure multiple webhooks per form with custom
-								payloads. Available on the Growth plan.
+								Connect your form data to the tools you already use. Automatically
+								sync submissions to Notion databases, Google Sheets, or Slack
+								channels the moment they arrive.
 							</p>
+							<ul className="space-y-2 text-sm text-muted-foreground">
+								{["Notion & Google Sheets", "Slack & Discord", "100+ Apps via Zapier", "Native Webhooks"].map(f => (
+									<li key={f} className="flex items-center gap-2"><span className="text-foreground font-mono">✓</span>{f}</li>
+								))}
+							</ul>
 						</div>
 					</div>
 				</section>

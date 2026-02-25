@@ -28,8 +28,9 @@ const sections = [
 		title: "Integrations",
 		items: [
 			{ label: "Plain HTML", desc: '<form action="…" method="POST"> with any input fields you like.' },
-			{ label: "React", desc: "Use fetch() or axios to POST form data to your endpoint." },
-			{ label: "Webhooks", desc: "Configure outgoing webhooks per form to push submissions to Slack, Notion, Discord, etc." },
+			{ label: "React / Next.js", desc: "Use fetch() or axios to POST form data to your endpoint from client-side or server-side." },
+			{ label: "App Integrations", desc: "Connect your forms directly to Notion, Google Sheets, Slack, and 100+ more apps via our automated connectors." },
+			{ label: "Webhooks", desc: "Configure outgoing webhooks per form to push submissions to any custom HTTPS endpoint." },
 		],
 	},
 ];

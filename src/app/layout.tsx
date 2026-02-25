@@ -79,8 +79,43 @@ export default function RootLayout({
 		<html lang="en" suppressHydrationWarning>
 			<head>
 				<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+				<link rel="canonical" href="https://formguard.strivio.world" />
+				<script
+					type="application/ld+json"
+					dangerouslySetInnerHTML={{
+						__html: JSON.stringify({
+							"@context": "https://schema.org",
+							"@type": "Organization",
+							"name": "FormGuard",
+							"url": "https://formguard.strivio.world",
+							"logo": "https://formguard.strivio.world/logo.png",
+							"description": "Stop building form backends. FormGuard captures submissions, blocks spam, and turns raw responses into AI insights — powered by Cloudflare edge infrastructure.",
+							"sameAs": [
+								"https://twitter.com/formguard",
+								"https://github.com/formguard"
+							]
+						}),
+					}}
+				/>
 			</head>
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}>
+				<script
+					type="application/ld+json"
+					dangerouslySetInnerHTML={{
+						__html: JSON.stringify({
+							"@context": "https://schema.org",
+							"@type": "Organization",
+							"name": "FormGuard",
+							"url": "https://formguard.strivio.world",
+							"logo": "https://formguard.strivio.world/favicon.svg",
+							"sameAs": [
+								"https://twitter.com/formguard",
+								"https://github.com/formguard"
+							],
+							"description": "AI-powered form backend for builders. Capture submissions, block spam, and generate AI insights."
+						})
+					}}
+				/>
 				<Providers>
 					<StackProvider app={stackClientApp}>
 						<StackTheme>{children}</StackTheme>
