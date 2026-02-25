@@ -3,22 +3,47 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import { createForm } from "@/db/actions/form.actions";
 
 export default function NewFormPage() {
 	const router = useRouter();
 	const [name, setName] = useState("");
 	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 
 	async function handleCreate(e: React.FormEvent) {
 		e.preventDefault();
 		if (!name.trim()) return;
 		setLoading(true);
-		// TODO Phase 3: call server action to create form in DB
-		// For now, simulate and redirect
-		await new Promise((r) => setTimeout(r, 500));
-		setLoading(false);
-		router.push("/dashboard");
+		setError(null);
+
+		try {
+			// We need the userId — get it via a separate server action
+			const res = await fetch("/api/forms/create", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ name: name.trim() }),
+			});
+
+			if (!res.ok) {
+				const data = await res.json();
+				throw new Error(data.error ?? "Failed to create form");
+			}
+
+			router.push("/dashboard");
+			router.refresh();
+		} catch (err) {
+			setError(err instanceof Error ? err.message : "Something went wrong");
+		} finally {
+			setLoading(false);
+		}
 	}
 
 	return (
@@ -51,7 +76,7 @@ export default function NewFormPage() {
 								value={name}
 								onChange={(e) => setName(e.target.value)}
 								required
-								className="w-full h-10 px-3 border border-border bg-input text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:border-ring transition-colors"
+								className="w-full h-10 px-3 border border-border bg-background text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:border-ring transition-colors"
 							/>
 						</div>
 
@@ -67,6 +92,10 @@ export default function NewFormPage() {
 									</span>
 								</p>
 							</div>
+						)}
+
+						{error && (
+							<p className="text-sm text-destructive font-mono">{error}</p>
 						)}
 
 						<div className="flex gap-3">

@@ -1,19 +1,28 @@
+import { stackServerApp } from "@/stack/server";
+import { redirect } from "next/navigation";
+import { getUserByStackAuthId } from "@/db/actions/user.actions";
+import { getUserForms } from "@/db/actions/form.actions";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 
-// Placeholder — real data will come from DB in Phase 3
-const MOCK_FORMS: {
-	id: string;
-	name: string;
-	endpoint_id: string;
-	submissions: number;
-	created_at: string;
-	plan: string;
-}[] = [];
+export default async function DashboardPage() {
+	const stackUser = await stackServerApp.getUser();
+	if (!stackUser) redirect("/handler/sign-in");
 
-export default function DashboardPage() {
+	const dbUser = await getUserByStackAuthId(stackUser.id);
+	if (!dbUser) redirect("/handler/sign-in");
+
+	const userForms = await getUserForms(dbUser.id);
+
+	const totalSubmissions = userForms.reduce((sum, f) => sum + f.submissions, 0);
+
 	return (
 		<div className="p-8">
 			{/* Header */}
@@ -32,9 +41,9 @@ export default function DashboardPage() {
 			{/* Stats row */}
 			<div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
 				{[
-					{ label: "Total Forms", value: "0" },
-					{ label: "Total Submissions", value: "0" },
-					{ label: "Plan", value: "Free" },
+					{ label: "Total Forms", value: String(userForms.length) },
+					{ label: "Total Submissions", value: String(totalSubmissions) },
+					{ label: "Plan", value: dbUser.plan.charAt(0).toUpperCase() + dbUser.plan.slice(1) },
 					{ label: "AI Insights Used", value: "0" },
 				].map((stat) => (
 					<Card key={stat.label} className="border-border">
@@ -51,7 +60,7 @@ export default function DashboardPage() {
 			</div>
 
 			{/* Forms list / empty state */}
-			{MOCK_FORMS.length === 0 ? (
+			{userForms.length === 0 ? (
 				<Card className="border-border border-dashed">
 					<CardContent className="flex flex-col items-center justify-center py-24 text-center">
 						<p className="text-4xl mb-4">📋</p>
@@ -67,23 +76,28 @@ export default function DashboardPage() {
 				</Card>
 			) : (
 				<div className="space-y-3">
-					{MOCK_FORMS.map((form) => (
-						<Card key={form.id} className="border-border hover:border-foreground/30 transition-colors group">
+					{userForms.map((form) => (
+						<Card
+							key={form.id}
+							className="border-border hover:border-foreground/30 transition-colors"
+						>
 							<CardContent className="flex items-center justify-between p-6">
 								<div>
 									<div className="flex items-center gap-3 mb-1">
 										<h3 className="font-bold text-foreground">{form.name}</h3>
 										<Badge variant="secondary" className="font-mono text-xs">
-											{form.plan}
+											{form.endpointId}
 										</Badge>
 									</div>
-									<p className="text-xs font-mono text-muted-foreground truncate max-w-xs">
-										/api/submit/{form.endpoint_id}
+									<p className="text-xs font-mono text-muted-foreground truncate max-w-md">
+										/api/submit/{form.endpointId}
 									</p>
 								</div>
 								<div className="flex items-center gap-6">
 									<div className="text-right hidden sm:block">
-										<p className="text-lg font-bold text-foreground">{form.submissions}</p>
+										<p className="text-lg font-bold text-foreground">
+											{form.submissions}
+										</p>
 										<p className="text-xs text-muted-foreground">submissions</p>
 									</div>
 									<Button variant="outline" size="sm" asChild>

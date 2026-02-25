@@ -1,0 +1,81 @@
+import {
+	pgTable,
+	uuid,
+	text,
+	timestamp,
+	pgEnum,
+	boolean,
+	jsonb,
+	index,
+} from "drizzle-orm/pg-core";
+
+// Enums
+export const planEnum = pgEnum("plan", ["free", "pro", "growth"]);
+
+// ─── Users ───────────────────────────────────────────
+export const users = pgTable("users", {
+	id: uuid("id").defaultRandom().primaryKey(),
+	stackAuthId: text("stack_auth_id").notNull().unique(),
+	email: text("email").notNull(),
+	displayName: text("display_name"),
+	plan: planEnum("plan").notNull().default("free"),
+	createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// ─── Forms ───────────────────────────────────────────
+export const forms = pgTable(
+	"forms",
+	{
+		id: uuid("id").defaultRandom().primaryKey(),
+		userId: uuid("user_id")
+			.notNull()
+			.references(() => users.id, { onDelete: "cascade" }),
+		name: text("name").notNull(),
+		endpointId: text("endpoint_id").notNull().unique(),
+		createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+	},
+	(table) => [index("forms_user_id_idx").on(table.userId)]
+);
+
+// ─── Submissions ─────────────────────────────────────
+export const submissions = pgTable(
+	"submissions",
+	{
+		id: uuid("id").defaultRandom().primaryKey(),
+		formId: uuid("form_id")
+			.notNull()
+			.references(() => forms.id, { onDelete: "cascade" }),
+		payload: jsonb("payload").notNull(),
+		ipAddress: text("ip_address"),
+		isSpam: boolean("is_spam").notNull().default(false),
+		createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+	},
+	(table) => [
+		index("submissions_form_id_idx").on(table.formId),
+		index("submissions_created_at_idx").on(table.createdAt),
+	]
+);
+
+// ─── Insights ────────────────────────────────────────
+export const insights = pgTable(
+	"insights",
+	{
+		id: uuid("id").defaultRandom().primaryKey(),
+		formId: uuid("form_id")
+			.notNull()
+			.references(() => forms.id, { onDelete: "cascade" }),
+		summary: text("summary").notNull(),
+		createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+	},
+	(table) => [index("insights_form_id_idx").on(table.formId)]
+);
+
+// ─── Type Exports ────────────────────────────────────
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
+export type Form = typeof forms.$inferSelect;
+export type NewForm = typeof forms.$inferInsert;
+export type Submission = typeof submissions.$inferSelect;
+export type NewSubmission = typeof submissions.$inferInsert;
+export type Insight = typeof insights.$inferSelect;
+export type NewInsight = typeof insights.$inferInsert;
