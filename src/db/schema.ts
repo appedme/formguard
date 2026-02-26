@@ -32,6 +32,12 @@ export const forms = pgTable(
 			.references(() => users.id, { onDelete: "cascade" }),
 		name: text("name").notNull(),
 		endpointId: text("endpoint_id").notNull().unique(),
+		redirectUrl: text("redirect_url"),
+		errorUrl: text("error_url"),
+		emailNotifications: boolean("email_notifications").notNull().default(false),
+		webhookUrl: text("webhook_url"),
+		webhookEnabled: boolean("webhook_enabled").notNull().default(false),
+		allowedOrigins: text("allowed_origins"), // Comma-separated list of allowed origins
 		turnstileEnabled: boolean("turnstile_enabled").notNull().default(false),
 		createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 	},

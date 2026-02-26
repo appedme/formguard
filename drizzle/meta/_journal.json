@@ -8,6 +8,20 @@
       "when": 1772096523428,
       "tag": "0000_curly_phil_sheldon",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1772113557752,
+      "tag": "0001_wealthy_slyde",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1772113977570,
+      "tag": "0002_wealthy_master_mold",
+      "breakpoints": true
     }
   ]
 }

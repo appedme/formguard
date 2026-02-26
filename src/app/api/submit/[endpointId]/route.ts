@@ -93,6 +93,35 @@ export async function POST(
 		revalidatePath(`/dashboard/forms/${form.id}`, "page");
 		revalidatePath("/dashboard/submissions", "page");
 
+		// --- Handle Webhooks ---
+		if (form.webhookEnabled && form.webhookUrl) {
+			try {
+				await fetch(form.webhookUrl, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						formId: form.id,
+						submissionId: submission.id,
+						payload,
+						createdAt: submission.createdAt,
+					}),
+				});
+			} catch (err) {
+				console.error("Webhook failed:", err);
+			}
+		}
+
+		// --- Handle Email Notifications ---
+		if (form.emailNotifications) {
+			// TODO: Implement email sending logic (e.g., Resend, SendGrid)
+			console.log(`[EMAIL] Sending notification for form ${form.id}`);
+		}
+
+		// --- Handle Redirects ---
+		if (form.redirectUrl) {
+			return NextResponse.redirect(form.redirectUrl, 302);
+		}
+
 		// Return success with CORS headers
 		return NextResponse.json(
 			{

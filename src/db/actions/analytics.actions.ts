@@ -110,3 +110,57 @@ export async function getSubmissionStats(userId: string) {
 		dailyCounts,
 	};
 }
+
+export async function getFormAnalytics(formId: string) {
+	// 1. Total Submissions
+	const [totalResult] = await db
+		.select({ count: count() })
+		.from(submissions)
+		.where(eq(submissions.formId, formId));
+
+	// 2. Last 30 Days Count
+	const thirtyDaysAgo = new Date();
+	thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+	
+	const [last30Result] = await db
+		.select({ count: count() })
+		.from(submissions)
+		.where(
+			and(
+				eq(submissions.formId, formId),
+				gte(submissions.createdAt, thirtyDaysAgo)
+			)
+		);
+
+	// 3. Daily History (Last 30 Days)
+	const dailyHistory: { date: string; count: number }[] = [];
+	for (let i = 29; i >= 0; i--) {
+		const date = new Date();
+		date.setDate(date.getDate() - i);
+		const dayStart = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+		const dayEnd = new Date(dayStart);
+		dayEnd.setDate(dayEnd.getDate() + 1);
+
+		const [result] = await db
+			.select({ count: count() })
+			.from(submissions)
+			.where(
+				and(
+					eq(submissions.formId, formId),
+					gte(submissions.createdAt, dayStart), // Fixed: Use gte/lt properly
+					sql`${submissions.createdAt} < ${dayEnd}`
+				)
+			);
+
+		dailyHistory.push({
+			date: dayStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+			count: result?.count ?? 0,
+		});
+	}
+
+	return {
+		total: totalResult?.count ?? 0,
+		last30Days: last30Result?.count ?? 0,
+		dailyHistory,
+	};
+}
