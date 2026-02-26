@@ -1,13 +1,19 @@
 import { db } from "@/db";
 import { submissions } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import OpenAI from "openai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const openai = new OpenAI({
+	baseURL: "https://openrouter.ai/api/v1",
+	apiKey: process.env.OPENROUTER_API_KEY,
+	defaultHeaders: {
+		"HTTP-Referer": "https://formguard.strivio.world", // Optional, for including your app on openrouter.ai rankings.
+		"X-Title": "FormGuard", // Optional. Shows in rankings on openrouter.ai.
+	}
+});
 
 /**
- * Generate an AI insight from form submissions using Google Gemini.
+ * Generate an AI insight from form submissions using OpenRouter.
  */
 export async function generateInsight(formId: string): Promise<string> {
 	// Fetch submissions for this form
@@ -48,11 +54,22 @@ export async function generateInsight(formId: string): Promise<string> {
 	`;
 
 	try {
-		const result = await model.generateContent(prompt);
-		const response = await result.response;
-		return response.text();
-	} catch (error) {
-		console.error("Gemini AI Error:", error);
-		return "Error generating AI insight. Please ensure your GEMINI_API_KEY is correct.";
+		const completion = await openai.chat.completions.create({
+			model: "google/gemini-2.5-flash-free", // Using a free model on OpenRouter
+			messages: [
+				{
+					role: "user",
+					content: prompt
+				}
+			],
+		});
+		
+		return completion.choices[0]?.message?.content || "No insight generated.";
+	} catch (error: any) {
+		console.error("OpenRouter AI Error:", error);
+		if (error?.status === 429) {
+			return "Rate limit exceeded. Please try again later.";
+		}
+		return "Error generating AI insight. Please ensure your OPENROUTER_API_KEY is correct.";
 	}
 }
