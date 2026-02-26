@@ -21,7 +21,7 @@ const sections = [
 	},
 	{
 		title: "4. Free and Paid Plans",
-		body: "Free plans are subject to usage limits and may be changed at any time. Paid plans are billed via Razorpay and can be cancelled at any time from the dashboard with no further charges.",
+		body: "Free plans are subject to usage limits and may be changed at any time. Paid plans are billed via Dodo Payments and can be cancelled at any time from the dashboard with no further charges.",
 	},
 	{
 		title: "5. Data Retention",

@@ -10,7 +10,7 @@ const systems = [
 	{ name: "Edge API (form submissions)", status: "Operational" },
 	{ name: "Dashboard", status: "Operational" },
 	{ name: "AI Insight Engine", status: "Operational" },
-	{ name: "Razorpay Billing", status: "Operational" },
+	{ name: "Dodo Payments Billing", status: "Operational" },
 	{ name: "Auth (StackAuth)", status: "Operational" },
 	{ name: "Cloudflare D1 Database", status: "Operational" },
 ];

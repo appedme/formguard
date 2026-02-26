@@ -3,7 +3,7 @@ const features = [
 	{ icon: "🤖", title: "AI Summaries", benefit: "Transform raw replies into structured insight on demand." },
 	{ icon: "🛡️", title: "Spam Protection", benefit: "Bot detection and rate limiting baked in at the edge." },
 	{ icon: "👥", title: "Team Workspaces", benefit: "Collaborate on forms and insights with your team." },
-	{ icon: "💳", title: "Razorpay Billing", benefit: "India-friendly subscriptions with secure webhook upgrades." },
+	{ icon: "💳", title: "Dodo Payments", benefit: "Global subscriptions with secure webhook upgrades and tax compliance." },
 	{ icon: "🔗", title: "Webhook Automation", benefit: "Push submissions to Slack, Notion, or any external system." },
 ];
 

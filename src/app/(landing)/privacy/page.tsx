@@ -21,7 +21,7 @@ const sections = [
 	},
 	{
 		title: "Third-party services",
-		body: "We use Razorpay for payment processing (their privacy policy applies to payment data), StackAuth for authentication, and Cloudflare for infrastructure. None of these services receive your form submission data.",
+		body: "We use Dodo Payments for payment processing (their privacy policy applies to payment data), StackAuth for authentication, and Cloudflare for infrastructure. None of these services receive your form submission data.",
 	},
 	{
 		title: "Your rights",

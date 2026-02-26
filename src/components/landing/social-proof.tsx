@@ -1,4 +1,4 @@
-const badges = ["Next.js", "Cloudflare Workers", "StackAuth", "Razorpay", "AI Powered"];
+const badges = ["Next.js", "Cloudflare Workers", "StackAuth", "Dodo Payments", "AI Powered"];
 
 export default function SocialProof() {
 	return (
