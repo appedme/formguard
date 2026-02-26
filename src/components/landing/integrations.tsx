@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 const integrations = [
-	{ name: "Notion", icon: Database, status: "Soon", color: "text-black" },
+	{ name: "Notion", icon: Database, status: "Soon", color: "text-white" },
 	{ name: "Google Sheets", icon: Table, status: "Soon", color: "text-green-600" },
 	{ name: "Slack", icon: Slack, status: "Active", color: "text-blue-500" },
 	{ name: "Discord", icon: MessageSquare, status: "Soon", color: "text-indigo-500" },
