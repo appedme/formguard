@@ -25,7 +25,7 @@ export default function HowItWorks() {
 				<p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-4">
 					How It Works
 				</p>
-				<h2 className="text-3xl font-black text-foreground mb-4">
+				<h2 className="text-3xl font-semibold text-foreground mb-4">
 					Up and running in minutes.
 				</h2>
 				<p className="text-muted-foreground font-mono text-sm mb-14">

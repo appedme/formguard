@@ -32,17 +32,15 @@ export default function AiSection() {
 							<p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-6">
 								AI Insight Engine
 							</p>
-							<h2 className="text-3xl font-black text-foreground mb-4 leading-tight">
-								Your forms don&apos;t just
+							<h2 className="text-3xl font-semibold text-foreground mb-4 leading-tight">
+								Your submissions don&apos;t just
 								<br />
 								collect data.
 								<br />
 								<span className="text-muted-foreground">They explain it.</span>
 							</h2>
 							<p className="text-muted-foreground mb-8 leading-relaxed text-sm">
-								One click. FormGuard batches your submissions and runs them
-								through an AI model — returning a structured, actionable summary.
-								No prompting. No setup.
+								Built for founders who read every submission. FormGuard batches your submissions and runs them through an logic-gate AI — returning a structured, actionable summary.
 							</p>
 							<ul className="space-y-3 mb-10">
 								{bullets.map((b) => (
@@ -62,16 +60,16 @@ export default function AiSection() {
 						</div>
 
 						{/* Right — always-dark terminal preview */}
-						<div className="border border-border bg-card p-6">
-							<div className="flex items-center gap-2 mb-4 pb-3 border-b border-border">
+						<div className="border border-border bg-black/50 p-8 md:p-12">
+							<div className="flex items-center gap-2 mb-6 pb-4 border-b border-border/50">
 								<div className="h-2.5 w-2.5 rounded-full bg-red-500/70" />
 								<div className="h-2.5 w-2.5 rounded-full bg-yellow-500/70" />
 								<div className="h-2.5 w-2.5 rounded-full bg-green-500/70" />
 								<span className="ml-2 text-xs font-mono text-muted-foreground">
-									formguard — insight output
+									formguard — infrastructure_analysis.log
 								</span>
 							</div>
-							<pre className="font-mono text-xs text-green-400 whitespace-pre-wrap leading-relaxed overflow-x-auto">
+							<pre className="font-mono text-xs text-green-400/90 whitespace-pre-wrap leading-relaxed overflow-x-auto">
 								{mockOutput}
 							</pre>
 						</div>

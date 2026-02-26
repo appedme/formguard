@@ -1,10 +1,8 @@
 import Hero from "@/components/landing/hero";
-import SocialProof from "@/components/landing/social-proof";
 import ProblemSolution from "@/components/landing/problem-solution";
 import HowItWorks from "@/components/landing/how-it-works";
-import Features from "@/components/landing/features";
-import Integrations from "@/components/landing/integrations";
 import AiSection from "@/components/landing/ai-section";
+import Features from "@/components/landing/features";
 import Pricing from "@/components/landing/pricing";
 import FAQ from "@/components/landing/faq";
 import FinalCTA from "@/components/landing/final-cta";
@@ -23,12 +21,10 @@ export default async function LandingPage() {
 	return (
 		<main>
 			<Hero user={user} />
-			<SocialProof />
 			<ProblemSolution />
 			<HowItWorks />
-			<Features />
-			<Integrations />
 			<AiSection />
+			<Features />
 			<Pricing />
 			<FAQ />
 			<FinalCTA user={user} />

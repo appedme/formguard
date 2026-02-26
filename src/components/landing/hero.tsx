@@ -19,21 +19,15 @@ export default function Hero({ user }: HeroProps) {
 					Stop building
 					<br />
 					form backends.
-					<br />
-					<span className="text-muted-foreground">Just drop an endpoint</span>
-					<br />
-					and ship.
 				</h1>
 
 				{/* Sub-headline */}
 				<p className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-10 leading-relaxed">
-					FormGuard captures submissions, blocks spam, and turns raw responses
-					into AI insights — powered by Cloudflare edge infrastructure. Zero
-					backend setup.
+					Edge-native form infrastructure built on Cloudflare. FormGuard captures submissions, blocks spam, and turns raw responses into AI insights.
 				</p>
 
 				{/* CTAs */}
-				<div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6">
+				<div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
 					{user ? (
 						<Link
 							href="/dashboard"
@@ -61,15 +55,17 @@ export default function Hero({ user }: HeroProps) {
 					</Link>
 				</div>
 
-				{/* Deploy line */}
-				<p className="text-sm text-muted-foreground font-mono mb-8">
-					⚡ Deploy in under 2 minutes.
+				{/* Micro-trust line */}
+				<p className="text-xs font-mono text-muted-foreground mb-10">
+					Works with plain HTML forms. No SDK required.
 				</p>
 
-				{/* Trust line */}
-				<p className="text-sm text-muted-foreground">
-					Built for indie makers, YC founders, and fast-moving teams.
-				</p>
+				{/* Credibility strip */}
+				<div className="pt-8 border-t border-border/50">
+					<p className="text-sm text-muted-foreground font-mono">
+						Built on Cloudflare’s global edge network.
+					</p>
+				</div>
 			</div>
 		</section>
 	);

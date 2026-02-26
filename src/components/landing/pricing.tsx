@@ -19,7 +19,7 @@ const plans = [
 		name: "Pro",
 		price: "$9",
 		period: "/month",
-		description: "For makers and indie devs.",
+		description: "Best for solo founders shipping MVPs.",
 		features: [
 			"5,000 submissions / month",
 			"AI summaries",
@@ -60,10 +60,10 @@ export default function Pricing() {
 				<p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-4">
 					Pricing
 				</p>
-				<h2 className="text-3xl font-black text-foreground mb-4">
+				<h2 className="text-3xl font-semibold text-foreground mb-4">
 					Pay for what you need.
 					<br />
-					<span className="text-muted-foreground">Cancel anytime.</span>
+					<span className="text-muted-foreground">Infrastructure that scales.</span>
 				</h2>
 				<p className="text-sm text-muted-foreground font-mono mb-14">
 					Secure billing · No hidden fees
@@ -101,7 +101,7 @@ export default function Pricing() {
 								</p>
 							</div>
 
-							<ul className="space-y-3 mb-10 flex-grow">
+							<ul className="space-y-3 mb-10 grow">
 								{plan.features.map((f) => (
 									<li key={f} className="flex items-center gap-3 text-sm">
 										<span className={`font-mono ${plan.highlighted ? "text-green-300" : "text-foreground"}`}>
@@ -128,7 +128,7 @@ export default function Pricing() {
 				</div>
 
 				<p className="text-center text-xs text-muted-foreground font-mono mt-8">
-					Cancel anytime. Secure billing. No credit card for free plan.
+					Secure billing. Cancel anytime. No credit card for free plan.
 				</p>
 			</div>
 		</section>

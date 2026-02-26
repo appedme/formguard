@@ -1,10 +1,9 @@
 import Link from "next/link";
 
 const problems = [
-	"Spam destroying your forms?",
-	"CSV exports are chaos?",
-	"No idea what users are actually asking?",
-	"Backend logic slowing your launch?",
+	"Stop writing backend handlers.",
+	"Stop cleaning spam manually.",
+	"Stop guessing what users want.",
 ];
 
 export default function ProblemSolution() {
@@ -17,10 +16,10 @@ export default function ProblemSolution() {
 						<p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-6">
 							The Problem
 						</p>
-						<h2 className="text-3xl font-black text-foreground mb-8">
-							Forms are simple.
+						<h2 className="text-3xl font-semibold text-foreground mb-8">
+							Form backends are a
 							<br />
-							<span className="text-muted-foreground">The backend isn&apos;t.</span>
+							<span className="text-muted-foreground">waste of your time.</span>
 						</h2>
 						<ul className="space-y-4">
 							{problems.map((problem) => (
@@ -37,24 +36,22 @@ export default function ProblemSolution() {
 						<p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-6">
 							The Solution
 						</p>
-						<h2 className="text-3xl font-black text-foreground mb-8">
+						<h2 className="text-3xl font-semibold text-foreground mb-8">
 							One endpoint.
 							<br />
-							Clean dashboard.
+							Edge processing.
 							<br />
-							<span className="text-muted-foreground">Instant AI summaries.</span>
+							<span className="text-muted-foreground">Instant insights.</span>
 						</h2>
-						<p className="text-muted-foreground mb-8 leading-relaxed">
-							FormGuard handles the entire backend — submissions, spam filtering,
-							rate limiting, and AI insight generation — all at the edge. You
-							just paste an endpoint.
+						<p className="text-muted-foreground mb-8 leading-relaxed text-sm">
+							FormGuard provides the infrastructure to capture, filter, and analyze submissions at the edge. No SDK, no complex backend handlers, just one endpoint.
 						</p>
 						<Link
 							href="/handler/sign-up"
 							data-cta="start-free-problem"
 							className="inline-flex items-center justify-center h-11 px-6 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
 						>
-							Start Free
+							Deploy Form Infrastructure →
 						</Link>
 					</div>
 				</div>

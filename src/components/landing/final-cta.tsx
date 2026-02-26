@@ -14,7 +14,7 @@ export default function FinalCTA({ user }: FinalCTAProps) {
 					<p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-8">
 						Stop waiting. Start shipping.
 					</p>
-					<h2 className="text-5xl md:text-6xl font-black text-foreground mb-8 leading-tight">
+					<h2 className="text-5xl md:text-6xl font-semibold text-foreground mb-8 leading-tight">
 						Ship forms faster
 						<br />
 						than your competitors.

@@ -34,6 +34,8 @@ export default function Footer() {
 					</nav>
 
 					<p className="text-xs font-mono text-muted-foreground">
+						Powered by Cloudflare Edge
+						<br />
 						© {new Date().getFullYear()} FormGuard
 					</p>
 				</div>
