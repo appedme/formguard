@@ -1,19 +1,11 @@
 import { db } from "@/db";
 import { submissions } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import OpenAI from "openai";
-
-const openai = new OpenAI({
-	baseURL: "https://openrouter.ai/api/v1",
-	apiKey: process.env.OPENROUTER_API_KEY,
-	defaultHeaders: {
-		"HTTP-Referer": "https://formguard.strivio.world", // Optional, for including your app on openrouter.ai rankings.
-		"X-Title": "FormGuard", // Optional. Shows in rankings on openrouter.ai.
-	}
-});
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 /**
- * Generate an AI insight from form submissions using OpenRouter.
+ * Generate an AI insight from form submissions using Cloudflare Workers AI.
+ * Uses @cf/openai/gpt-oss-20b model via the AI binding.
  */
 export async function generateInsight(formId: string): Promise<string> {
 	// Fetch submissions for this form
@@ -27,49 +19,50 @@ export async function generateInsight(formId: string): Promise<string> {
 		return "No submissions to analyze yet. Send some test submissions first.";
 	}
 
-	// Prepare data for Gemini
+	// Prepare data for AI
 	const submissionData = subs.map(s => ({
 		payload: s.payload,
 		date: s.createdAt.toISOString()
 	}));
 
-	const prompt = `
-		You are FormGuard AI, an expert at analyzing form submissions.
-		Analyze the following ${subs.length} form submissions and provide a structured summary.
-		
-		Submissions Data:
-		${JSON.stringify(submissionData)}
+	const prompt = `You are FormGuard AI, an expert at analyzing form submissions.
+Analyze the following ${subs.length} form submissions and provide a structured summary.
 
-		Please format your response strictly as follows:
-		1. FormGuard AI Insight — [count] submissions analyzed
-		2. === Fields Detected ===
-		   List each field found and a brief note on its distribution or common values.
-		3. === Content Themes ===
-		   Summarize the core messages or themes found in text responses.
-		4. === Action Items ===
-		   Provide 2-3 specific recommendations based on the data.
-		
-		Keep the tone professional, concise, and brutalist (minimalist but high-impact).
-		Generated at ${new Date().toISOString()} · FormGuard Insight Engine
-	`;
+Submissions Data:
+${JSON.stringify(submissionData)}
+
+Please format your response strictly as follows:
+1. FormGuard AI Insight — [count] submissions analyzed
+2. === Fields Detected ===
+   List each field found and a brief note on its distribution or common values.
+3. === Content Themes ===
+   Summarize the core messages or themes found in text responses.
+4. === Action Items ===
+   Provide 2-3 specific recommendations based on the data.
+
+Keep the tone professional, concise, and brutalist (minimalist but high-impact).
+Generated at ${new Date().toISOString()} · FormGuard Insight Engine`;
 
 	try {
-		const completion = await openai.chat.completions.create({
-			model: "google/gemini-2.5-flash-free", // Using a free model on OpenRouter
+		const { env } = await getCloudflareContext({ async: true });
+		const ai = env.AI;
+
+		const response = await ai.run("@cf/openai/gpt-oss-20b" as any, {
 			messages: [
-				{
-					role: "user",
-					content: prompt
-				}
+				{ role: "system", content: "You are FormGuard AI, an expert form submission analyst. Be concise and structured." },
+				{ role: "user", content: prompt }
 			],
+			max_tokens: 1024,
 		});
-		
-		return completion.choices[0]?.message?.content || "No insight generated.";
-	} catch (error: any) {
-		console.error("OpenRouter AI Error:", error);
-		if (error?.status === 429) {
-			return "Rate limit exceeded. Please try again later.";
+
+		if ("response" in response && typeof response.response === "string") {
+			return response.response;
 		}
-		return "Error generating AI insight. Please ensure your OPENROUTER_API_KEY is correct.";
+
+		// Handle streaming or other response shapes
+		return String(response) || "No insight generated.";
+	} catch (error: any) {
+		console.error("Cloudflare Workers AI Error:", error);
+		return "Error generating AI insight. Please check your Cloudflare AI binding configuration.";
 	}
 }
