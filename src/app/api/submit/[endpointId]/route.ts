@@ -3,6 +3,7 @@ import { db } from "@/db";
 import { forms, submissions } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { verifyTurnstileToken } from "@/lib/turnstile";
 
 export async function POST(
 	req: NextRequest,
@@ -53,7 +54,28 @@ export async function POST(
 			null;
 
 		// Basic spam check (simple heuristic — can be enhanced later)
-		const isSpam = false;
+		let isSpam = false;
+
+		// Turnstile Verification
+		if (form.turnstileEnabled) {
+			const turnstileToken = payload["cf-turnstile-response"] as string | undefined;
+			
+			if (!turnstileToken) {
+				return NextResponse.json(
+					{ error: "Spam protection triggered. Turnstile token missing." },
+					{ status: 403 }
+				);
+			}
+
+			const verification = await verifyTurnstileToken(turnstileToken);
+			if (!verification.success) {
+				console.log(`[SPAM] Turnstile verification failed for form ${form.id}:`, verification["error-codes"]);
+				isSpam = true;
+				
+				// Optional: Block submissions entirely if verification fails
+				// return NextResponse.json({ error: "Spam protection triggered. verification failed." }, { status: 403 });
+			}
+		}
 
 		// Insert submission
 		const [submission] = await db

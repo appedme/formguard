@@ -32,6 +32,7 @@ export const forms = pgTable(
 			.references(() => users.id, { onDelete: "cascade" }),
 		name: text("name").notNull(),
 		endpointId: text("endpoint_id").notNull().unique(),
+		turnstileEnabled: boolean("turnstile_enabled").notNull().default(false),
 		createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 	},
 	(table) => [index("forms_user_id_idx").on(table.userId)]

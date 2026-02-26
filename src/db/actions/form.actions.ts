@@ -80,3 +80,16 @@ export async function deleteForm(formId: string, userId: string) {
 	await db.delete(forms).where(eq(forms.id, formId));
 	return true;
 }
+
+export async function updateForm(formId: string, userId: string, data: Partial<typeof forms.$inferInsert>) {
+	// Verify ownership first
+	const form = await getFormById(formId, userId);
+	if (!form) return false;
+
+	await db
+		.update(forms)
+		.set(data)
+		.where(eq(forms.id, formId));
+	
+	return true;
+}
