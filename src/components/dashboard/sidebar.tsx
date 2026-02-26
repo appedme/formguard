@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/landing/theme-toggle";
-import { Separator } from "@/components/ui/separator";
 import { 
 	LayoutDashboard, 
 	Inbox, 
@@ -11,9 +10,9 @@ import {
 	BarChart3, 
 	Settings, 
 	LogOut,
-	ShieldCheck,
-	ChevronRight
+	ShieldCheck
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 const nav = [
 	{ label: "Forms", href: "/dashboard", icon: LayoutDashboard },
@@ -27,6 +26,7 @@ interface SidebarProps {
 	user: {
 		displayName: string | null;
 		primaryEmail: string | null;
+		plan: "free" | "pro" | "growth";
 	};
 }
 
@@ -50,7 +50,7 @@ export function DashboardSidebar({ user }: SidebarProps) {
 			{/* Nav */}
 			<nav className="flex-1 overflow-y-auto py-4 px-3 space-y-8">
 				<div className="space-y-1">
-					<p className="px-3 mb-2 text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground/60">
+					<p className="px-3 mb-2 text-[10px] font-medium uppercase tracking-widest text-muted-foreground/60">
 						Overview
 					</p>
 					{nav.map((item) => {
@@ -77,7 +77,7 @@ export function DashboardSidebar({ user }: SidebarProps) {
 				</div>
 
 				<div className="space-y-1">
-					<p className="px-3 mb-2 text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground/60">
+					<p className="px-3 mb-2 text-[10px] font-medium uppercase tracking-widest text-muted-foreground/60">
 						Account
 					</p>
 					<Link
@@ -104,6 +104,18 @@ export function DashboardSidebar({ user }: SidebarProps) {
 							{user.primaryEmail}
 						</p>
 					</div>
+					<Badge 
+						variant="outline" 
+						className={`text-[9px] px-1.5 py-0 h-4 font-mono uppercase tracking-tighter ${
+							user.plan === "pro" 
+								? "bg-purple-500/10 text-purple-600 border-purple-500/20" 
+								: user.plan === "growth" 
+								? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" 
+								: "bg-muted text-muted-foreground border-border"
+						}`}
+					>
+						{user.plan}
+					</Badge>
 				</div>
 				<div className="flex items-center justify-between px-2 py-2 bg-muted/40 rounded-lg border border-border/50">
 					<span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Theme</span>
