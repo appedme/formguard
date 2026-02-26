@@ -5,7 +5,6 @@ const features = [
 	{ icon: "🔗", title: "Webhook Automation", benefit: "Push data to Slack, Notion, or any external system." },
 	{ icon: "👥", title: "Team Workspaces", benefit: "Collaborate on forms and insights with your team." },
 	{ icon: "💳", title: "Dodo Payments", benefit: "Global subscriptions with secure webhook upgrades and tax compliance." },
-	{ icon: "🔗", title: "Webhook Automation", benefit: "Push submissions to Slack, Notion, or any external system." },
 ];
 
 export default function Features() {
