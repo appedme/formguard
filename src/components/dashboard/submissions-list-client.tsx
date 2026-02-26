@@ -53,7 +53,7 @@ export function SubmissionsListClient({
 	});
 
 	function handlePageChange(page: number) {
-		router.push(`/dashboard/dashboard/forms/${form.id}/submissions?page=${page}`);
+		router.push(`/dashboard/forms/${form.id}/submissions?page=${page}`);
 	}
 
 	async function handleExport() {
@@ -88,7 +88,7 @@ export function SubmissionsListClient({
 							variant="ghost" 
 							size="icon" 
 							className="rounded-full"
-							onClick={() => router.push(`/dashboard/dashboard/forms/${form.id}`)}
+							onClick={() => router.push(`/dashboard/forms/${form.id}`)}
 						>
 							<ArrowLeft className="w-5 h-5" />
 						</Button>

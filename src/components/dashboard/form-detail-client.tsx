@@ -461,7 +461,7 @@ export function FormDetailClient({
 								variant="ghost" 
 								size="sm" 
 								className="w-full text-xs text-muted-foreground" 
-								onClick={() => router.push(`/dashboard/dashboard/forms/${form.id}/submissions`)}
+								onClick={() => router.push(`/dashboard/forms/${form.id}/submissions`)}
 							>
 								View all submissions
 							</Button>
