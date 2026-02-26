@@ -308,7 +308,7 @@ export function FormSettingsClient({ form: initialData }: FormSettingsClientProp
 												Auto-Responder
 											</FormLabel>
 											<FormDescription>
-												Send an automatic email reply to the submitter (requires an "email" field in the form).
+												Send an automatic email reply to the submitter (requires an &quot;email&quot; field in the form).
 											</FormDescription>
 										</div>
 										<FormControl>

@@ -16,10 +16,15 @@ Turn FormGuard into a workflow trigger.
 Email Notifications:
 Feature: Toggle to receive an email whenever a form is submitted.
 Tech: Use Resend or AWS SES (integrated via Cloudflare Workers).
+Status: Done
+
 Auto-Responders:
 Feature: Send a simple confirmation email to the user who submitted the form (if an email field is detected).
+Status: Done
+
 Slack/Discord Presets:
 Feature: "One-click" setup for sending notifications to a Slack channel without writing custom webhook JSON code.
+Status: Done
 
 🧠 Phase 3: Advanced AI Features
 Leverage the existing Gemini integration.
