@@ -2,7 +2,7 @@ import { stackServerApp } from "@/stack/server";
 import { redirect, notFound } from "next/navigation";
 import { getUserByStackAuthId } from "@/db/actions/user.actions";
 import { getFormById } from "@/db/actions/form.actions";
-import { FormSetupView } from "@/components/dashboard/form-setup-view";
+import { PublicFormSettings } from "@/components/dashboard/public-form-settings";
 
 export const dynamic = "force-dynamic";
 
@@ -10,7 +10,7 @@ interface Props {
 	params: Promise<{ formId: string }>;
 }
 
-export default async function FormDetailPage({ params }: Props) {
+export default async function PublicFormSettingsPage({ params }: Props) {
 	const stackUser = await stackServerApp.getUser();
 	if (!stackUser) redirect("/handler/sign-in");
 
@@ -23,12 +23,8 @@ export default async function FormDetailPage({ params }: Props) {
 	if (!form) return notFound();
 
 	return (
-		<FormSetupView
-			form={{
-				id: form.id,
-				endpointId: form.endpointId,
-				turnstileEnabled: form.turnstileEnabled
-			}}
-		/>
+		<div className="max-w-4xl mx-auto">
+			<PublicFormSettings form={form} userId={dbUser.id} />
+		</div>
 	);
 }

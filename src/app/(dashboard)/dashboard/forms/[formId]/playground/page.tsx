@@ -2,7 +2,7 @@ import { stackServerApp } from "@/stack/server";
 import { redirect, notFound } from "next/navigation";
 import { getUserByStackAuthId } from "@/db/actions/user.actions";
 import { getFormById } from "@/db/actions/form.actions";
-import { FormSetupView } from "@/components/dashboard/form-setup-view";
+import { FormPlaygroundView } from "@/components/dashboard/form-playground-view";
 
 export const dynamic = "force-dynamic";
 
@@ -10,7 +10,7 @@ interface Props {
 	params: Promise<{ formId: string }>;
 }
 
-export default async function FormDetailPage({ params }: Props) {
+export default async function PlaygroundPage({ params }: Props) {
 	const stackUser = await stackServerApp.getUser();
 	if (!stackUser) redirect("/handler/sign-in");
 
@@ -23,11 +23,10 @@ export default async function FormDetailPage({ params }: Props) {
 	if (!form) return notFound();
 
 	return (
-		<FormSetupView
+		<FormPlaygroundView
 			form={{
 				id: form.id,
-				endpointId: form.endpointId,
-				turnstileEnabled: form.turnstileEnabled
+				endpointId: form.endpointId
 			}}
 		/>
 	);

@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { forms, submissions } from "@/db/schema";
+import { forms, submissions, insights } from "@/db/schema";
 import { eq, count, desc } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
@@ -50,6 +50,7 @@ export async function getUserForms(userId: string) {
 	return formsWithCounts;
 }
 
+
 export async function getFormById(formId: string, userId: string) {
 	const result = await db
 		.select()
@@ -66,9 +67,17 @@ export async function getFormById(formId: string, userId: string) {
 		.from(submissions)
 		.where(eq(submissions.formId, formId));
 
+	// Get insights
+	const formInsights = await db
+		.select()
+		.from(insights)
+		.where(eq(insights.formId, formId))
+		.orderBy(desc(insights.createdAt));
+
 	return {
 		...form,
 		submissions: countResult?.count ?? 0,
+		insights: formInsights,
 	};
 }
 

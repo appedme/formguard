@@ -2,7 +2,8 @@ import { stackServerApp } from "@/stack/server";
 import { redirect, notFound } from "next/navigation";
 import { getUserByStackAuthId } from "@/db/actions/user.actions";
 import { getFormById } from "@/db/actions/form.actions";
-import { FormSetupView } from "@/components/dashboard/form-setup-view";
+import { getFormAnalytics } from "@/db/actions/analytics.actions";
+import { FormAnalyticsClient } from "@/components/dashboard/form-analytics-client";
 
 export const dynamic = "force-dynamic";
 
@@ -10,7 +11,7 @@ interface Props {
 	params: Promise<{ formId: string }>;
 }
 
-export default async function FormDetailPage({ params }: Props) {
+export default async function AnalyticsPage({ params }: Props) {
 	const stackUser = await stackServerApp.getUser();
 	if (!stackUser) redirect("/handler/sign-in");
 
@@ -22,13 +23,15 @@ export default async function FormDetailPage({ params }: Props) {
 
 	if (!form) return notFound();
 
+	const analytics = await getFormAnalytics(formId);
+
 	return (
-		<FormSetupView
-			form={{
-				id: form.id,
-				endpointId: form.endpointId,
-				turnstileEnabled: form.turnstileEnabled
-			}}
-		/>
+		<div className="space-y-6">
+			<div>
+				<h2 className="text-xl font-black tracking-tighter mb-1">Analytics</h2>
+				<p className="text-xs text-muted-foreground font-medium">Insights into your form performance and submission trends.</p>
+			</div>
+			<FormAnalyticsClient analytics={analytics} />
+		</div>
 	);
 }

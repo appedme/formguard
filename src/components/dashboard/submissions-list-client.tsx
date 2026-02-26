@@ -92,56 +92,34 @@ export function SubmissionsListClient({
 	}
 
 	return (
-		<div className="p-4 md:p-10 max-w-7xl mx-auto w-full min-h-screen bg-background">
-			<div className="flex flex-col gap-10">
-				{/* Top Bar */}
-				<div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-					<div className="flex items-center gap-4">
-						<Button 
-							variant="outline" 
-							size="icon" 
-							className="rounded-xl border-border/40 hover:bg-muted/50"
-							onClick={() => router.push(`/dashboard/forms/${form.id}`)}
-						>
-							<ArrowLeft className="w-5 h-5" />
-						</Button>
-						<div>
-							<div className="flex items-center gap-2 mb-1">
-								<h1 className="text-3xl font-black tracking-tight text-foreground">{form.name}</h1>
-								<Badge variant="outline" className="text-[10px] font-mono px-2 py-0 h-5 border-primary/20 text-primary">Submissions</Badge>
-							</div>
-							<p className="text-sm text-muted-foreground font-medium">Manage and export all data collected via your form endpoint.</p>
-						</div>
-					</div>
-					<div className="flex items-center gap-3">
-						<Button 
-							variant="outline" 
-							className="rounded-xl border-border/40 font-bold text-xs px-6" 
-							disabled
-						>
-							<Filter className="w-3.5 h-3.5 mr-2 opacity-50" />
-							Advanced Filter
-						</Button>
-						<Button 
-							variant="default"
-							className="rounded-xl font-black text-xs px-6 bg-foreground text-background hover:bg-foreground/90 transition-transform active:scale-95" 
-							onClick={() => handleExport("csv")}
-							disabled={exporting || total === 0}
-						>
-							<Download className="w-3.5 h-3.5 mr-2" />
-							{exporting ? "Preparing..." : "Export CSV"}
-						</Button>
-						<Button 
-							variant="outline"
-							className="rounded-xl font-black text-xs px-6 border-border/40 transition-transform active:scale-95" 
-							onClick={() => handleExport("json")}
-							disabled={exporting || total === 0}
-						>
-							<Download className="w-3.5 h-3.5 mr-2" />
-							Export JSON
-						</Button>
-					</div>
+		<div className="flex flex-col gap-8 w-full">
+			{/* Submissions Stats/Header */}
+			<div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+				<div>
+					<h2 className="text-xl font-black tracking-tighter mb-1">Submissions</h2>
+					<p className="text-xs text-muted-foreground font-medium">Manage and export all data collected via your form endpoint.</p>
 				</div>
+				<div className="flex items-center gap-3">
+					<Button 
+						variant="outline"
+						className="rounded-xl font-black text-xs px-6 bg-foreground text-background hover:bg-foreground/90 transition-transform active:scale-95" 
+						onClick={() => handleExport("csv")}
+						disabled={exporting || total === 0}
+					>
+						<Download className="w-3.5 h-3.5 mr-2" />
+						{exporting ? "Preparing..." : "Export CSV"}
+					</Button>
+					<Button 
+						variant="outline"
+						className="rounded-xl font-black text-xs px-6 border-border/40 transition-transform active:scale-95" 
+						onClick={() => handleExport("json")}
+						disabled={exporting || total === 0}
+					>
+						<Download className="w-3.5 h-3.5 mr-2" />
+						Export JSON
+					</Button>
+				</div>
+			</div>
 
 				{/* Table Container */}
 				<Card className="border-border/40 shadow-2xl shadow-primary/5 overflow-hidden bg-card/30 backdrop-blur-sm rounded-2xl">
@@ -275,6 +253,5 @@ export function SubmissionsListClient({
 					</div>
 				)}
 			</div>
-		</div>
 	);
 }
