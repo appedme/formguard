@@ -97,9 +97,9 @@ export default function DocsPage() {
 								<Code2 className="w-3 h-3" />
 								llms.txt (Full Technical Context)
 							</Link>
-							<a href="https://context7.com/llmstxt/formguard_strivio_world_llms_txt?tab=logs" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs font-mono text-primary hover:underline">
+							<a href="https://context7.com/llmstxt/formguard_strivio_world_llms_txt" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs font-mono text-primary hover:underline">
 								<Terminal className="w-3 h-3" />
-								MCP Context7 (Live Logs)
+								Get on Context7 MCP
 							</a>
 						</div>
 					</nav>
