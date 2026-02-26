@@ -17,5 +17,3 @@ export const POST = Webhooks({
 		}
 	},
 });
-
-export const runtime = "edge";

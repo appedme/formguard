@@ -44,9 +44,9 @@ export function FormDetailClient({
 	const [deleting, setDeleting] = useState(false);
 
 	useEffect(() => {
-		// @ts-ignore
+		// @ts-expect-error Prism is loaded via CDN script
 		if (typeof window !== "undefined" && window.Prism) {
-			// @ts-ignore
+			// @ts-expect-error Prism is loaded via CDN script
 			window.Prism.highlightAll();
 		}
 	}, [initialSubmissions]);
@@ -99,7 +99,7 @@ export function FormDetailClient({
 				src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"
 				strategy="afterInteractive"
 				onLoad={() => {
-					// @ts-ignore
+					// @ts-expect-error Prism is loaded via CDN script
 					window.Prism.highlightAll();
 				}}
 			/>
