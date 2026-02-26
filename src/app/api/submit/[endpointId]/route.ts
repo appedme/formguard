@@ -125,20 +125,64 @@ export async function POST(
 		revalidatePath("/dashboard/submissions", "page");
 
 		// --- Handle Webhooks ---
-		if (form.webhookEnabled && form.webhookUrl) {
-			try {
-				await fetch(form.webhookUrl, {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({
-						formId: form.id,
-						submissionId: submission.id,
-						payload,
-						createdAt: submission.createdAt,
-					}),
-				});
-			} catch (err) {
-				console.error("Webhook failed:", err);
+		if (form.webhookEnabled) {
+			if (form.webhookUrl) {
+				try {
+					await fetch(form.webhookUrl, {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							formId: form.id,
+							submissionId: submission.id,
+							payload,
+							createdAt: submission.createdAt,
+						}),
+					});
+				} catch (err) {
+					console.error("Webhook failed:", err);
+				}
+			}
+
+			if (form.slackWebhookUrl) {
+				try {
+					const slackPayload = {
+						text: `*New Submission for ${form.name}*\n\n` + 
+							  Object.entries(payload)
+								.map(([key, value]) => `*${key}:* ${value}`)
+								.join("\n")
+					};
+					await fetch(form.slackWebhookUrl, {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify(slackPayload),
+					});
+				} catch (err) {
+					console.error("Slack Webhook failed:", err);
+				}
+			}
+
+			if (form.discordWebhookUrl) {
+				try {
+					const discordPayload = {
+						content: `**New Submission for ${form.name}**`,
+						embeds: [{
+							title: "Submission Details",
+							color: 3447003,
+							fields: Object.entries(payload).map(([key, value]) => ({
+								name: key,
+								value: String(value).substring(0, 1024),
+								inline: true
+							}))
+						}]
+					};
+					await fetch(form.discordWebhookUrl, {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify(discordPayload),
+					});
+				} catch (err) {
+					console.error("Discord Webhook failed:", err);
+				}
 			}
 		}
 
@@ -161,6 +205,28 @@ export async function POST(
 				});
 			} catch (emailError) {
 				console.error("[EMAIL] Failed to send notification:", emailError);
+			}
+		}
+
+		// --- Handle Auto-Responder ---
+		if (form.autoResponderEnabled) {
+			// Try to find an email field in the payload
+			const submitterEmail = 
+				(payload.email as string) || 
+				(payload.Email as string) || 
+				(payload.EMAIL as string);
+
+			if (submitterEmail && typeof submitterEmail === 'string' && submitterEmail.includes('@')) {
+				try {
+					await resend.emails.send({
+						from: process.env.RESEND_FROM_EMAIL || "FormGuard <notifications@formguard.dev>",
+						to: submitterEmail,
+						subject: form.autoResponderSubject || `Thank you for contacting ${form.name}`,
+						text: form.autoResponderMessage || "We have received your submission and will get back to you shortly.",
+					});
+				} catch (emailError) {
+					console.error("[EMAIL] Failed to send auto-responder:", emailError);
+				}
 			}
 		}
 

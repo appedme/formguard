@@ -37,6 +37,11 @@ export const forms = pgTable(
 		emailNotifications: boolean("email_notifications").notNull().default(false),
 		webhookUrl: text("webhook_url"),
 		webhookEnabled: boolean("webhook_enabled").notNull().default(false),
+		slackWebhookUrl: text("slack_webhook_url"),
+		discordWebhookUrl: text("discord_webhook_url"),
+		autoResponderEnabled: boolean("auto_responder_enabled").notNull().default(false),
+		autoResponderSubject: text("auto_responder_subject"),
+		autoResponderMessage: text("auto_responder_message"),
 		allowedOrigins: text("allowed_origins"), // Comma-separated list of allowed origins
 		turnstileEnabled: boolean("turnstile_enabled").notNull().default(false),
 		createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),

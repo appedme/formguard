@@ -22,6 +22,13 @@
       "when": 1772113977570,
       "tag": "0002_wealthy_master_mold",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1772117392695,
+      "tag": "0003_ancient_lifeguard",
+      "breakpoints": true
     }
   ]
 }

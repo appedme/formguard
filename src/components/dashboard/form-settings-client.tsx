@@ -48,10 +48,15 @@ const formSchema = z.object({
 	redirectUrl: z.string().url({ message: "Invalid URL" }).optional().or(z.literal("")),
 	errorUrl: z.string().url({ message: "Invalid URL" }).optional().or(z.literal("")),
 	webhookUrl: z.string().url({ message: "Invalid URL" }).optional().or(z.literal("")),
+	slackWebhookUrl: z.string().url({ message: "Invalid URL" }).optional().or(z.literal("")),
+	discordWebhookUrl: z.string().url({ message: "Invalid URL" }).optional().or(z.literal("")),
 	allowedOrigins: z.string().optional().or(z.literal("")),
 	emailNotifications: z.boolean(),
 	webhookEnabled: z.boolean(),
 	turnstileEnabled: z.boolean(),
+	autoResponderEnabled: z.boolean(),
+	autoResponderSubject: z.string().optional().or(z.literal("")),
+	autoResponderMessage: z.string().optional().or(z.literal("")),
 });
 
 interface FormSettingsClientProps {
@@ -62,10 +67,15 @@ interface FormSettingsClientProps {
 		redirectUrl: string | null;
 		errorUrl: string | null;
 		webhookUrl: string | null;
+		slackWebhookUrl: string | null;
+		discordWebhookUrl: string | null;
 		allowedOrigins: string | null;
 		emailNotifications: boolean;
 		webhookEnabled: boolean;
 		turnstileEnabled: boolean;
+		autoResponderEnabled: boolean;
+		autoResponderSubject: string | null;
+		autoResponderMessage: string | null;
 	};
 }
 
@@ -81,10 +91,15 @@ export function FormSettingsClient({ form: initialData }: FormSettingsClientProp
 			redirectUrl: initialData.redirectUrl || "",
 			errorUrl: initialData.errorUrl || "",
 			webhookUrl: initialData.webhookUrl || "",
+			slackWebhookUrl: initialData.slackWebhookUrl || "",
+			discordWebhookUrl: initialData.discordWebhookUrl || "",
 			allowedOrigins: initialData.allowedOrigins || "",
 			emailNotifications: initialData.emailNotifications,
 			webhookEnabled: initialData.webhookEnabled,
 			turnstileEnabled: initialData.turnstileEnabled,
+			autoResponderEnabled: initialData.autoResponderEnabled,
+			autoResponderSubject: initialData.autoResponderSubject || "",
+			autoResponderMessage: initialData.autoResponderMessage || "",
 		},
 	});
 
@@ -96,10 +111,15 @@ export function FormSettingsClient({ form: initialData }: FormSettingsClientProp
 				redirectUrl: values.redirectUrl || null,
 				errorUrl: values.errorUrl || null,
 				webhookUrl: values.webhookUrl || null,
+				slackWebhookUrl: values.slackWebhookUrl || null,
+				discordWebhookUrl: values.discordWebhookUrl || null,
 				allowedOrigins: values.allowedOrigins || null,
 				emailNotifications: values.emailNotifications,
 				webhookEnabled: values.webhookEnabled,
 				turnstileEnabled: values.turnstileEnabled,
+				autoResponderEnabled: values.autoResponderEnabled,
+				autoResponderSubject: values.autoResponderSubject || null,
+				autoResponderMessage: values.autoResponderMessage || null,
 			});
 
 			if (result) {
@@ -249,9 +269,9 @@ export function FormSettingsClient({ form: initialData }: FormSettingsClientProp
 					{/* Notifications */}
 					<Card>
 						<CardHeader>
-							<CardTitle>Notifications</CardTitle>
+							<CardTitle>Notifications & Auto-Responders</CardTitle>
 							<CardDescription>
-								Get alerted when new submissions arrive.
+								Get alerted when new submissions arrive and send automatic replies.
 							</CardDescription>
 						</CardHeader>
 						<CardContent className="space-y-4">
@@ -277,13 +297,70 @@ export function FormSettingsClient({ form: initialData }: FormSettingsClientProp
 									</FormItem>
 								)}
 							/>
+							<Separator />
+							<FormField
+								control={form.control}
+								name="autoResponderEnabled"
+								render={({ field }) => (
+									<FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+										<div className="space-y-0.5">
+											<FormLabel className="text-base">
+												Auto-Responder
+											</FormLabel>
+											<FormDescription>
+												Send an automatic email reply to the submitter (requires an "email" field in the form).
+											</FormDescription>
+										</div>
+										<FormControl>
+											<Switch
+												checked={field.value}
+												onCheckedChange={field.onChange}
+											/>
+										</FormControl>
+									</FormItem>
+								)}
+							/>
+							{form.watch("autoResponderEnabled") && (
+								<div className="space-y-4 pt-4">
+									<FormField
+										control={form.control}
+										name="autoResponderSubject"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Email Subject</FormLabel>
+												<FormControl>
+													<Input placeholder="Thank you for your submission!" {...field} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name="autoResponderMessage"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Email Message</FormLabel>
+												<FormControl>
+													<textarea 
+														className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+														placeholder="We have received your message and will get back to you shortly." 
+														{...field} 
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+							)}
 						</CardContent>
 					</Card>
 					
 					{/* Webhooks */}
 					<Card>
 						<CardHeader>
-							<CardTitle>Webhooks</CardTitle>
+							<CardTitle>Webhooks & Integrations</CardTitle>
 							<CardDescription>
 								Send submission data to external services via HTTP POST.
 							</CardDescription>
@@ -312,19 +389,53 @@ export function FormSettingsClient({ form: initialData }: FormSettingsClientProp
 								)}
 							/>
                             {form.watch("webhookEnabled") && (
-                                <FormField
-                                    control={form.control}
-                                    name="webhookUrl"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Webhook URL</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="https://api.example.com/webhook" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+								<div className="space-y-4 pt-4">
+									<FormField
+										control={form.control}
+										name="webhookUrl"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Custom Webhook URL</FormLabel>
+												<FormControl>
+													<Input placeholder="https://api.example.com/webhook" {...field} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name="slackWebhookUrl"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Slack Webhook URL</FormLabel>
+												<FormControl>
+													<Input placeholder="https://hooks.slack.com/services/..." {...field} />
+												</FormControl>
+												<FormDescription>
+													Send a formatted message to a Slack channel.
+												</FormDescription>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name="discordWebhookUrl"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Discord Webhook URL</FormLabel>
+												<FormControl>
+													<Input placeholder="https://discord.com/api/webhooks/..." {...field} />
+												</FormControl>
+												<FormDescription>
+													Send a formatted message to a Discord channel.
+												</FormDescription>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
                             )}
 						</CardContent>
 					</Card>
