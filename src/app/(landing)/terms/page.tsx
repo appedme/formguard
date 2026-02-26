@@ -1,5 +1,3 @@
-import Navbar from "@/components/landing/navbar";
-import Footer from "@/components/landing/footer";
 
 export const metadata = {
 	title: "Terms of Service",
@@ -43,35 +41,31 @@ const sections = [
 
 export default function TermsPage() {
 	return (
-		<>
-			<Navbar />
-			<main>
-				<section className="py-16 border-b border-border bg-background">
-					<div className="mx-auto max-w-4xl px-6">
-						<p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-4">
-							Legal
-						</p>
-						<h1 className="text-4xl font-black text-foreground mb-4">
-							Terms of Service
-						</h1>
-						<p className="text-muted-foreground text-sm font-mono">
-							Last updated: February 2026
-						</p>
-					</div>
-				</section>
+		<main>
+			<section className="py-16 border-b border-border bg-background">
+				<div className="mx-auto max-w-4xl px-6">
+					<p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-4">
+						Legal
+					</p>
+					<h1 className="text-4xl font-black text-foreground mb-4">
+						Terms of Service
+					</h1>
+					<p className="text-muted-foreground text-sm font-mono">
+						Last updated: February 2026
+					</p>
+				</div>
+			</section>
 
-				<section className="py-16 bg-background">
-					<div className="mx-auto max-w-4xl px-6 space-y-10">
-						{sections.map((s) => (
-							<div key={s.title} className="border-b border-border pb-10 last:border-0">
-								<h2 className="text-lg font-bold text-foreground mb-3">{s.title}</h2>
-								<p className="text-sm text-muted-foreground leading-relaxed">{s.body}</p>
-							</div>
-						))}
-					</div>
-				</section>
-			</main>
-			<Footer />
-		</>
+			<section className="py-16 bg-background">
+				<div className="mx-auto max-w-4xl px-6 space-y-10">
+					{sections.map((s) => (
+						<div key={s.title} className="border-b border-border pb-10 last:border-0">
+							<h2 className="text-lg font-bold text-foreground mb-3">{s.title}</h2>
+							<p className="text-sm text-muted-foreground leading-relaxed">{s.body}</p>
+						</div>
+					))}
+				</div>
+			</section>
+		</main>
 	);
 }

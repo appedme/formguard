@@ -155,7 +155,7 @@ Grid of 6 brutal cards:
 * AI Summaries
 * Spam Protection
 * Team Workspaces
-* Razorpay Billing
+* Dodo Payments
 * Webhook Automation
 
 Each card:
