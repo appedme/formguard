@@ -5,9 +5,10 @@ import { updateForm } from "@/db/actions/form.actions";
 
 export async function PATCH(
 	req: NextRequest,
-	{ params }: { params: { formId: string } }
+	{ params }: { params: Promise<{ formId: string }> }
 ) {
 	try {
+		const { formId } = await params;
 		const stackUser = await stackServerApp.getUser();
 		if (!stackUser) {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -19,7 +20,7 @@ export async function PATCH(
 		}
 
 		const body = await req.json();
-		const success = await updateForm(params.formId, dbUser.id, body as any);
+		const success = await updateForm(formId, dbUser.id, body as any);
 
 		if (!success) {
 			return NextResponse.json({ error: "Forbidden or not found" }, { status: 403 });
