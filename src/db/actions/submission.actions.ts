@@ -32,6 +32,16 @@ export async function getFormSubmissions(
 	};
 }
 
+export async function getAllFormSubmissions(formId: string) {
+	const results = await db
+		.select()
+		.from(submissions)
+		.where(eq(submissions.formId, formId))
+		.orderBy(desc(submissions.createdAt));
+
+	return results;
+}
+
 export async function getSubmissionCount(formId: string) {
 	const [result] = await db
 		.select({ count: count() })

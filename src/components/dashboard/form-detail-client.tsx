@@ -18,7 +18,14 @@ import {
 	Globe,
 	Inbox,
 	ShieldCheck,
-	Lock
+	Lock,
+	Zap,
+	Database,
+	MessageSquare,
+	Slack,
+	Send,
+	Play,
+	Table
 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
@@ -50,6 +57,8 @@ export function FormDetailClient({
 	const [deleting, setDeleting] = useState(false);
 	const [turnstileEnabled, setTurnstileEnabled] = useState(form.turnstileEnabled);
 	const [isUpdating, setIsUpdating] = useState(false);
+	const [playgroundData, setPlaygroundData] = useState('{\n  "email": "test@example.com",\n  "message": "Hello from playground"\n}');
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "1x00000000000000000000AA";
 
@@ -107,6 +116,29 @@ export function FormDetailClient({
 			toast.error("An error occurred");
 		} finally {
 			setIsUpdating(false);
+		}
+	}
+
+	async function handlePlaygroundSubmit() {
+		setIsSubmitting(true);
+		try {
+			const payload = JSON.parse(playgroundData);
+			const res = await fetch(endpointUrl, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(payload),
+			});
+			if (res.ok) {
+				toast.success("Test submission sent!");
+				router.refresh();
+			} else {
+				const data = await res.json() as { error?: string };
+				toast.error(data.error || "Submission failed");
+			}
+		} catch (err) {
+			toast.error("Invalid JSON or network error");
+		} finally {
+			setIsSubmitting(false);
 		}
 	}
 
@@ -179,6 +211,15 @@ export function FormDetailClient({
 					>
 						<ExternalLink className="w-3.5 h-3.5 mr-2" />
 						Test Endpoint
+					</Button>
+					<Button 
+						variant="outline" 
+						size="sm" 
+						className="rounded-full px-4 h-9"
+						onClick={() => document.getElementById("playground")?.scrollIntoView({ behavior: "smooth" })}
+					>
+						<Play className="w-3.5 h-3.5 mr-2" />
+						Playground
 					</Button>
 					<Button 
 						variant="ghost" 
@@ -304,11 +345,73 @@ export function FormDetailClient({
 											)}
 										</Button>
 									</div>
-									<pre className={`!bg-muted/30 !border-border/40 !rounded-xl !p-4 !text-[11px] !font-mono !text-foreground overflow-x-auto whitespace-pre-wrap leading-relaxed language-${snippet.lang}`}>
+									<pre className="bg-muted/30! border-border/40! rounded-xl! p-4! text-[11px]! font-mono! text-foreground! overflow-x-auto whitespace-pre-wrap leading-relaxed language-${snippet.lang}">
 										<code className={`language-${snippet.lang}`}>
 											{snippet.code}
 										</code>
 									</pre>
+								</div>
+							))}
+						</div>
+					</section>
+
+					<section id="playground" className="pt-8 border-t border-border/40">
+						<div className="flex items-center justify-between mb-6">
+							<h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
+								<Play className="w-4 h-4 text-primary" />
+								Form Playground
+							</h2>
+							<Badge variant="outline" className="text-[9px] uppercase font-mono tracking-tighter">Live Test</Badge>
+						</div>
+						<div className="space-y-4">
+							<p className="text-[11px] text-muted-foreground">
+								Directly test your form endpoint without writing any code. Edit the JSON payload below and hit submit.
+							</p>
+							<div className="relative">
+								<textarea
+									value={playgroundData}
+									onChange={(e) => setPlaygroundData(e.target.value)}
+									className="w-full h-32 bg-muted/20 border border-border/60 rounded-xl p-4 font-mono text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary/40 resize-none"
+									spellCheck={false}
+								/>
+								<Button 
+									size="sm" 
+									className="absolute bottom-3 right-3 rounded-lg h-8 px-3"
+									onClick={handlePlaygroundSubmit}
+									disabled={isSubmitting}
+								>
+									{isSubmitting ? "Sending..." : "Submit Test"}
+									<Send className="w-3 h-3 ml-2" />
+								</Button>
+							</div>
+						</div>
+					</section>
+
+					<section className="pt-8 border-t border-border/40 pb-10">
+						<div className="flex items-center justify-between mb-6">
+							<h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
+								<Zap className="w-4 h-4 text-primary" />
+								Third-Party Integrations
+							</h2>
+							<Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-primary/20 text-[9px] uppercase font-mono tracking-tighter">
+								Coming Soon
+							</Badge>
+						</div>
+						
+						<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 opacity-60 grayscale cursor-not-allowed">
+							{[
+								{ name: "Notion", icon: Database },
+								{ name: "Google Sheets", icon: Table },
+								{ name: "Slack", icon: Slack },
+								{ name: "Discord", icon: MessageSquare },
+								{ name: "Zapier", icon: Zap },
+								{ name: "Webhooks", icon: Globe },
+								{ name: "Airtable", icon: Database },
+								{ name: "100+ More", icon: Zap },
+							].map((integration) => (
+								<div key={integration.name} className="flex items-center gap-3 p-3 bg-muted/30 border border-border/40 rounded-xl">
+									<integration.icon className="w-4 h-4 text-muted-foreground" />
+									<span className="text-[11px] font-medium text-muted-foreground">{integration.name}</span>
 								</div>
 							))}
 						</div>
@@ -346,7 +449,7 @@ export function FormDetailClient({
 												{new Date(sub.createdAt).toLocaleDateString()}
 											</span>
 										</div>
-										<pre className="!text-[10px] font-mono !text-muted-foreground overflow-x-auto !bg-muted/40 rounded-lg !p-2.5 max-h-[120px] scrollbar-hide language-json">
+										<pre className="text-[10px]! font-mono! text-muted-foreground! overflow-x-auto bg-muted/40! rounded-lg p-2.5! max-h-[120px] scrollbar-hide language-json">
 											<code className="language-json">
 												{JSON.stringify(sub.payload, null, 2)}
 											</code>
@@ -354,11 +457,14 @@ export function FormDetailClient({
 									</CardContent>
 								</Card>
 							))}
-							{totalPages > 1 && (
-								<Button variant="ghost" size="sm" className="w-full text-xs text-muted-foreground" onClick={() => router.push("/dashboard/submissions")}>
-									View all submissions
-								</Button>
-							)}
+							<Button 
+								variant="ghost" 
+								size="sm" 
+								className="w-full text-xs text-muted-foreground" 
+								onClick={() => router.push(`/dashboard/dashboard/forms/${form.id}/submissions`)}
+							>
+								View all submissions
+							</Button>
 						</div>
 					)}
 				</div>
