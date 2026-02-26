@@ -72,7 +72,9 @@ export default async function DashboardPage() {
 					<div className="flex items-center justify-between">
 						<h2 className="text-sm font-medium text-foreground">Recent Forms</h2>
 						{userForms.length > 0 && (
-							<p className="text-xs text-muted-foreground">{userForms.length} total</p>
+							<Link href="/dashboard/forms" className="text-xs text-primary font-bold hover:underline transition-all">
+								View All &rarr;
+							</Link>
 						)}
 					</div>
 
@@ -139,7 +141,7 @@ export default async function DashboardPage() {
 				{/* Sidebar/Integrations Preview */}
 				<div className="space-y-6">
 					<h2 className="text-sm font-medium text-foreground">Upcoming Features</h2>
-					<Card className="bg-primary/[0.03] border-primary/10 shadow-none overflow-hidden relative">
+					<Card className="bg-primary/5 border-primary/10 shadow-none overflow-hidden relative">
 						<CardContent className="p-6">
 							<Sparkles className="absolute -right-2 -top-2 w-16 h-16 text-primary/5" />
 							<div className="flex items-center gap-3 mb-4">

@@ -50,6 +50,64 @@ export async function getUserForms(userId: string) {
 	return formsWithCounts;
 }
 
+import { like, and } from "drizzle-orm";
+
+export async function getPaginatedUserForms(
+	userId: string,
+	page: number = 1,
+	pageSize: number = 10,
+	search?: string
+) {
+	const offset = (page - 1) * pageSize;
+
+	const whereClause = search 
+		? and(eq(forms.userId, userId), like(forms.name, `%${search}%`))
+		: eq(forms.userId, userId);
+
+	// Get total count
+	const [countResult] = await db
+		.select({ count: count() })
+		.from(forms)
+		.where(whereClause);
+
+	const total = countResult?.count ?? 0;
+	const totalPages = Math.ceil(total / pageSize);
+
+	const userForms = await db
+		.select({
+			id: forms.id,
+			name: forms.name,
+			endpointId: forms.endpointId,
+			createdAt: forms.createdAt,
+		})
+		.from(forms)
+		.where(whereClause)
+		.limit(pageSize)
+		.offset(offset)
+		.orderBy(desc(forms.createdAt));
+
+	// Get submission counts per form
+	const formsWithCounts = await Promise.all(
+		userForms.map(async (form) => {
+			const [result] = await db
+				.select({ count: count() })
+				.from(submissions)
+				.where(eq(submissions.formId, form.id));
+
+			return {
+				...form,
+				submissions: result?.count ?? 0,
+			};
+		})
+	);
+
+	return {
+		forms: formsWithCounts,
+		total,
+		totalPages,
+	};
+}
+
 
 export async function getFormById(formId: string, userId: string) {
 	const result = await db
