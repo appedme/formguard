@@ -69,6 +69,20 @@ export function FormDetailClient({
 		setTimeout(() => setCopied(null), 2000);
 	}
 
+	async function handleDelete() {
+		if (!confirm("Delete this form? All submissions and insights will be permanently removed.")) return;
+		setDeleting(true);
+		try {
+			const res = await fetch(`/api/forms/${form.id}`, { method: "DELETE" });
+			if (res.ok) {
+				router.push("/dashboard");
+				router.refresh();
+			}
+		} catch {
+			setDeleting(false);
+		}
+	}
+
 	async function handleToggleTurnstile() {
 		setIsUpdating(true);
 		try {
@@ -223,6 +237,38 @@ export function FormDetailClient({
 								{endpointUrl}
 							</code>
 						</div>
+					</section>
+
+					<section>
+						<div className="flex items-center justify-between mb-4">
+							<h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
+								<ShieldCheck className="w-4 h-4 text-primary" />
+								Spam Protection
+							</h2>
+							<div className="flex items-center gap-2">
+								<span className="text-[10px] uppercase font-bold tracking-tighter text-muted-foreground mr-1">
+									{turnstileEnabled ? "Active" : "Disabled"}
+								</span>
+								<Switch 
+									checked={turnstileEnabled} 
+									onCheckedChange={handleToggleTurnstile}
+									disabled={isUpdating}
+								/>
+							</div>
+						</div>
+						<Card className="bg-primary/5 border-primary/10 shadow-none">
+							<CardContent className="p-4 flex items-start gap-4">
+								<div className="bg-primary/10 p-2 rounded-lg">
+									<Lock className="w-4 h-4 text-primary" />
+								</div>
+								<div className="space-y-1">
+									<p className="text-xs font-semibold text-foreground">Cloudflare Turnstile</p>
+									<p className="text-[11px] text-muted-foreground leading-relaxed">
+										Protect your form from bots and spam without frustrating your users. Turnstile is non-intrusive and doesn&apos;t require complex puzzles.
+									</p>
+								</div>
+							</CardContent>
+						</Card>
 					</section>
 
 					<section className="space-y-6">
