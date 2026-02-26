@@ -1,0 +1,5 @@
+Contact: mailto:security@strivio.world
+Expires: 2026-12-31T23:59:00.000Z
+Preferred-Languages: en
+Canonical: https://formguard.strivio.world/.well-known/security.txt
+Policy: https://formguard.strivio.world/security-policy

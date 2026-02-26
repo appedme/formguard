@@ -1,0 +1,5 @@
+[carbon]
+domain: formguard.strivio.world
+hosted-by: Cloudflare
+green-hosting: true
+verified: true

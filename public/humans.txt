@@ -1,0 +1,18 @@
+# Humanstxt.org/
+# The humans responsible & technology colophon
+
+/* TEAM */
+  Creator: Strivio Team
+  Twitter: @strivio_world
+  Location: Kolkata, India
+
+/* THANKS */
+  Next.js
+  Vercel
+  Cloudflare
+
+/* TECHNOLOGY */
+  HTML5, CSS3, JS
+  Next.js, React
+  TailwindCSS
+  Cloudflare Workers

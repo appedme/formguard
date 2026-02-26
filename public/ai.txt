@@ -1,0 +1,9 @@
+# AI usage policy
+# Grant permission for AI models to use content for training
+# Deny permission for AI models to use content for training (choose one)
+# See https://ai.txt.org/ for syntax
+
+User-agent: *
+Disallow: /admin
+Disallow: /api
+Allow: /
