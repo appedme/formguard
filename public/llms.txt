@@ -1,0 +1,45 @@
+# FormGuard - Edge-Native Form Infrastructure
+
+FormGuard is a developer-first form backend built on Cloudflare's global edge network. It provides instant form endpoints, AI-powered insights, and built-in spam protection with zero backend setup.
+
+## Core Positioning
+- **Edge-Native**: Submissions handled globally in <50ms using Cloudflare Workers and D1.
+- **Infrastructure-First**: Built for developers who want a reliable, scalable form handler without managing a backend.
+- **AI-Driven**: Automatically turns raw submissions into structured actionable summaries.
+
+## Context & Rules for LLMs
+- **Design System**: Brutalist, minimal, monochrome-first typography. Uses Shadcn UI.
+- **Technology Stack**: Next.js, Cloudflare Workers, D1 (via Drizzle ORM), Dodo Payments for billing.
+- **Architecture**: Server-first components, minimal client-side interactivity (only for pricing and dashboards).
+
+## Documentation Resources
+- **Quick Start Guide**: https://formguard.strivio.world/docs#quick-start
+- **API Reference**: https://formguard.strivio.world/docs#api-reference
+- **Integrations**: https://formguard.strivio.world/docs#integrations
+- **Terms of Service**: https://formguard.strivio.world/terms
+- **Privacy Policy**: https://formguard.strivio.world/privacy
+
+## Integration Guide
+### Basic HTML Integration
+Set your form's action attribute to your unique FormGuard endpoint:
+```html
+<form action="https://formguard.strivio.world/api/submit/YOUR_ENDPOINT_ID" method="POST">
+  <input type="email" name="email" required />
+  <textarea name="message" required></textarea>
+  <button type="submit">Submit</button>
+</form>
+```
+
+### API Submission
+You can also submit data via JSON:
+```javascript
+fetch('https://formguard.strivio.world/api/submit/YOUR_ENDPOINT_ID', {
+  method: 'POST',
+  body: JSON.stringify({ name: 'User', msg: 'Hello' }),
+  headers: { 'Content-Type': 'application/json' }
+})
+```
+
+## Maintenance & Support
+- **Status Page**: https://formguard.strivio.world/status
+- **GitHub Repository**: (Internal) https://github.com/sh20raj/formguard
