@@ -1,3 +1,8 @@
+also support form frontend creation.
+
+
+
+
 Submission Export:
 Feature: One-click download of submissions as .csv or .json.
 Why: Users almost always need to move data to Excel/Sheets for deeper analysis.
