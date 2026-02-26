@@ -147,7 +147,7 @@ export function McpClient({ initialKeys, userId }: McpClientProps) {
 						<Card className="border-border/40 shadow-none rounded-2xl">
 							<CardHeader className="p-6">
 								<CardTitle className="text-sm font-black uppercase tracking-tighter">Create New Key</CardTitle>
-								<CardDescription className="text-[10px] font-medium">Use a descriptive name like "Cursor Laptop" or "Production Bot".</CardDescription>
+								<CardDescription className="text-[10px] font-medium">Use a descriptive name like &quot;Cursor Laptop&quot; or &quot;Production Bot&quot;.</CardDescription>
 							</CardHeader>
 							<CardContent className="p-6 pt-0 space-y-4">
 								<div className="space-y-2">
@@ -263,12 +263,34 @@ export function McpClient({ initialKeys, userId }: McpClientProps) {
 							</ol>
 
 							<div className="mt-auto space-y-3">
-								<div className="p-4 bg-muted/40 rounded-xl border border-border/40 relative group">
-									<p className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-2">Example Tool</p>
-									<p className="text-xs font-mono text-foreground leading-relaxed">
-										"List all my forms and check if there are any new submissions for 'Beta Signup'."
+								<div className="p-4 bg-muted/20 border border-border/40 rounded-xl space-y-3">
+									<div className="flex items-center justify-between">
+										<p className="text-[10px] font-black uppercase tracking-widest opacity-40">SSE Config (Native)</p>
+										<Badge variant="outline" className="h-4 text-[8px] border-primary/20 text-primary px-1">Best Performance</Badge>
+									</div>
+									<p className="text-xs font-mono text-foreground/80 wrap-break-word leading-relaxed">
+										URL: <span className="underline">{typeof window !== 'undefined' ? `${window.location.origin}/api/mcp` : ""}</span><br/>
+										Header: <span className="font-bold text-primary">x-api-key</span>
 									</p>
 								</div>
+
+								<div className="p-4 bg-zinc-950 rounded-xl border border-white/5 space-y-3">
+									<div className="flex items-center justify-between">
+										<p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Stdio Config (via mcp-remote)</p>
+										<Badge variant="outline" className="h-4 text-[8px] border-zinc-700 text-zinc-400 px-1">Universal</Badge>
+									</div>
+									<pre className="text-[10px] font-mono text-zinc-300 leading-relaxed overflow-x-auto">
+{`"formguard-servermcp-": {
+  "command": "npx",
+  "args": [
+    "-y", "mcp-remote@latest",
+    "${typeof window !== 'undefined' ? window.location.origin : ""}/api/mcp",
+    "--header", "x-api-key:[YOUR_KEY]"
+  ]
+}`}
+									</pre>
+								</div>
+
 								<Button variant="outline" className="w-full rounded-xl h-11 text-xs font-bold border-border/40" asChild>
 									<a href="https://cursor.com/mcp" target="_blank" rel="noopener noreferrer">
 										Learn more about Cursor MCP <ExternalLink className="w-3.5 h-3.5 ml-2" />

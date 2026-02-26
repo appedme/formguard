@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 import { 
     Terminal, 
     Bot, 
@@ -197,6 +198,23 @@ export default function McpDocsPage() {
       }
     }
   }
+}`}
+									</pre>
+								</div>
+								
+								<div className="bg-foreground text-background p-6 rounded-2xl space-y-4 shadow-xl">
+									<div className="flex items-center justify-between">
+										<p className="text-[10px] font-mono text-background/40 uppercase tracking-widest">Stdio (via mcp-remote)</p>
+										<Badge variant="outline" className="text-[8px] border-background/20 text-background/60">Universal</Badge>
+									</div>
+									<pre className="font-mono text-xs leading-relaxed text-background/80 overflow-x-auto">
+{`"formguard": {
+  "command": "npx",
+  "args": [
+    "-y", "mcp-remote@latest",
+    "https://formguard.strivio.world/api/mcp",
+    "--header", "x-api-key:YOUR_KEY"
+  ]
 }`}
 									</pre>
 								</div>
