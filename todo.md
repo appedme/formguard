@@ -1,6 +1,4 @@
-also support form frontend creation.
-
-
+create /contact to share feedback contact on the footer and create separate table to store all this 
 
 
 Submission Export:
