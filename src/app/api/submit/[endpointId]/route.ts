@@ -69,7 +69,7 @@ export async function POST(
 
 			const verification = await verifyTurnstileToken(turnstileToken);
 			if (!verification.success) {
-				console.log(`[SPAM] Turnstile verification failed for form ${form.id}:`, verification["error-codes"]);
+				console.log(`[SPAM] Turnstile verification failed for form ${form.id}:`, (verification as any)["error-codes"]);
 				isSpam = true;
 				
 				// Optional: Block submissions entirely if verification fails
