@@ -93,3 +93,26 @@ export async function updateForm(formId: string, userId: string, data: Partial<t
 	
 	return true;
 }
+
+export async function getFormByEndpointIdPublic(endpointId: string) {
+	const result = await db
+		.select({
+			id: forms.id,
+			name: forms.name,
+			endpointId: forms.endpointId,
+			isPublic: forms.isPublic,
+			publicFormDescription: forms.publicFormDescription,
+			publicFormFields: forms.publicFormFields,
+			publicFormSuccessMessage: forms.publicFormSuccessMessage,
+			publicFormButtonText: forms.publicFormButtonText,
+			turnstileEnabled: forms.turnstileEnabled,
+		})
+		.from(forms)
+		.where(eq(forms.endpointId, endpointId))
+		.limit(1);
+
+	const form = result[0];
+	if (!form || !form.isPublic) return null;
+
+	return form;
+}

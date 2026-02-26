@@ -16,6 +16,7 @@
 		"@cloudflare/ai": "^1.2.2",
 		"@dodopayments/nextjs": "^0.3.4",
 		"@hookform/resolvers": "^5.2.2",
+		"@marsidev/react-turnstile": "^1.4.2",
 		"@neondatabase/serverless": "^1.0.2",
 		"@opennextjs/cloudflare": "^1.17.1",
 		"@radix-ui/react-alert-dialog": "^1.1.15",

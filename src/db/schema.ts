@@ -44,6 +44,11 @@ export const forms = pgTable(
 		autoResponderMessage: text("auto_responder_message"),
 		allowedOrigins: text("allowed_origins"), // Comma-separated list of allowed origins
 		turnstileEnabled: boolean("turnstile_enabled").notNull().default(false),
+		isPublic: boolean("is_public").notNull().default(false),
+		publicFormDescription: text("public_form_description"),
+		publicFormFields: jsonb("public_form_fields").notNull().default([]),
+		publicFormSuccessMessage: text("public_form_success_message"),
+		publicFormButtonText: text("public_form_button_text").notNull().default("Submit"),
 		createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 	},
 	(table) => [index("forms_user_id_idx").on(table.userId)]

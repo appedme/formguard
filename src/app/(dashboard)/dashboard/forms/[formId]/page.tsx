@@ -47,6 +47,7 @@ export default async function FormDetailPage({ params }: Props) {
 	return (
 		<FormDetailClient
 			form={form}
+			userId={dbUser.id}
 			initialSubmissions={submissions}
 			totalSubmissions={total}
 			totalPages={totalPages}

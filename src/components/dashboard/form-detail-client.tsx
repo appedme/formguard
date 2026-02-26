@@ -34,6 +34,7 @@ import { toast } from "sonner";
 import { updateForm } from "@/db/actions/form.actions";
 import type { Submission } from "@/db/schema";
 import { FormAnalyticsClient } from "@/components/dashboard/form-analytics-client";
+import { PublicFormSettings } from "@/components/dashboard/public-form-settings";
 
 interface FormDetailProps {
 	form: {
@@ -41,9 +42,15 @@ interface FormDetailProps {
 		name: string;
 		endpointId: string;
 		turnstileEnabled: boolean;
+		isPublic: boolean;
+		publicFormDescription: string | null;
+		publicFormFields: any;
+		publicFormSuccessMessage: string | null;
+		publicFormButtonText: string;
 		createdAt: Date;
 		submissions: number;
 	};
+	userId: string;
 	initialSubmissions: Submission[];
 	totalSubmissions: number;
 	totalPages: number;
@@ -56,12 +63,14 @@ interface FormDetailProps {
 
 export function FormDetailClient({
 	form,
+	userId,
 	initialSubmissions,
 	totalSubmissions,
 	totalPages,
 	analytics,
 }: FormDetailProps) {
 	const router = useRouter();
+	const [activeTab, setActiveTab] = useState<"integrate" | "public">("integrate");
 	const [copied, setCopied] = useState<string | null>(null);
 	const [deleting, setDeleting] = useState(false);
 	const [turnstileEnabled, setTurnstileEnabled] = useState(form.turnstileEnabled);
@@ -257,14 +266,41 @@ export function FormDetailClient({
 				<FormAnalyticsClient analytics={analytics} />
 			</div>
 
+			{/* Tabs */}
+			<div className="flex items-center gap-1 bg-muted/30 p-1 rounded-xl mb-8 w-fit border border-border/40">
+				<Button 
+					variant={activeTab === "integrate" ? "default" : "ghost"} 
+					size="sm" 
+					className={`rounded-lg h-9 px-4 text-xs font-black uppercase tracking-widest transition-all ${activeTab !== "integrate" && 'text-muted-foreground'}`}
+					onClick={() => setActiveTab("integrate")}
+				>
+					<Terminal className="w-3.5 h-3.5 mr-2" />
+					Integrate
+				</Button>
+				<Button 
+					variant={activeTab === "public" ? "default" : "ghost"} 
+					size="sm" 
+					className={`rounded-lg h-9 px-4 text-xs font-black uppercase tracking-widest transition-all ${activeTab !== "public" && 'text-muted-foreground'}`}
+					onClick={() => setActiveTab("public")}
+				>
+					<Globe className="w-3.5 h-3.5 mr-2" />
+					Public Page
+					{form.isPublic && (
+						<div className="ml-2 w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+					)}
+				</Button>
+			</div>
+
 			<div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-				{/* Integration Section */}
+				{/* Main Content */}
 				<div className="lg:col-span-2 space-y-8">
-					<section>
-						<h2 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
-							<Globe className="w-4 h-4 text-primary" />
-							Your Endpoint
-						</h2>
+					{activeTab === "integrate" ? (
+						<div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+							<section>
+								<h2 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
+									<Globe className="w-4 h-4 text-primary" />
+									Your Endpoint
+								</h2>
 						<div className="relative group">
 							<div className="absolute inset-y-0 right-0 flex items-center pr-2">
 								<Button
@@ -418,6 +454,12 @@ export function FormDetailClient({
 							))}
 						</div>
 					</section>
+				</div>
+			) : (
+						<div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+							<PublicFormSettings form={form} userId={userId} />
+						</div>
+					)}
 				</div>
 
 				{/* Submissions Sidebar */}
