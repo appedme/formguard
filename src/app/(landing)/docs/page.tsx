@@ -33,6 +33,13 @@ const sections = [
 			{ label: "Webhooks", desc: "Configure outgoing webhooks per form to push submissions to any custom HTTPS endpoint." },
 		],
 	},
+	{
+		title: "AI & LLM Assisted Development",
+		items: [
+			{ label: "llms.txt", desc: "We provide a machine-readable technical overview of our entire infrastructure, setup, and usage patterns. Ideal for AI coding assistants and documentation scrapers." },
+			{ label: "Full Context URL", desc: "https://formguard.strivio.world/llms.txt" },
+		],
+	},
 ];
 
 export default function DocsPage() {

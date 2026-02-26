@@ -1,45 +1,69 @@
-# FormGuard - Edge-Native Form Infrastructure
+# FormGuard - Edge-Native Form Infrastructure Technical Overview
 
-FormGuard is a developer-first form backend built on Cloudflare's global edge network. It provides instant form endpoints, AI-powered insights, and built-in spam protection with zero backend setup.
+FormGuard is a high-performance, developer-first form backend infrastructure built on Cloudflare's Edge Network. It simplifies form management by providing instant endpoints, AI-native insights, and edge-enforced security.
 
-## Core Positioning
-- **Edge-Native**: Submissions handled globally in <50ms using Cloudflare Workers and D1.
-- **Infrastructure-First**: Built for developers who want a reliable, scalable form handler without managing a backend.
-- **AI-Driven**: Automatically turns raw submissions into structured actionable summaries.
+## Tech Stack Summary
+- **Frontend**: Next.js 15 (App Router), React 19, TailwindCSS 4, shadcn/ui.
+- **Backend/Edge**: Cloudflare Workers via OpenNext, Node.js compatibility enabled.
+- **Database**: Neon Postgres (Serverless) with Drizzle ORM.
+- **Authentication**: StackAuth (Managed Auth).
+- **Billing & Payments**: Dodo Payments (Next.js SDK integration).
+- **AI Engine**: Google Gemini Pro (@google/generative-ai).
+- **Runtime**: Bun (Preferred for development and installs).
 
-## Context & Rules for LLMs
-- **Design System**: Brutalist, minimal, monochrome-first typography. Uses Shadcn UI.
-- **Technology Stack**: Next.js, Cloudflare Workers, D1 (via Drizzle ORM), Dodo Payments for billing.
-- **Architecture**: Server-first components, minimal client-side interactivity (only for pricing and dashboards).
+## Core Architecture
+- **Edge Runtime**: Most logic executes on Cloudflare Workers for global performance (<50ms submission latency).
+- **Server-First Components**: Marketing and non-interactive dashboard pages are rendered as React Server Components (RSC).
+- **Brutalist Design**: Minimalist, high-contrast, typography-driven UI following "Vercel-level" developer aesthetics.
 
-## Documentation Resources
-- **Quick Start Guide**: https://formguard.strivio.world/docs#quick-start
-- **API Reference**: https://formguard.strivio.world/docs#api-reference
-- **Integrations**: https://formguard.strivio.world/docs#integrations
-- **Terms of Service**: https://formguard.strivio.world/terms
-- **Privacy Policy**: https://formguard.strivio.world/privacy
+## Database Schema (Drizzle ORM)
+### Tables:
+- `users`: Managed by StackAuth, stores user plan (free, pro, growth).
+- `forms`: Contains form metadata and unique `endpoint_id`.
+- `submissions`: Stores JSON payloads, IP addresses, and spam detection status.
+- `insights`: Stores AI-generated summaries for batches of submissions.
 
-## Integration Guide
-### Basic HTML Integration
-Set your form's action attribute to your unique FormGuard endpoint:
-```html
-<form action="https://formguard.strivio.world/api/submit/YOUR_ENDPOINT_ID" method="POST">
-  <input type="email" name="email" required />
-  <textarea name="message" required></textarea>
-  <button type="submit">Submit</button>
-</form>
-```
+## API Endpoints
+### Public Endpoints:
+- `POST /api/submit/:endpointId`: The primary ingest endpoint. Supports JSON and multipart/form-data.
+- Handles spam filtering and rate limiting before persistence.
 
-### API Submission
-You can also submit data via JSON:
-```javascript
-fetch('https://formguard.strivio.world/api/submit/YOUR_ENDPOINT_ID', {
-  method: 'POST',
-  body: JSON.stringify({ name: 'User', msg: 'Hello' }),
-  headers: { 'Content-Type': 'application/json' }
-})
-```
+### Protected API (Dashboard):
+- `/api/forms`: Create, list, delete forms.
+- `/api/forms/:id/submissions`: Retrieve form data.
+- `/api/forms/:id/insight`: Trigger Gemini AI processing for recent submissions.
 
-## Maintenance & Support
-- **Status Page**: https://formguard.strivio.world/status
-- **GitHub Repository**: (Internal) https://github.com/sh20raj/formguard
+### Webhooks:
+- `/api/webhook/dodo`: Handles subscription lifecycle events (payment.succeeded, subscription.created, etc.).
+
+## Development & Setup
+### Environment Variables:
+Required keys in `.env`:
+- `NEXT_PUBLIC_STACK_PROJECT_ID`: StackAuth Project ID.
+- `STACK_SECRET_SERVER_KEY`: StackAuth Server Key.
+- `DATABASE_URL`: Neon Postgres connection string.
+- `GEMINI_API_KEY`: Google AI Studio key.
+- `DODO_PAYMENTS_API_KEY`: Dodo Payments API key.
+- `DODO_PAYMENTS_WEBHOOK_SECRET`: For validating incoming webhooks.
+
+### Commands:
+- `bun install`: Install dependencies.
+- `bun dev`: Start Next.js development server.
+- `bun run deploy`: Build with OpenNext and deploy to Cloudflare Workers.
+- `npx tsc --noEmit`: Run type checks.
+
+## Key Files for AI Understanding
+- `src/db/schema.ts`: Single source of truth for the data model.
+- `wrangler.jsonc`: Cloudflare configuration and bindings.
+- `src/app/(landing)/page.tsx`: Core landing page layout and positioning.
+- `public/llms.txt`: This file, summarizing technical context for LLMs.
+
+## Positioning & Messaging
+FormGuard is not just a "form tool"; it is **infrastructure**. Every part of the codebase should reflect durability, security, and developer-first utility.
+- No heavy animations or unnecessary client-side JS.
+- Works with plain HTML forms. No SDK required.
+- Everything is "Edge-native".
+
+## Documentation
+Full documentation is available at: https://formguard.strivio.world/docs
+LLM Context link: https://formguard.strivio.world/llms.txt
