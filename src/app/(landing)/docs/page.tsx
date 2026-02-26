@@ -78,7 +78,8 @@ const sections = [
 			{ name: "get_recent_submissions", desc: "Retrieve latest entries for context." },
 			{ name: "get_ai_insights", desc: "Access AI-generated sentiment analysis." }
 		],
-		usage: "Endpoint: https://formguard.strivio.world/api/mcp | Header: x-api-key"
+		usage: "Endpoint: https://formguard.strivio.world/api/mcp | Header: x-api-key",
+		learnMore: "/docs/mcp"
 	}
 ];
 
@@ -203,6 +204,18 @@ export default function DocsPage() {
 												</div>
 											))}
 										</div>
+									</div>
+								)}
+
+								{section.learnMore && (
+									<div className="mt-8 flex justify-end">
+										<Link 
+											href={section.learnMore} 
+											className="inline-flex items-center gap-2 px-6 py-2.5 bg-primary/10 text-primary font-bold text-xs rounded-xl hover:bg-primary/20 transition-all group"
+										>
+											Comprehensive MCP Guide
+											<ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+										</Link>
 									</div>
 								)}
 
