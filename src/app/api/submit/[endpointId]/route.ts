@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { forms, submissions } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 export async function POST(
 	req: NextRequest,
@@ -64,6 +65,11 @@ export async function POST(
 				isSpam,
 			})
 			.returning({ id: submissions.id, createdAt: submissions.createdAt });
+
+		// Invalidate dashboard caches
+		revalidatePath("/dashboard", "page");
+		revalidatePath(`/dashboard/forms/${form.id}`, "page");
+		revalidatePath("/dashboard/submissions", "page");
 
 		// Return success with CORS headers
 		return NextResponse.json(

@@ -6,6 +6,8 @@ import { getFormSubmissions } from "@/db/actions/submission.actions";
 import { FormDetailClient } from "@/components/dashboard/form-detail-client";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
 	params: Promise<{ formId: string }>;
 }
