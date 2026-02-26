@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Terminal, Globe, ShieldCheck, Zap, Code2, BookOpen, Cpu, ArrowRight } from "lucide-react";
+import { Terminal, Globe, ShieldCheck, Zap, Code2, BookOpen, Cpu, ArrowRight, Bot } from "lucide-react";
 
 export const metadata = {
 	title: "Docs — FormGuard",
@@ -59,6 +59,26 @@ const sections = [
 		icon: Cpu,
 		content: "Powered by Gemini 1.5 Flash. FormGuard analyzes the semantic content of your submissions to detect trends, sentiment, and common themes across hundreds of entries in seconds.",
 		usage: "Available via the dashboard 'Generate Insight' button. Requires a Pro or Growth plan."
+	},
+	{
+		id: "mcp",
+		title: "Model Context Protocol (MCP)",
+		icon: Bot,
+		content: "Connect FormGuard directly to AI agents like Cursor, VSCode, and Windsurf. MCP enables AI-driven management of your forms, webhooks, and submissions directly from your IDE.",
+		features: [
+			"Programmatic form lifecycle management",
+			"Real-time submission context for LLMs",
+			"Remote webhook & integration config",
+			"Secure SSE-based agent communication"
+		],
+		mcpTools: [
+			{ name: "list_forms", desc: "Get an inventory of all active endpoints." },
+			{ name: "create_form", desc: "Provision new forms via natural language." },
+			{ name: "update_form_settings", desc: "Configure Slack, Discord, and Webhooks." },
+			{ name: "get_recent_submissions", desc: "Retrieve latest entries for context." },
+			{ name: "get_ai_insights", desc: "Access AI-generated sentiment analysis." }
+		],
+		usage: "Endpoint: https://formguard.strivio.world/api/mcp | Header: x-api-key"
 	}
 ];
 
@@ -166,6 +186,23 @@ export default function DocsPage() {
 												</div>
 											</div>
 										))}
+									</div>
+								)}
+
+								{section.mcpTools && (
+									<div className="space-y-3 mt-8">
+										<h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-4">Available MCP Tools</h4>
+										<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+											{section.mcpTools.map(tool => (
+												<div key={tool.name} className="p-4 bg-card border border-border/40 rounded-xl group/tool hover:border-primary/20 transition-colors">
+													<div className="flex items-center gap-2 mb-2">
+														<Code2 className="w-3.5 h-3.5 text-primary" />
+														<span className="font-mono text-xs font-bold text-foreground">{tool.name}</span>
+													</div>
+													<p className="text-xs text-muted-foreground">{tool.desc}</p>
+												</div>
+											))}
+										</div>
 									</div>
 								)}
 
