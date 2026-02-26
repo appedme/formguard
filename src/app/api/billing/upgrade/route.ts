@@ -30,10 +30,14 @@ export async function POST(req: NextRequest) {
 		}
 
 		const origin = req.headers.get("origin") || "http://localhost:3000";
+		const isLive = process.env.DODO_PAYMENTS_ENVIRONMENT === "live_mode";
+		const bearerToken = isLive
+			? process.env.DODO_PAYMENTS_API_KEY_LIVE!
+			: process.env.DODO_PAYMENTS_API_KEY!;
 
 		// Dodo Payments Checkout Handler (Programmatic POST for sessions)
 		const handler = Checkout({
-			bearerToken: process.env.DODO_PAYMENTS_API_KEY!,
+			bearerToken,
 			returnUrl: `${origin}/dashboard/settings?success=true`,
 			environment: process.env.DODO_PAYMENTS_ENVIRONMENT as "test_mode" | "live_mode",
 			type: "session",

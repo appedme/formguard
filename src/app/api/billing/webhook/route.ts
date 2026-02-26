@@ -2,8 +2,13 @@ import { Webhooks } from "@dodopayments/nextjs";
 import { upgradePlan } from "@/db/actions/billing.actions";
 import type { PlanName } from "@/lib/plans";
 
+const isLive = process.env.DODO_PAYMENTS_ENVIRONMENT === "live_mode";
+const webhookKey = isLive
+	? process.env.DODO_PAYMENTS_WEBHOOK_SECRET_LIVE!
+	: process.env.DODO_PAYMENTS_WEBHOOK_SECRET!;
+
 export const POST = Webhooks({
-	webhookKey: process.env.DODO_PAYMENTS_WEBHOOK_SECRET!,
+	webhookKey,
 	onPaymentSucceeded: async (payload) => {
 		// Dodo Payments metadata is available directly on the payload or data object depending on version
 		// Based on standard webhook patterns for Dodo, it's often in payload.metadata
