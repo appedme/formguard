@@ -46,7 +46,7 @@ interface PublicFormClientProps {
 }
 
 export function PublicFormClient({ form }: PublicFormClientProps) {
-	const [formData, setFormData] = useState<Record<string, string>>({});
+	const [formData, setFormData] = useState<Record<string, any>>({});
 	const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 	const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
@@ -114,91 +114,116 @@ export function PublicFormClient({ form }: PublicFormClientProps) {
 		);
 	}
 
-	return (
-		<div className="w-full max-w-2xl mx-auto space-y-6">
-			{/* Form Container */}
-			<div className="rounded-xl overflow-hidden shadow-xl border border-border/40 bg-card/60 backdrop-blur-md relative">
-				{/* Top Accent Bar */}
-				<div 
-					className="h-2.5 w-full absolute top-0 left-0" 
-					style={{ backgroundColor: form.publicFormThemeColor }}
-				/>
-				
-				{/* Header Image */}
-				{form.publicFormHeaderImage && (
-					<div className="w-full h-40 md:h-56 overflow-hidden border-b border-border/40 mt-2.5">
-						<img 
-							src={form.publicFormHeaderImage} 
-							alt="Form Header" 
-							className="w-full h-full object-cover"
-						/>
-					</div>
-				)}
+	// Logic to calculate dynamic background
+	const bgTint = `${form.publicFormThemeColor}08`; // ~3% opacity tint
 
-				<div className="p-6 md:p-10 space-y-8">
-					{/* Header Info */}
-					<div className="space-y-4">
-						<div className="flex items-center gap-3">
-							<div className="bg-foreground p-1 rounded-lg">
-								<ShieldCheck className="w-4 h-4 text-background" />
-							</div>
-							<Badge variant="outline" className="font-mono text-[9px] tracking-widest uppercase py-0 px-2 h-4 border-primary/20 text-primary bg-primary/5">
-								Verified FormGuard Endpoint
-							</Badge>
+	return (
+		<div className="w-full min-h-screen py-12 px-4 transition-colors duration-500" style={{ backgroundColor: bgTint }}>
+			<div className="max-w-3xl mx-auto space-y-4">
+				{/* 1. Header Card */}
+				<Card className="overflow-hidden shadow-md border-border/40 rounded-xl relative">
+					{/* Top Accent Bar */}
+					<div 
+						className="h-2.5 w-full absolute top-0 left-0" 
+						style={{ backgroundColor: form.publicFormThemeColor }}
+					/>
+					
+					{/* Header Image */}
+					{form.publicFormHeaderImage && (
+						<div className="w-full h-40 md:h-56 overflow-hidden border-b border-border/40 mt-2.5">
+							<img 
+								src={form.publicFormHeaderImage} 
+								alt="Form Header" 
+								className="w-full h-full object-cover"
+							/>
 						</div>
+					)}
+
+					<div className="p-6 md:p-8 pt-10 space-y-4">
+						<div className="flex items-center gap-2 mb-2">
+							<div className="bg-foreground p-1 rounded-md">
+								<ShieldCheck className="w-3.5 h-3.5 text-background" />
+							</div>
+							<span className="text-[10px] font-mono tracking-wider uppercase text-muted-foreground font-bold">
+								FormGuard Secured
+							</span>
+						</div>
+						
 						<h1 className="text-4xl font-black tracking-tight text-foreground leading-tight">
 							{form.name}
 						</h1>
+						
 						{form.publicFormDescription && (
-							<p className="text-sm font-medium text-foreground/60 whitespace-pre-wrap leading-relaxed">
+							<p className="text-base font-medium text-foreground/70 whitespace-pre-wrap leading-relaxed">
 								{form.publicFormDescription}
 							</p>
 						)}
-						<Separator className="bg-border/40" />
+
+						<Separator className="mt-6 opacity-40" />
+						
+						<div className="text-[11px] font-bold text-red-500 uppercase tracking-widest mt-4">
+							* Indicates required question
+						</div>
 					</div>
+				</Card>
 
-					<form onSubmit={handleSubmit} className="space-y-10">
-						{fields.length === 0 ? (
-							<div className="py-20 text-center bg-muted/20 rounded-2xl border border-dashed border-border/60">
-								<p className="text-sm text-muted-foreground">This form has no fields yet.</p>
-							</div>
-						) : (
-							<div className="space-y-10">
-								{fields.map((field) => (
-									<div key={field.name} className="space-y-4">
-										<Label htmlFor={field.name} className="text-sm font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2">
-											{field.label}
-											{field.required && <span className="text-red-500 text-lg">*</span>}
-										</Label>
+				<form onSubmit={handleSubmit} className="space-y-4">
+					{fields.length === 0 ? (
+						<Card className="p-12 text-center border-dashed border-2">
+							<p className="text-sm text-muted-foreground font-medium">This form has no fields yet.</p>
+						</Card>
+					) : (
+						fields.map((field) => (
+							<Card key={field.name} className="p-6 md:p-8 shadow-sm border-border/40 rounded-xl transition-all hover:shadow-md group">
+								<div className="space-y-5">
+									<Label htmlFor={field.name} className="text-base font-bold text-foreground flex items-center gap-1.5 leading-snug">
+										{field.label}
+										{field.required && <span className="text-red-500 text-xl font-black">*</span>}
+									</Label>
 
+									<div className="pt-1">
 										{field.type === "textarea" ? (
 											<Textarea
 												id={field.name}
 												name={field.name}
 												required={field.required}
-												placeholder={field.placeholder}
-												className="bg-background/40 border-border/40 focus:border-primary/50 focus:ring-primary/20 rounded-xl min-h-[120px] transition-all text-base px-4 py-3"
+												placeholder={field.placeholder || "Your answer"}
+												className="bg-transparent border-0 border-b-2 border-muted focus-visible:ring-0 rounded-none focus-visible:border-primary px-0 pb-2 transition-all text-base placeholder:text-muted-foreground/40 min-h-[40px] resize-none overflow-hidden"
+												style={{ borderBottomColor: formData[field.name] ? form.publicFormThemeColor : undefined }}
 												value={formData[field.name] || ""}
-												onChange={(e) => setFormData({ ...formData, [field.name]: e.target.value })}
+												onChange={(e) => {
+													setFormData({ ...formData, [field.name]: e.target.value });
+													e.target.style.height = 'auto';
+													e.target.style.height = e.target.scrollHeight + 'px';
+												}}
 											/>
 										) : field.type === "radio" ? (
 											<RadioGroup 
 												onValueChange={(val) => setFormData({ ...formData, [field.name]: val })}
-												className="flex flex-col gap-3"
+												className="flex flex-col gap-4"
 											>
 												{field.options?.map((option) => (
-													<div key={option} className="flex items-center space-x-3 p-3 rounded-lg border border-border/40 bg-background/30 hover:bg-background/50 transition-colors">
-														<RadioGroupItem value={option} id={`${field.name}-${option}`} />
-														<Label htmlFor={`${field.name}-${option}`} className="font-medium cursor-pointer flex-1">{option}</Label>
+													<div key={option} className="flex items-center space-x-3 group/opt">
+														<RadioGroupItem 
+															value={option} 
+															id={`${field.name}-${option}`} 
+															className="border-2 border-muted-foreground/30"
+															style={{ color: form.publicFormThemeColor }}
+														/>
+														<Label htmlFor={`${field.name}-${option}`} className="text-sm font-medium cursor-pointer flex-1 py-1 group-hover/opt:text-primary transition-colors">
+															{option}
+														</Label>
 													</div>
 												))}
 											</RadioGroup>
 										) : field.type === "checkbox" ? (
-											<div className="flex flex-col gap-3">
+											<div className="flex flex-col gap-4">
 												{field.options?.map((option) => (
-													<div key={option} className="flex items-center space-x-3 p-3 rounded-lg border border-border/40 bg-background/30 hover:bg-background/50 transition-colors">
+													<div key={option} className="flex items-center space-x-3 group/opt">
 														<Checkbox 
 															id={`${field.name}-${option}`} 
+															className="border-2 border-muted-foreground/30 data-[state=checked]:border-none"
+															style={{ backgroundColor: (formData[field.name] as unknown as string[])?.includes(option) ? form.publicFormThemeColor : undefined }}
 															onCheckedChange={(checked) => {
 																const current = (formData[field.name] as unknown as string[]) || [];
 																const next = checked 
@@ -207,16 +232,18 @@ export function PublicFormClient({ form }: PublicFormClientProps) {
 																setFormData({ ...formData, [field.name]: next as any });
 															}}
 														/>
-														<Label htmlFor={`${field.name}-${option}`} className="font-medium cursor-pointer flex-1">{option}</Label>
+														<Label htmlFor={`${field.name}-${option}`} className="text-sm font-medium cursor-pointer flex-1 py-1 group-hover/opt:text-primary transition-colors">
+															{option}
+														</Label>
 													</div>
 												))}
 											</div>
 										) : field.type === "select" ? (
 											<Select onValueChange={(val) => setFormData({ ...formData, [field.name]: val })}>
-												<SelectTrigger className="w-full h-12 bg-background/40 border-border/40 rounded-xl">
-													<SelectValue placeholder={field.placeholder || "Select an option"} />
+												<SelectTrigger className="w-full md:w-1/2 h-11 bg-background/50 border-muted-foreground/20 rounded-lg">
+													<SelectValue placeholder={field.placeholder || "Choose an option"} />
 												</SelectTrigger>
-												<SelectContent className="rounded-xl border-border/40">
+												<SelectContent className="rounded-xl">
 													{field.options?.map((option) => (
 														<SelectItem key={option} value={option}>{option}</SelectItem>
 													))}
@@ -228,30 +255,33 @@ export function PublicFormClient({ form }: PublicFormClientProps) {
 												name={field.name}
 												type={field.type}
 												required={field.required}
-												placeholder={field.placeholder}
-												className="bg-background/40 border-border/40 h-12 focus:border-primary/50 focus:ring-primary/20 rounded-xl transition-all text-base px-4"
+												placeholder={field.placeholder || "Your answer"}
+												className="bg-transparent border-0 border-b-2 border-muted focus-visible:ring-0 rounded-none focus-visible:border-primary px-0 pb-2 transition-all text-base placeholder:text-muted-foreground/40 h-auto"
+												style={{ borderBottomColor: formData[field.name] ? form.publicFormThemeColor : undefined }}
 												value={formData[field.name] || ""}
 												onChange={(e) => setFormData({ ...formData, [field.name]: e.target.value })}
 											/>
 										)}
 									</div>
-								))}
-							</div>
-						)}
+								</div>
+							</Card>
+						))
+					)}
 
-						{form.turnstileEnabled && (
-							<div className="flex justify-center pt-2">
-								<Turnstile
-									siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
-									onSuccess={(token) => setTurnstileToken(token)}
-								/>
-							</div>
-						)}
+					{form.turnstileEnabled && (
+						<div className="flex justify-start pt-2">
+							<Turnstile
+								siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
+								onSuccess={(token) => setTurnstileToken(token)}
+							/>
+						</div>
+					)}
 
+					<div className="flex items-center justify-between pt-4">
 						<Button 
 							type="submit" 
 							disabled={status === "submitting" || fields.length === 0}
-							className="w-full h-14 rounded-xl font-black tracking-tight text-lg shadow-xl transition-all active:scale-[0.98]"
+							className="h-12 px-8 rounded-lg font-bold tracking-tight text-base shadow-lg transition-all active:scale-[0.98] hover:opacity-90"
 							style={{ backgroundColor: form.publicFormThemeColor, color: "#fff" }}
 						>
 							{status === "submitting" ? (
@@ -260,8 +290,32 @@ export function PublicFormClient({ form }: PublicFormClientProps) {
 								form.publicFormButtonText
 							)}
 						</Button>
-					</form>
-				</div>
+						
+						<Button 
+							variant="ghost" 
+							type="button"
+							className="text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground"
+							onClick={() => {
+								setFormData({});
+								setStatus("idle");
+							}}
+						>
+							Clear form
+						</Button>
+					</div>
+				</form>
+
+				<footer className="pt-12 pb-8 flex flex-col items-center gap-6">
+					<div className="flex items-center gap-3">
+						<span className="text-[11px] font-bold text-muted-foreground uppercase tracking-tighter">Powered by</span>
+						<div className="bg-foreground text-background px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-tighter shadow-lg">
+							FormGuard
+						</div>
+					</div>
+					<div className="text-[10px] text-muted-foreground/60 font-medium">
+						This content is neither created nor endorsed by FormGuard.
+					</div>
+				</footer>
 			</div>
 		</div>
 	);

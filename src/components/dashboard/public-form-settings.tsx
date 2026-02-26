@@ -18,10 +18,28 @@ import {
 	Globe, 
 	CheckCircle2,
 	Eye,
-	X
+	X,
+	Settings2
 } from "lucide-react";
 import { updateForm } from "@/db/actions/form.actions";
 import { toast } from "sonner";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 interface PublicFormField {
 	label: string;
@@ -35,6 +53,126 @@ interface PublicFormField {
 interface PublicFormSettingsProps {
 	form: any;
 	userId: string;
+}
+
+function SortableField({ 
+	field, 
+	updateField, 
+	removeField 
+}: { 
+	field: PublicFormField; 
+	updateField: (name: string, data: Partial<PublicFormField>) => void;
+	removeField: (name: string) => void;
+}) {
+	const {
+		attributes,
+		listeners,
+		setNodeRef,
+		transform,
+		transition,
+		isDragging,
+	} = useSortable({ id: field.name });
+
+	const style = {
+		transform: CSS.Transform.toString(transform),
+		transition,
+		zIndex: isDragging ? 50 : 0,
+	};
+
+	return (
+		<div 
+			ref={setNodeRef} 
+			style={style} 
+			className={`flex flex-col gap-4 p-5 bg-background border border-border/60 rounded-xl group relative shadow-sm hover:shadow-md transition-shadow ${isDragging ? 'opacity-50 ring-2 ring-primary border-primary' : ''}`}
+		>
+			<div className="flex items-start gap-4 pr-10">
+				<div 
+					{...attributes} 
+					{...listeners} 
+					className="mt-2.5 cursor-grab active:cursor-grabbing opacity-30 group-hover:opacity-100 transition-opacity"
+				>
+					<GripVertical className="w-4 h-4" />
+				</div>
+				<div className="flex-1 grid sm:grid-cols-12 gap-4">
+					<div className="sm:col-span-4 space-y-1.5">
+						<Label className="text-[10px] font-black uppercase tracking-tighter opacity-50">Field Label</Label>
+						<Input 
+							className="h-9 bg-muted/20 border-border/40 text-sm rounded-lg"
+							value={field.label}
+							onChange={(e) => updateField(field.name, { label: e.target.value })}
+						/>
+					</div>
+					<div className="sm:col-span-3 space-y-1.5">
+						<Label className="text-[10px] font-black uppercase tracking-tighter opacity-50">Type</Label>
+						<select 
+							className="w-full h-9 bg-muted/20 border border-border/40 rounded-lg px-3 text-sm focus:ring-1 focus:ring-primary outline-none"
+							value={field.type}
+							onChange={(e) => {
+								const newType = e.target.value as any;
+								const updates: Partial<PublicFormField> = { type: newType };
+								// Initialize options if switching to a multi-choice type
+								if (["radio", "checkbox", "select"].includes(newType) && (!field.options || field.options.length === 0)) {
+									updates.options = ["Option 1", "Option 2"];
+								}
+								updateField(field.name, updates);
+							}}
+						>
+							<option value="text">Short Text</option>
+							<option value="email">Email Address</option>
+							<option value="textarea">Long Text</option>
+							<option value="number">Number</option>
+							<option value="radio">Multiple Choice (Radio)</option>
+							<option value="checkbox">Checkboxes</option>
+							<option value="select">Dropdown (Select)</option>
+						</select>
+					</div>
+					<div className="sm:col-span-3 space-y-1.5">
+						<Label className="text-[10px] font-black uppercase tracking-tighter opacity-50">Placeholder</Label>
+						<Input 
+							className="h-9 bg-muted/20 border-border/40 text-sm rounded-lg"
+							placeholder="e.g. Enter your name"
+							value={field.placeholder || ""}
+							onChange={(e) => updateField(field.name, { placeholder: e.target.value })}
+						/>
+					</div>
+					<div className="sm:col-span-2 flex items-center gap-2 pt-6">
+						<Switch 
+							checked={field.required} 
+							onCheckedChange={(val) => updateField(field.name, { required: val })}
+						/>
+						<span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Req</span>
+					</div>
+				</div>
+
+				<Button 
+					variant="ghost" 
+					size="icon" 
+					className="h-8 w-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 absolute right-3 top-6 opacity-30 group-hover:opacity-100 transition-opacity"
+					onClick={() => removeField(field.name)}
+				>
+					<Trash2 className="w-3.5 h-3.5" />
+				</Button>
+			</div>
+
+			{/* Options for Multi-choice fields */}
+			{["radio", "checkbox", "select"].includes(field.type) && (
+				<div className="ml-8 pt-4 border-t border-border/40 space-y-3">
+					<div className="flex items-center gap-2">
+						<Settings2 className="w-3 h-3 text-muted-foreground" />
+						<Label className="text-[10px] font-black uppercase tracking-tighter opacity-70">Options (Comma separated)</Label>
+					</div>
+					<Input 
+						placeholder="Option 1, Option 2, Option 3"
+						className="h-9 bg-muted/20 border-border/40 text-xs rounded-lg"
+						value={field.options?.join(", ") || ""}
+						onChange={(e) => updateField(field.name, { 
+							options: e.target.value.split(",").map(s => s.trim()).filter(s => s !== "") 
+						})}
+					/>
+				</div>
+			)}
+		</div>
+	);
 }
 
 export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
@@ -51,7 +189,14 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 	const [themeColor, setThemeColor] = useState(form.publicFormThemeColor || "#6366f1");
 	const [isCustomColor, setIsCustomColor] = useState(false);
 
-	const publicUrl = `${window.location.origin}/share/${form.endpointId}`;
+	const sensors = useSensors(
+		useSensor(PointerSensor),
+		useSensor(KeyboardSensor, {
+			coordinateGetter: sortableKeyboardCoordinates,
+		})
+	);
+
+	const publicUrl = typeof window !== 'undefined' ? `${window.location.origin}/share/${form.endpointId}` : "";
 
 	const themeColors = [
 		{ name: "Indigo", value: "#6366f1" },
@@ -87,6 +232,19 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 			toast.error("Something went wrong.");
 		} finally {
 			setUpdating(false);
+		}
+	}
+
+	function handleDragEnd(event: DragEndEvent) {
+		const { active, over } = event;
+
+		if (over && active.id !== over.id) {
+			setFields((items) => {
+				const oldIndex = items.findIndex((i) => i.name === active.id);
+				const newIndex = items.findIndex((i) => i.name === over.id);
+
+				return arrayMove(items, oldIndex, newIndex);
+			});
 		}
 	}
 
@@ -305,81 +463,27 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 										<Button variant="link" className="text-primary font-bold mt-2" onClick={addField}>Add your first field</Button>
 									</div>
 								) : (
-									<div className="space-y-3">
-										{fields.map((field, index) => (
-											<div key={field.name} className="flex items-start gap-4 p-4 bg-muted/20 border border-border/40 rounded-xl group relative pr-12">
-												<div className="mt-2.5 cursor-grab opacity-30 group-hover:opacity-100 transition-opacity">
-													<GripVertical className="w-4 h-4" />
-												</div>
-												<div className="flex-1 grid sm:grid-cols-12 gap-4">
-													<div className="sm:col-span-4 space-y-1.5">
-														<Label className="text-[10px] font-black uppercase tracking-tighter opacity-50">Field Label</Label>
-														<Input 
-															className="h-9 bg-background/50 text-sm rounded-lg"
-															value={field.label}
-															onChange={(e) => updateField(field.name, { label: e.target.value })}
-														/>
-													</div>
-													<div className="sm:col-span-3 space-y-1.5">
-														<Label className="text-[10px] font-black uppercase tracking-tighter opacity-50">Type</Label>
-														<select 
-															className="w-full h-9 bg-background/50 border border-input rounded-lg px-3 text-sm focus:ring-1 focus:ring-primary outline-none"
-															value={field.type}
-															onChange={(e) => updateField(field.name, { type: e.target.value as any })}
-														>
-															<option value="text">Short Text</option>
-															<option value="email">Email Address</option>
-															<option value="textarea">Long Text</option>
-															<option value="number">Number</option>
-															<option value="radio">Multiple Choice (Radio)</option>
-															<option value="checkbox">Checkboxes</option>
-															<option value="select">Dropdown (Select)</option>
-														</select>
-													</div>
-													<div className="sm:col-span-3 space-y-1.5">
-														<Label className="text-[10px] font-black uppercase tracking-tighter opacity-50">Placeholder</Label>
-														<Input 
-															className="h-9 bg-background/50 text-sm rounded-lg"
-															placeholder="e.g. Enter your name"
-															value={field.placeholder || ""}
-															onChange={(e) => updateField(field.name, { placeholder: e.target.value })}
-														/>
-													</div>
-													<div className="sm:col-span-2 flex items-center gap-2 pt-6">
-														<Switch 
-															checked={field.required} 
-															onCheckedChange={(val) => updateField(field.name, { required: val })}
-														/>
-														<span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Req</span>
-													</div>
-												</div>
-
-												{/* Options for Multi-choice fields */}
-												{["radio", "checkbox", "select"].includes(field.type) && (
-													<div className="mt-4 pt-4 border-t border-border/40 w-full space-y-3">
-														<Label className="text-[10px] font-black uppercase tracking-tighter opacity-70">Options (Comma separated)</Label>
-														<Input 
-															placeholder="Option 1, Option 2, Option 3"
-															className="h-9 bg-background/50 text-xs rounded-lg"
-															value={field.options?.join(", ") || ""}
-															onChange={(e) => updateField(field.name, { 
-																options: e.target.value.split(",").map(s => s.trim()).filter(s => s !== "") 
-															})}
-														/>
-													</div>
-												)}
-
-												<Button 
-													variant="ghost" 
-													size="icon" 
-													className="h-8 w-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 absolute right-3 top-1/2 -translate-y-1/2 opacity-30 group-hover:opacity-100 transition-opacity"
-													onClick={() => removeField(field.name)}
-												>
-													<Trash2 className="w-3.5 h-3.5" />
-												</Button>
+									<DndContext 
+										sensors={sensors}
+										collisionDetection={closestCenter}
+										onDragEnd={handleDragEnd}
+									>
+										<SortableContext 
+											items={fields.map(f => f.name)}
+											strategy={verticalListSortingStrategy}
+										>
+											<div className="space-y-4">
+												{fields.map((field) => (
+													<SortableField 
+														key={field.name} 
+														field={field} 
+														updateField={updateField} 
+														removeField={removeField} 
+													/>
+												))}
 											</div>
-										))}
-									</div>
+										</SortableContext>
+									</DndContext>
 								)}
 							</div>
 						</div>

@@ -89,6 +89,22 @@ export const insights = pgTable(
 	(table) => [index("insights_form_id_idx").on(table.formId)]
 );
 
+// ─── API Keys ─────────────────────────────────────────
+export const apiKeys = pgTable(
+	"api_keys",
+	{
+		id: uuid("id").defaultRandom().primaryKey(),
+		userId: uuid("user_id")
+			.notNull()
+			.references(() => users.id, { onDelete: "cascade" }),
+		name: text("name").notNull(),
+		key: text("key").notNull().unique(),
+		createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+		lastUsedAt: timestamp("last_used_at", { withTimezone: true }),
+	},
+	(table) => [index("api_keys_user_id_idx").on(table.userId), index("api_keys_key_idx").on(table.key)]
+);
+
 // ─── Type Exports ────────────────────────────────────
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;

@@ -50,11 +50,13 @@ export default async function FormSubmissionsPage({
 
 	return (
 		<SubmissionsListClient
-			form={{ id: form.id, name: form.name }}
-			submissions={JSON.parse(JSON.stringify(submissions))}
-			total={total}
-			currentPage={currentPage}
-			totalPages={totalPages}
+			initialData={{
+				submissions: JSON.parse(JSON.stringify(submissions)),
+				total,
+				page: currentPage,
+				totalPages
+			}}
+			userId={dbUser.id}
 		/>
 	);
 }

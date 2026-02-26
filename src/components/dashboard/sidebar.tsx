@@ -11,7 +11,8 @@ import {
 	Settings, 
 	LogOut,
 	ShieldCheck,
-	Menu
+	Menu,
+	Bot
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -27,6 +28,7 @@ const nav = [
 	{ label: "Forms", href: "/dashboard", icon: LayoutDashboard },
 	{ label: "Submissions", href: "/dashboard/submissions", icon: Inbox },
 	{ label: "Insights", href: "/dashboard/insights", icon: Sparkles },
+	{ label: "MCP", href: "/dashboard/mcp", icon: Bot },
 	{ label: "Usage", href: "/dashboard/usage", icon: BarChart3 },
 	{ label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];

@@ -6,6 +6,8 @@ import { revalidatePath } from "next/cache";
 import { verifyTurnstileToken } from "@/lib/turnstile";
 import { Resend } from "resend";
 
+export const runtime = "edge";
+
 const resend = new Resend(process.env.RESEND_API_KEY || "re_123456789");
 
 
