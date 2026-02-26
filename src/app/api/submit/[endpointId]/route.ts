@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
-import { forms, submissions } from "@/db/schema";
+import { forms, submissions, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { verifyTurnstileToken } from "@/lib/turnstile";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY || "re_123456789");
+
 
 export async function POST(
 	req: NextRequest,
@@ -12,18 +16,45 @@ export async function POST(
 	try {
 		const { endpointId } = await params;
 
-		// Find the form by endpointId
-		const [form] = await db
-			.select()
+		// Find the form by endpointId and get user email
+		const result = await db
+			.select({
+				form: forms,
+				userEmail: users.email
+			})
 			.from(forms)
+			.leftJoin(users, eq(forms.userId, users.id))
 			.where(eq(forms.endpointId, endpointId))
 			.limit(1);
 
-		if (!form) {
+		if (result.length === 0) {
 			return NextResponse.json(
 				{ error: "Form not found" },
 				{ status: 404 }
 			);
+		}
+
+		const { form, userEmail } = result[0];
+
+		// CORS / Allowed Origins Check
+		const origin = req.headers.get("origin") || req.headers.get("referer");
+		if (form.allowedOrigins) {
+			const allowedOrigins = form.allowedOrigins.split(",").map(o => o.trim());
+			if (origin) {
+				const originUrl = new URL(origin);
+				const isAllowed = allowedOrigins.some(allowed => 
+					originUrl.hostname === allowed || 
+					originUrl.origin === allowed ||
+					allowed === "*" // Allow wildcard
+				);
+
+				if (!isAllowed) {
+					return NextResponse.json(
+						{ error: `Origin '${origin}' not allowed` },
+						{ status: 403 }
+					);
+				}
+			}
 		}
 
 		// Parse payload — support JSON and form-data
@@ -112,9 +143,25 @@ export async function POST(
 		}
 
 		// --- Handle Email Notifications ---
-		if (form.emailNotifications) {
-			// TODO: Implement email sending logic (e.g., Resend, SendGrid)
-			console.log(`[EMAIL] Sending notification for form ${form.id}`);
+		if (form.emailNotifications && userEmail) {
+			try {
+				await resend.emails.send({
+					from: process.env.RESEND_FROM_EMAIL || "FormGuard <notifications@formguard.dev>",
+					to: userEmail,
+					subject: `New Submission: ${form.name}`,
+					html: `
+						<h1>New Form Submission</h1>
+						<p>You have received a new submission for your form <strong>${form.name}</strong>.</p>
+						<hr />
+						<div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px;">
+							<pre style="white-space: pre-wrap;">${JSON.stringify(payload, null, 2)}</pre>
+						</div>
+						<p><a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/forms/${form.id}/submissions">View in Dashboard</a></p>
+					`,
+				});
+			} catch (emailError) {
+				console.error("[EMAIL] Failed to send notification:", emailError);
+			}
 		}
 
 		// --- Handle Redirects ---

@@ -68,22 +68,22 @@ export function SubmissionsListClient({
 		setTimeout(() => setCopiedId(null), 2000);
 	}
 
-	async function handleExport() {
+	async function handleExport(format: "csv" | "json" = "csv") {
 		setExporting(true);
 		try {
-			const res = await fetch(`/api/forms/${form.id}/submissions/export`);
+			const res = await fetch(`/api/forms/${form.id}/submissions/export?format=${format}`);
 			if (!res.ok) throw new Error("Export failed");
 			
 			const blob = await res.blob();
 			const url = window.URL.createObjectURL(blob);
 			const a = document.createElement("a");
 			a.href = url;
-			a.download = `${form.name.toLowerCase().replace(/\s+/g, "_")}_submissions.csv`;
+			a.download = `${form.name.toLowerCase().replace(/\s+/g, "_")}_submissions.${format}`;
 			document.body.appendChild(a);
 			a.click();
 			window.URL.revokeObjectURL(url);
 			document.body.removeChild(a);
-			toast.success("Submissions exported successfully");
+			toast.success(`Submissions exported as ${format.toUpperCase()}`);
 		} catch {
 			toast.error("Failed to export submissions");
 		} finally {
@@ -125,11 +125,20 @@ export function SubmissionsListClient({
 						<Button 
 							variant="default"
 							className="rounded-xl font-black text-xs px-6 bg-foreground text-background hover:bg-foreground/90 transition-transform active:scale-95" 
-							onClick={handleExport}
+							onClick={() => handleExport("csv")}
 							disabled={exporting || total === 0}
 						>
 							<Download className="w-3.5 h-3.5 mr-2" />
 							{exporting ? "Preparing..." : "Export CSV"}
+						</Button>
+						<Button 
+							variant="outline"
+							className="rounded-xl font-black text-xs px-6 border-border/40 transition-transform active:scale-95" 
+							onClick={() => handleExport("json")}
+							disabled={exporting || total === 0}
+						>
+							<Download className="w-3.5 h-3.5 mr-2" />
+							Export JSON
 						</Button>
 					</div>
 				</div>

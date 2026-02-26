@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation";
 import { getUserByStackAuthId } from "@/db/actions/user.actions";
 import { getFormById } from "@/db/actions/form.actions";
 import { getFormSubmissions } from "@/db/actions/submission.actions";
+import { getFormAnalytics } from "@/db/actions/analytics.actions";
 import { FormDetailClient } from "@/components/dashboard/form-detail-client";
 import type { Metadata } from "next";
 
@@ -28,9 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	};
 }
 
-export default async function FormDetailPage({
-	params,
-}: Props) {
+export default async function FormDetailPage({ params }: Props) {
 	const stackUser = await stackServerApp.getUser();
 	if (!stackUser) redirect("/handler/sign-in");
 
@@ -39,16 +38,19 @@ export default async function FormDetailPage({
 
 	const { formId } = await params;
 	const form = await getFormById(formId, dbUser.id);
-	if (!form) notFound();
 
-	const { submissions, total, totalPages } = await getFormSubmissions(formId, 1, 20);
+	if (!form) return notFound();
+
+	const { submissions, total, totalPages } = await getFormSubmissions(formId, 1, 5);
+	const analytics = await getFormAnalytics(formId);
 
 	return (
 		<FormDetailClient
 			form={form}
-			initialSubmissions={JSON.parse(JSON.stringify(submissions))}
+			initialSubmissions={submissions}
 			totalSubmissions={total}
 			totalPages={totalPages}
+			analytics={analytics}
 		/>
 	);
 }

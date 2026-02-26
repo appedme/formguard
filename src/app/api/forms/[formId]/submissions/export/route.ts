@@ -26,7 +26,26 @@ export async function GET(
 		return new NextResponse("No submissions to export", { status: 400 });
 	}
 
-	// Simple CSV generation
+	const format = request.nextUrl.searchParams.get("format") || "csv";
+
+	if (format === "json") {
+		const jsonData = submissions.map((sub) => ({
+			id: sub.id,
+			status: sub.isSpam ? "SPAM" : "CLEAN",
+			date: new Date(sub.createdAt).toISOString(),
+			ipAddress: sub.ipAddress || "",
+			...(sub.payload as Record<string, any>),
+		}));
+
+		return new NextResponse(JSON.stringify(jsonData, null, 2), {
+			headers: {
+				"Content-Type": "application/json",
+				"Content-Disposition": `attachment; filename="${form.name.toLowerCase().replace(/\s+/g, "_")}_submissions.json"`,
+			},
+		});
+	}
+
+	// CSV generation
 	// Get all unique keys from payloads
 	const allKeys = new Set<string>();
 	submissions.forEach((sub) => {

@@ -25,12 +25,15 @@ import {
 	Slack,
 	Send,
 	Play,
-	Table
+	Table,
+	Settings,
+	Download
 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { updateForm } from "@/db/actions/form.actions";
 import type { Submission } from "@/db/schema";
+import { FormAnalyticsClient } from "@/components/dashboard/form-analytics-client";
 
 interface FormDetailProps {
 	form: {
@@ -44,6 +47,11 @@ interface FormDetailProps {
 	initialSubmissions: Submission[];
 	totalSubmissions: number;
 	totalPages: number;
+	analytics: {
+		total: number;
+		last30Days: number;
+		dailyHistory: { date: string; count: number }[];
+	};
 }
 
 export function FormDetailClient({
@@ -51,6 +59,7 @@ export function FormDetailClient({
 	initialSubmissions,
 	totalSubmissions,
 	totalPages,
+	analytics,
 }: FormDetailProps) {
 	const router = useRouter();
 	const [copied, setCopied] = useState<string | null>(null);
@@ -207,6 +216,15 @@ export function FormDetailClient({
 						variant="outline" 
 						size="sm" 
 						className="rounded-full px-4 h-9"
+						onClick={() => router.push(`/dashboard/forms/${form.id}/settings`)}
+					>
+						<Settings className="w-3.5 h-3.5 mr-2" />
+						Settings
+					</Button>
+					<Button 
+						variant="outline" 
+						size="sm" 
+						className="rounded-full px-4 h-9"
 						onClick={() => window.open(endpointUrl, "_blank")}
 					>
 						<ExternalLink className="w-3.5 h-3.5 mr-2" />
@@ -234,25 +252,9 @@ export function FormDetailClient({
 				</div>
 			</div>
 
-			{/* Stats Row */}
-			<div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
-				{[
-					{ label: "Submissions", value: totalSubmissions, icon: Inbox },
-					{ label: "Pages", value: totalPages || 1, icon: Code2 },
-					{ label: "Endpoint Status", value: "Active", icon: Globe },
-				].map((stat) => (
-					<Card key={stat.label} className="bg-card/50 shadow-none border-border/60">
-						<CardContent className="p-5">
-							<p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground mb-1">
-								{stat.label}
-							</p>
-							<div className="flex items-center justify-between">
-								<p className="text-xl font-semibold text-foreground">{stat.value}</p>
-								<stat.icon className="w-4 h-4 text-muted-foreground/40" />
-							</div>
-						</CardContent>
-					</Card>
-				))}
+			{/* Analytics Section */}
+			<div className="mb-10">
+				<FormAnalyticsClient analytics={analytics} />
 			</div>
 
 			<div className="grid grid-cols-1 lg:grid-cols-3 gap-10">

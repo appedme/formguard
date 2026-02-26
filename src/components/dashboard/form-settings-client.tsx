@@ -48,9 +48,10 @@ const formSchema = z.object({
 	redirectUrl: z.string().url({ message: "Invalid URL" }).optional().or(z.literal("")),
 	errorUrl: z.string().url({ message: "Invalid URL" }).optional().or(z.literal("")),
 	webhookUrl: z.string().url({ message: "Invalid URL" }).optional().or(z.literal("")),
-	emailNotifications: z.boolean().default(false),
-	webhookEnabled: z.boolean().default(false),
-	turnstileEnabled: z.boolean().default(false),
+	allowedOrigins: z.string().optional().or(z.literal("")),
+	emailNotifications: z.boolean(),
+	webhookEnabled: z.boolean(),
+	turnstileEnabled: z.boolean(),
 });
 
 interface FormSettingsClientProps {
@@ -61,6 +62,7 @@ interface FormSettingsClientProps {
 		redirectUrl: string | null;
 		errorUrl: string | null;
 		webhookUrl: string | null;
+		allowedOrigins: string | null;
 		emailNotifications: boolean;
 		webhookEnabled: boolean;
 		turnstileEnabled: boolean;
@@ -79,6 +81,7 @@ export function FormSettingsClient({ form: initialData }: FormSettingsClientProp
 			redirectUrl: initialData.redirectUrl || "",
 			errorUrl: initialData.errorUrl || "",
 			webhookUrl: initialData.webhookUrl || "",
+			allowedOrigins: initialData.allowedOrigins || "",
 			emailNotifications: initialData.emailNotifications,
 			webhookEnabled: initialData.webhookEnabled,
 			turnstileEnabled: initialData.turnstileEnabled,
@@ -93,6 +96,7 @@ export function FormSettingsClient({ form: initialData }: FormSettingsClientProp
 				redirectUrl: values.redirectUrl || null,
 				errorUrl: values.errorUrl || null,
 				webhookUrl: values.webhookUrl || null,
+				allowedOrigins: values.allowedOrigins || null,
 				emailNotifications: values.emailNotifications,
 				webhookEnabled: values.webhookEnabled,
 				turnstileEnabled: values.turnstileEnabled,
@@ -191,12 +195,63 @@ export function FormSettingsClient({ form: initialData }: FormSettingsClientProp
 						</CardContent>
 					</Card>
 
-					{/* Notifications & Security */}
+					{/* Security */}
 					<Card>
 						<CardHeader>
-							<CardTitle>Notifications & Security</CardTitle>
+							<CardTitle>Security</CardTitle>
 							<CardDescription>
-								Configure email alerts and spam protection.
+								Control who can submit to your form.
+							</CardDescription>
+						</CardHeader>
+						<CardContent className="space-y-4">
+							<FormField
+								control={form.control}
+								name="allowedOrigins"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Allowed Domains</FormLabel>
+										<FormControl>
+											<Input placeholder="example.com, my-site.com" {...field} />
+										</FormControl>
+										<FormDescription>
+											Comma-separated list of domains allowed to submit. Leave blank to allow all.
+										</FormDescription>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+                            <Separator />
+							<FormField
+								control={form.control}
+								name="turnstileEnabled"
+								render={({ field }) => (
+									<FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+										<div className="space-y-0.5">
+											<FormLabel className="text-base">
+												Spam Protection (Cloudflare Turnstile)
+											</FormLabel>
+											<FormDescription>
+												Enable CAPTCHA verification to prevent spam.
+											</FormDescription>
+										</div>
+										<FormControl>
+											<Switch
+												checked={field.value}
+												onCheckedChange={field.onChange}
+											/>
+										</FormControl>
+									</FormItem>
+								)}
+							/>
+						</CardContent>
+					</Card>
+
+					{/* Notifications */}
+					<Card>
+						<CardHeader>
+							<CardTitle>Notifications</CardTitle>
+							<CardDescription>
+								Get alerted when new submissions arrive.
 							</CardDescription>
 						</CardHeader>
 						<CardContent className="space-y-4">
@@ -211,29 +266,6 @@ export function FormSettingsClient({ form: initialData }: FormSettingsClientProp
 											</FormLabel>
 											<FormDescription>
 												Receive an email whenever a new submission is received.
-											</FormDescription>
-										</div>
-										<FormControl>
-											<Switch
-												checked={field.value}
-												onCheckedChange={field.onChange}
-											/>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-							<Separator />
-							<FormField
-								control={form.control}
-								name="turnstileEnabled"
-								render={({ field }) => (
-									<FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-										<div className="space-y-0.5">
-											<FormLabel className="text-base">
-												Spam Protection (Cloudflare Turnstile)
-											</FormLabel>
-											<FormDescription>
-												Enable CAPTCHA verification to prevent spam.
 											</FormDescription>
 										</div>
 										<FormControl>
