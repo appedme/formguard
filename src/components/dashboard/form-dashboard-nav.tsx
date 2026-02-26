@@ -23,11 +23,11 @@ export function FormDashboardNav({ formId, isPublic }: FormNavProps) {
 
 	const tabs = [
 		{ label: "Integrate", href: `/dashboard/forms/${formId}`, icon: Terminal, exact: true },
+		{ label: "Public Page", href: `/dashboard/forms/${formId}/public`, icon: Globe, highlight: isPublic },
 		{ label: "Submissions", href: `/dashboard/forms/${formId}/submissions`, icon: Inbox },
+		{ label: "Playground", href: `/dashboard/forms/${formId}/playground`, icon: Play },
 		{ label: "Analytics", href: `/dashboard/forms/${formId}/analytics`, icon: BarChart3 },
 		{ label: "AI Insights", href: `/dashboard/forms/${formId}/insights`, icon: Sparkles },
-		{ label: "Public Page", href: `/dashboard/forms/${formId}/public`, icon: Globe, highlight: isPublic },
-		{ label: "Playground", href: `/dashboard/forms/${formId}/playground`, icon: Play },
 		{ label: "Settings", href: `/dashboard/forms/${formId}/settings`, icon: Settings },
 	];
 
