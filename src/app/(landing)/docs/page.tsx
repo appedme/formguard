@@ -11,7 +11,7 @@ const sections = [
 		title: "Quick Start",
 		items: [
 			{ label: "1. Sign up and create a form", desc: "Create an account, hit + Create Form, and copy your unique endpoint URL." },
-			{ label: "2. Add your endpoint to an HTML form", desc: 'Set action="https://api.formguard.strivio.world/api/submit/YOUR_ID" method="POST".' },
+			{ label: "2. Add your endpoint to an HTML form", desc: 'Set action="https://formguard.strivio.world/api/submit/YOUR_ID" method="POST".' },
 			{ label: "3. Submit test data", desc: "Fill and submit the form. See the submission appear in your dashboard instantly." },
 			{ label: "4. Generate insight", desc: 'Click "Generate Insight" to run the AI model against all collected submissions.' },
 		],

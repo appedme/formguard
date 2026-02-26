@@ -52,7 +52,7 @@ export default function HowItWorks() {
 				{/* Code snippet */}
 				<div className="mt-12 border border-border bg-secondary p-6 font-mono text-sm">
 					<p className="text-muted-foreground mb-2 text-xs">Your integration — one line:</p>
-					<pre className="text-green-500 dark:text-green-400 overflow-x-auto">{`<form action="https://api.formguard.strivio.world/api/submit/abc123" method="POST">`}</pre>
+					<pre className="text-green-500 dark:text-green-400 overflow-x-auto">{`<form action="https://formguard.strivio.world/api/submit/abc123" method="POST">`}</pre>
 				</div>
 			</div>
 		</section>
