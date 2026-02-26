@@ -1,0 +1,65 @@
+# FormGuard - The Modern Form Backend for Developers
+
+FormGuard is a complete backend solution for your HTML forms. It handles submission capture, spam filtering, and data storage, while providing powerful AI-driven insights—all without you writing a single line of backend code.
+
+## Why FormGuard?
+
+- **Zero Backend Required:** specialized endpoints instantly ready to accept form data.
+- **AI-Powered Insights:** Automatically summarizes submissions and detects trends using Gemini Pro models.
+- **Edge Performance:** Built on Cloudflare's global edge network for <50ms latency.
+- **Spam Protection:** Built-in intelligent spam filtering.
+
+## How to Use
+
+### 1. Create a Form
+Log in to the [FormGuard Dashboard](https://formguard.strivio.world/dashboard) and create a new form. You will receive a unique **Endpoint ID**.
+
+### 2. Connect Your Form
+Point your HTML form's `action` attribute to your unique FormGuard endpoint.
+
+#### HTML Example
+```html
+<form action="https://formguard.strivio.world/api/submit/{your-endpoint-id}" method="POST">
+  <input name="email" type="email" placeholder="email@example.com" required />
+  <textarea name="message" placeholder="Your message..."></textarea>
+  <button type="submit">Send</button>
+</form>
+```
+
+#### JSON / Fetch Example
+You can also submit data via JavaScript/AJAX using JSON.
+
+```javascript
+await fetch("https://formguard.strivio.world/api/submit/{your-endpoint-id}", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    email: "user@example.com",
+    message: "I love FormGuard!"
+  }),
+});
+```
+
+### 3. View Submissions
+Go to your dashboard to view real-time submissions, read AI-generated summaries, and export your data.
+
+## API Reference
+
+### POST `/api/submit/:endpointId`
+
+**Parameters:**
+- `endpointId` (string, required): The unique ID of your form found in the dashboard.
+
+**Headers:**
+- `Content-Type`: `application/x-www-form-urlencoded`, `multipart/form-data`, or `application/json`.
+- `Accept`: `application/json` (optional, to receive JSON response instead of redirect).
+
+**Response:**
+- **Success (200/303):** Redirects to the configured success URL (or default thank you page). If JSON is requested, returns `{ success: true }`.
+- **Error (4xx/5xx):** Returns error details if submission fails (e.g., spam detected, rate limit exceeded).
+
+## Features
+
+- **Spam Filtering:** We analyze request metadata and content to block bot submissions automatically.
+- **Instant Notifications:** (Coming Soon) Webhook integrations for Slack, Discord, and Email.
+- **Data Export:** Download all your submissions as standard CSV/JSON formats.
