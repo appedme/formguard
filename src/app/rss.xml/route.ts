@@ -1,7 +1,7 @@
 import { generateRssFeed } from "@/lib/rss";
 
 export async function GET() {
-  const rssFeed = generateRssFeed("feed.xml");
+  const rssFeed = generateRssFeed("rss.xml");
 
   return new Response(rssFeed, {
     headers: {
@@ -9,4 +9,3 @@ export async function GET() {
     },
   });
 }
-
