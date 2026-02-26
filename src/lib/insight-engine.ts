@@ -55,12 +55,26 @@ Generated at ${new Date().toISOString()} · FormGuard Insight Engine`;
 			max_tokens: 1024,
 		});
 
-		if ("response" in response && typeof response.response === "string") {
-			return response.response;
+		// Handle different response shapes from Cloudflare Workers AI
+		let summary = "";
+		
+		if (typeof response === "string") {
+			summary = response;
+		} else if (response && typeof response === "object") {
+			if ("response" in response && typeof response.response === "string") {
+				summary = response.response;
+			} else if ("result" in response && typeof response.result === "string") {
+				summary = response.result;
+			} else if ("content" in response && typeof response.content === "string") {
+				summary = response.content;
+			} else {
+				// Log the unknown shape
+				console.warn("Unknown AI response shape:", JSON.stringify(response));
+				summary = "AI analysis complete, but response format was unexpected.";
+			}
 		}
 
-		// Handle streaming or other response shapes
-		return String(response) || "No insight generated.";
+		return summary || "No insight generated.";
 	} catch (error: any) {
 		console.error("Cloudflare Workers AI Error:", error);
 		return "Error generating AI insight. Please check your Cloudflare AI binding configuration.";
