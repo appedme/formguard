@@ -26,9 +26,10 @@ import { toast } from "sonner";
 interface PublicFormField {
 	label: string;
 	name: string;
-	type: "text" | "email" | "textarea" | "number";
+	type: "text" | "email" | "textarea" | "number" | "radio" | "checkbox" | "select";
 	required: boolean;
 	placeholder?: string;
+	options?: string[];
 }
 
 interface PublicFormSettingsProps {
@@ -46,8 +47,22 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 	const [fields, setFields] = useState<PublicFormField[]>(form.publicFormFields || []);
 	const [successMessage, setSuccessMessage] = useState(form.publicFormSuccessMessage || "");
 	const [buttonText, setButtonText] = useState(form.publicFormButtonText || "Submit");
+	const [headerImage, setHeaderImage] = useState(form.publicFormHeaderImage || "");
+	const [themeColor, setThemeColor] = useState(form.publicFormThemeColor || "#6366f1");
+	const [isCustomColor, setIsCustomColor] = useState(false);
 
 	const publicUrl = `${window.location.origin}/share/${form.endpointId}`;
+
+	const themeColors = [
+		{ name: "Indigo", value: "#6366f1" },
+		{ name: "Red", value: "#ef4444" },
+		{ name: "Green", value: "#22c55e" },
+		{ name: "Sky", value: "#0ea5e9" },
+		{ name: "Amber", value: "#f59e0b" },
+		{ name: "Violet", value: "#8b5cf6" },
+		{ name: "Pink", value: "#ec4899" },
+		{ name: "Sage", value: "#4d7c0f" },
+	];
 
 	async function handleSave() {
 		setUpdating(true);
@@ -58,6 +73,8 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 				publicFormFields: fields,
 				publicFormSuccessMessage: successMessage,
 				publicFormButtonText: buttonText,
+				publicFormHeaderImage: headerImage,
+				publicFormThemeColor: themeColor,
 			});
 
 			if (success) {
@@ -151,10 +168,81 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 					)}
 
 					<div className="p-6 md:p-8 space-y-10">
+						{/* Theme Customization */}
+						<div className="space-y-6">
+							<h3 className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+								1. Theme & Appearance
+								<Separator className="flex-1" />
+							</h3>
+							
+							<div className="grid gap-8 p-6 bg-muted/20 border border-border/40 rounded-2xl">
+								<div className="space-y-4">
+									<Label className="text-xs font-black uppercase tracking-widest opacity-60">Theme Color</Label>
+									<div className="flex flex-wrap gap-3">
+										{themeColors.map((color) => (
+											<button
+												key={color.value}
+												type="button"
+												className={`w-10 h-10 rounded-full border-2 transition-all hover:scale-110 flex items-center justify-center ${themeColor === color.value ? 'border-foreground ring-2 ring-primary/20' : 'border-transparent'}`}
+												style={{ backgroundColor: color.value }}
+												onClick={() => {
+													setThemeColor(color.value);
+													setIsCustomColor(false);
+												}}
+											>
+												{themeColor === color.value && <div className="w-2 h-2 rounded-full bg-white shadow-sm" />}
+											</button>
+										))}
+										<div className="flex items-center gap-2">
+											<div 
+												className="w-10 h-10 rounded-full border-2 border-border/40 relative overflow-hidden flex items-center justify-center bg-background"
+												style={{ borderColor: isCustomColor ? themeColor : undefined }}
+											>
+												<input 
+													type="color" 
+													className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+													value={themeColor}
+													onChange={(e) => {
+														setThemeColor(e.target.value);
+														setIsCustomColor(true);
+													}}
+												/>
+												<Plus className="w-4 h-4 text-muted-foreground" />
+											</div>
+											{isCustomColor && <span className="text-[10px] font-mono font-bold uppercase">{themeColor}</span>}
+										</div>
+									</div>
+								</div>
+
+								<div className="space-y-3">
+									<Label className="text-xs font-black uppercase tracking-widest opacity-60">Header Image URL (Optional)</Label>
+									<div className="flex gap-4">
+										<Input 
+											placeholder="https://example.com/banner.jpg"
+											className="bg-background border-border/40 h-11 rounded-xl focus:ring-primary/20 flex-1"
+											value={headerImage}
+											onChange={(e) => setHeaderImage(e.target.value)}
+										/>
+										{headerImage && (
+											<Button 
+												variant="outline" 
+												size="icon" 
+												className="h-11 w-11 rounded-xl border-border/40"
+												onClick={() => setHeaderImage("")}
+											>
+												<X className="w-4 h-4" />
+											</Button>
+										)}
+									</div>
+									<p className="text-[10px] text-muted-foreground">Standard Google Forms header aspect ratio is about 4:1 (e.g., 1600x400).</p>
+								</div>
+							</div>
+						</div>
+
 						{/* Basic Info */}
 						<div className="space-y-6">
 							<h3 className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-								1. Basic Information
+								2. Basic Information
 								<Separator className="flex-1" />
 							</h3>
 							
@@ -196,7 +284,7 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 						<div className="space-y-6">
 							<div className="flex items-center justify-between">
 								<h3 className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2 flex-1 mr-4">
-									2. Form Fields
+									3. Form Fields
 									<Separator className="flex-1" />
 								</h3>
 								<Button 
@@ -243,6 +331,9 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 															<option value="email">Email Address</option>
 															<option value="textarea">Long Text</option>
 															<option value="number">Number</option>
+															<option value="radio">Multiple Choice (Radio)</option>
+															<option value="checkbox">Checkboxes</option>
+															<option value="select">Dropdown (Select)</option>
 														</select>
 													</div>
 													<div className="sm:col-span-3 space-y-1.5">
@@ -262,6 +353,22 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 														<span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Req</span>
 													</div>
 												</div>
+
+												{/* Options for Multi-choice fields */}
+												{["radio", "checkbox", "select"].includes(field.type) && (
+													<div className="mt-4 pt-4 border-t border-border/40 w-full space-y-3">
+														<Label className="text-[10px] font-black uppercase tracking-tighter opacity-70">Options (Comma separated)</Label>
+														<Input 
+															placeholder="Option 1, Option 2, Option 3"
+															className="h-9 bg-background/50 text-xs rounded-lg"
+															value={field.options?.join(", ") || ""}
+															onChange={(e) => updateField(field.name, { 
+																options: e.target.value.split(",").map(s => s.trim()).filter(s => s !== "") 
+															})}
+														/>
+													</div>
+												)}
+
 												<Button 
 													variant="ghost" 
 													size="icon" 

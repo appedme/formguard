@@ -172,6 +172,8 @@ export async function getFormByEndpointIdPublic(endpointId: string) {
 			publicFormFields: forms.publicFormFields,
 			publicFormSuccessMessage: forms.publicFormSuccessMessage,
 			publicFormButtonText: forms.publicFormButtonText,
+			publicFormHeaderImage: forms.publicFormHeaderImage,
+			publicFormThemeColor: forms.publicFormThemeColor,
 			turnstileEnabled: forms.turnstileEnabled,
 		})
 		.from(forms)

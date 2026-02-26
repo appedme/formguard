@@ -9,14 +9,25 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Turnstile } from "@marsidev/react-turnstile";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, ShieldCheck, Loader2 } from "lucide-react";
+import { CheckCircle2, ShieldCheck, Loader2, Check, ChevronDown } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
 
 interface PublicFormField {
 	label: string;
 	name: string;
-	type: "text" | "email" | "textarea" | "number";
+	type: "text" | "email" | "textarea" | "number" | "radio" | "checkbox" | "select";
 	required: boolean;
 	placeholder?: string;
+	options?: string[];
 }
 
 interface PublicFormClientProps {
@@ -28,6 +39,8 @@ interface PublicFormClientProps {
 		publicFormFields: any;
 		publicFormSuccessMessage: string | null;
 		publicFormButtonText: string;
+		publicFormHeaderImage: string | null;
+		publicFormThemeColor: string;
 		turnstileEnabled: boolean;
 	};
 }
@@ -102,86 +115,154 @@ export function PublicFormClient({ form }: PublicFormClientProps) {
 	}
 
 	return (
-		<Card className="w-full max-w-lg border-primary/10 shadow-2xl overflow-hidden rounded-2xl bg-card/50 backdrop-blur-sm">
-			<CardHeader className="bg-primary/5 border-b border-primary/10 p-8">
-				<div className="flex items-center gap-3 mb-4">
-					<div className="bg-foreground p-1.5 rounded-lg shadow-lg">
-						<ShieldCheck className="w-5 h-5 text-background" />
+		<div className="w-full max-w-2xl mx-auto space-y-6">
+			{/* Form Container */}
+			<div className="rounded-xl overflow-hidden shadow-xl border border-border/40 bg-card/60 backdrop-blur-md relative">
+				{/* Top Accent Bar */}
+				<div 
+					className="h-2.5 w-full absolute top-0 left-0" 
+					style={{ backgroundColor: form.publicFormThemeColor }}
+				/>
+				
+				{/* Header Image */}
+				{form.publicFormHeaderImage && (
+					<div className="w-full h-40 md:h-56 overflow-hidden border-b border-border/40 mt-2.5">
+						<img 
+							src={form.publicFormHeaderImage} 
+							alt="Form Header" 
+							className="w-full h-full object-cover"
+						/>
 					</div>
-					<Badge variant="outline" className="font-mono text-[10px] tracking-widest uppercase py-0 px-2 h-5 border-primary/20 text-primary bg-primary/5">
-						Trusted Form
-					</Badge>
-				</div>
-				<CardTitle className="text-3xl font-black tracking-tight text-foreground leading-tight">
-					{form.name}
-				</CardTitle>
-				{form.publicFormDescription && (
-					<CardDescription className="text-sm font-medium text-foreground/60 mt-2 whitespace-pre-wrap">
-						{form.publicFormDescription}
-					</CardDescription>
 				)}
-			</CardHeader>
-			<CardContent className="p-8">
-				<form onSubmit={handleSubmit} className="space-y-6">
-					{fields.length === 0 ? (
-						<div className="py-10 text-center bg-muted/20 rounded-xl border border-dashed border-border/60">
-							<p className="text-sm text-muted-foreground">This form has no fields yet.</p>
-						</div>
-					) : (
-						fields.map((field) => (
-							<div key={field.name} className="space-y-3">
-								<Label htmlFor={field.name} className="text-xs font-black uppercase tracking-widest text-foreground/70">
-									{field.label}
-									{field.required && <span className="text-primary ml-1">*</span>}
-								</Label>
-								{field.type === "textarea" ? (
-									<Textarea
-										id={field.name}
-										name={field.name}
-										required={field.required}
-										placeholder={field.placeholder}
-										className="bg-background/50 border-border/40 focus:border-primary/50 focus:ring-primary/20 rounded-xl min-h-[120px] transition-all"
-										value={formData[field.name] || ""}
-										onChange={(e) => setFormData({ ...formData, [field.name]: e.target.value })}
-									/>
-								) : (
-									<Input
-										id={field.name}
-										name={field.name}
-										type={field.type}
-										required={field.required}
-										placeholder={field.placeholder}
-										className="bg-background/50 border-border/40 h-12 focus:border-primary/50 focus:ring-primary/20 rounded-xl transition-all"
-										value={formData[field.name] || ""}
-										onChange={(e) => setFormData({ ...formData, [field.name]: e.target.value })}
-									/>
-								)}
+
+				<div className="p-6 md:p-10 space-y-8">
+					{/* Header Info */}
+					<div className="space-y-4">
+						<div className="flex items-center gap-3">
+							<div className="bg-foreground p-1 rounded-lg">
+								<ShieldCheck className="w-4 h-4 text-background" />
 							</div>
-						))
-					)}
-
-					{form.turnstileEnabled && (
-						<div className="flex justify-center pt-2">
-							<Turnstile
-								siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
-								onSuccess={(token) => setTurnstileToken(token)}
-							/>
+							<Badge variant="outline" className="font-mono text-[9px] tracking-widest uppercase py-0 px-2 h-4 border-primary/20 text-primary bg-primary/5">
+								Verified FormGuard Endpoint
+							</Badge>
 						</div>
-					)}
-
-					<Button 
-						type="submit" 
-						disabled={status === "submitting" || fields.length === 0}
-						className="w-full h-14 bg-foreground text-background hover:bg-foreground/90 rounded-xl font-black tracking-tight text-base shadow-xl shadow-foreground/5 transition-all active:scale-[0.98]"
-					>
-						{status === "submitting" ? (
-							<><Loader2 className="w-5 h-5 mr-3 animate-spin" /> Submitting...</>
-						) : (
-							form.publicFormButtonText
+						<h1 className="text-4xl font-black tracking-tight text-foreground leading-tight">
+							{form.name}
+						</h1>
+						{form.publicFormDescription && (
+							<p className="text-sm font-medium text-foreground/60 whitespace-pre-wrap leading-relaxed">
+								{form.publicFormDescription}
+							</p>
 						)}
-					</Button>
-				</form>
-			</CardContent>
-		</Card>
+						<Separator className="bg-border/40" />
+					</div>
+
+					<form onSubmit={handleSubmit} className="space-y-10">
+						{fields.length === 0 ? (
+							<div className="py-20 text-center bg-muted/20 rounded-2xl border border-dashed border-border/60">
+								<p className="text-sm text-muted-foreground">This form has no fields yet.</p>
+							</div>
+						) : (
+							<div className="space-y-10">
+								{fields.map((field) => (
+									<div key={field.name} className="space-y-4">
+										<Label htmlFor={field.name} className="text-sm font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2">
+											{field.label}
+											{field.required && <span className="text-red-500 text-lg">*</span>}
+										</Label>
+
+										{field.type === "textarea" ? (
+											<Textarea
+												id={field.name}
+												name={field.name}
+												required={field.required}
+												placeholder={field.placeholder}
+												className="bg-background/40 border-border/40 focus:border-primary/50 focus:ring-primary/20 rounded-xl min-h-[120px] transition-all text-base px-4 py-3"
+												value={formData[field.name] || ""}
+												onChange={(e) => setFormData({ ...formData, [field.name]: e.target.value })}
+											/>
+										) : field.type === "radio" ? (
+											<RadioGroup 
+												onValueChange={(val) => setFormData({ ...formData, [field.name]: val })}
+												className="flex flex-col gap-3"
+											>
+												{field.options?.map((option) => (
+													<div key={option} className="flex items-center space-x-3 p-3 rounded-lg border border-border/40 bg-background/30 hover:bg-background/50 transition-colors">
+														<RadioGroupItem value={option} id={`${field.name}-${option}`} />
+														<Label htmlFor={`${field.name}-${option}`} className="font-medium cursor-pointer flex-1">{option}</Label>
+													</div>
+												))}
+											</RadioGroup>
+										) : field.type === "checkbox" ? (
+											<div className="flex flex-col gap-3">
+												{field.options?.map((option) => (
+													<div key={option} className="flex items-center space-x-3 p-3 rounded-lg border border-border/40 bg-background/30 hover:bg-background/50 transition-colors">
+														<Checkbox 
+															id={`${field.name}-${option}`} 
+															onCheckedChange={(checked) => {
+																const current = (formData[field.name] as unknown as string[]) || [];
+																const next = checked 
+																	? [...current, option] 
+																	: current.filter(i => i !== option);
+																setFormData({ ...formData, [field.name]: next as any });
+															}}
+														/>
+														<Label htmlFor={`${field.name}-${option}`} className="font-medium cursor-pointer flex-1">{option}</Label>
+													</div>
+												))}
+											</div>
+										) : field.type === "select" ? (
+											<Select onValueChange={(val) => setFormData({ ...formData, [field.name]: val })}>
+												<SelectTrigger className="w-full h-12 bg-background/40 border-border/40 rounded-xl">
+													<SelectValue placeholder={field.placeholder || "Select an option"} />
+												</SelectTrigger>
+												<SelectContent className="rounded-xl border-border/40">
+													{field.options?.map((option) => (
+														<SelectItem key={option} value={option}>{option}</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+										) : (
+											<Input
+												id={field.name}
+												name={field.name}
+												type={field.type}
+												required={field.required}
+												placeholder={field.placeholder}
+												className="bg-background/40 border-border/40 h-12 focus:border-primary/50 focus:ring-primary/20 rounded-xl transition-all text-base px-4"
+												value={formData[field.name] || ""}
+												onChange={(e) => setFormData({ ...formData, [field.name]: e.target.value })}
+											/>
+										)}
+									</div>
+								))}
+							</div>
+						)}
+
+						{form.turnstileEnabled && (
+							<div className="flex justify-center pt-2">
+								<Turnstile
+									siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
+									onSuccess={(token) => setTurnstileToken(token)}
+								/>
+							</div>
+						)}
+
+						<Button 
+							type="submit" 
+							disabled={status === "submitting" || fields.length === 0}
+							className="w-full h-14 rounded-xl font-black tracking-tight text-lg shadow-xl transition-all active:scale-[0.98]"
+							style={{ backgroundColor: form.publicFormThemeColor, color: "#fff" }}
+						>
+							{status === "submitting" ? (
+								<><Loader2 className="w-5 h-5 mr-3 animate-spin" /> Submitting...</>
+							) : (
+								form.publicFormButtonText
+							)}
+						</Button>
+					</form>
+				</div>
+			</div>
+		</div>
 	);
 }

@@ -49,6 +49,8 @@ export const forms = pgTable(
 		publicFormFields: jsonb("public_form_fields").notNull().default([]),
 		publicFormSuccessMessage: text("public_form_success_message"),
 		publicFormButtonText: text("public_form_button_text").notNull().default("Submit"),
+		publicFormHeaderImage: text("public_form_header_image"),
+		publicFormThemeColor: text("public_form_theme_color").notNull().default("#6366f1"),
 		createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 	},
 	(table) => [index("forms_user_id_idx").on(table.userId)]
