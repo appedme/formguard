@@ -1,5 +1,3 @@
-import Navbar from "@/components/landing/navbar";
-import Footer from "@/components/landing/footer";
 
 export const metadata = {
 	title: "Docs",
@@ -45,7 +43,6 @@ const sections = [
 export default function DocsPage() {
 	return (
 		<>
-			<Navbar />
 			<main>
 				<section className="py-16 border-b border-border bg-background">
 					<div className="mx-auto max-w-6xl px-6">
@@ -77,7 +74,6 @@ export default function DocsPage() {
 					</section>
 				))}
 			</main>
-			<Footer />
 		</>
 	);
 }

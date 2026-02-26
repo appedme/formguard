@@ -2,10 +2,13 @@ import { Webhooks } from "@dodopayments/nextjs";
 import { upgradePlan } from "@/db/actions/billing.actions";
 import type { PlanName } from "@/lib/plans";
 
+export const dynamic = "force-dynamic";
+
 const isLive = process.env.DODO_PAYMENTS_ENVIRONMENT === "live_mode";
-const webhookKey = isLive
-	? process.env.DODO_PAYMENTS_WEBHOOK_SECRET_LIVE!
-	: process.env.DODO_PAYMENTS_WEBHOOK_SECRET!;
+const webhookKey = 
+	(isLive 
+		? process.env.DODO_PAYMENTS_WEBHOOK_SECRET_LIVE 
+		: process.env.DODO_PAYMENTS_WEBHOOK_SECRET) || "setup_required";
 
 export const POST = Webhooks({
 	webhookKey,
