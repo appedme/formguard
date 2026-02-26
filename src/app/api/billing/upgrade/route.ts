@@ -45,15 +45,15 @@ export async function POST(req: NextRequest) {
 
 		// We need to call the handler with a mocked request or just use the SDK directly if available.
 		// However, based on docs, the Checkout utility returns a Response.
-		// Define product IDs based on environment
+		// Define product IDs based on environment variables
 		const productIds = isLive
 			? {
-					pro: "pdt_0NZK2Wi6CuOEgvbwK0Lte",
-					growth: "pdt_0NZK2rEzi69XAmEAIftHO",
+					pro: process.env.DODO_PAYMENTS_PRODUCT_ID_PRO_LIVE!,
+					growth: process.env.DODO_PAYMENTS_PRODUCT_ID_GROWTH_LIVE!,
 				}
 			: {
-					pro: "pdt_0NZH8jZJDtXkerKovWdDw",
-					growth: "pdt_0NZH94BiE9oVPap4qFR15",
+					pro: process.env.DODO_PAYMENTS_PRODUCT_ID_PRO_TEST!,
+					growth: process.env.DODO_PAYMENTS_PRODUCT_ID_GROWTH_TEST!,
 				};
 
 		const productId = plan === "pro" ? productIds.pro : productIds.growth;
