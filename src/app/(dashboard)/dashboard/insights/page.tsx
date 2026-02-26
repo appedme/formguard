@@ -2,8 +2,9 @@ import { stackServerApp } from "@/stack/server";
 import { redirect } from "next/navigation";
 import { getUserByStackAuthId } from "@/db/actions/user.actions";
 import { getUserForms } from "@/db/actions/form.actions";
-import { getFormInsights } from "@/db/actions/insight.actions";
+import { getFormInsights, getMonthlyInsightCount } from "@/db/actions/insight.actions";
 import { InsightsClient } from "@/components/dashboard/insights-client";
+import { PLAN_LIMITS } from "@/lib/plans";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -18,6 +19,8 @@ export default async function InsightsPage() {
 	if (!dbUser) redirect("/handler/sign-in");
 
 	const userForms = await getUserForms(dbUser.id);
+	const monthlyUsed = await getMonthlyInsightCount(dbUser.id);
+	const monthlyLimit = PLAN_LIMITS[dbUser.plan].aiInsightsPerMonth;
 
 	// Get insights for all forms
 	const formsWithInsights = await Promise.all(
@@ -34,6 +37,8 @@ export default async function InsightsPage() {
 		<InsightsClient
 			forms={formsWithInsights}
 			plan={dbUser.plan}
+			monthlyUsed={monthlyUsed}
+			monthlyLimit={monthlyLimit}
 		/>
 	);
 }
