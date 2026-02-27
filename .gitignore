@@ -50,3 +50,6 @@ next-env.d.ts
 
 
 !.dev.vars.example
+
+# Generated blog data (build-time)
+src/lib/blog-md-data.ts
