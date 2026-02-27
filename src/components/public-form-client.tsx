@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, ShieldCheck, Loader2, Check, ChevronDown } from "lucide-react";
 import {
   Select,
@@ -202,8 +201,8 @@ export function PublicFormClient({ form }: PublicFormClientProps) {
 												onValueChange={(val) => setFormData({ ...formData, [field.name]: val })}
 												className="flex flex-col gap-4"
 											>
-												{field.options?.map((option) => (
-													<div key={option} className="flex items-center space-x-3 group/opt">
+												{field.options?.map((option, i) => (
+													<div key={`${field.name}-${option}-${i}`} className="flex items-center space-x-3 group/opt">
 														<RadioGroupItem 
 															value={option} 
 															id={`${field.name}-${option}`} 
@@ -218,8 +217,8 @@ export function PublicFormClient({ form }: PublicFormClientProps) {
 											</RadioGroup>
 										) : field.type === "checkbox" ? (
 											<div className="flex flex-col gap-4">
-												{field.options?.map((option) => (
-													<div key={option} className="flex items-center space-x-3 group/opt">
+												{field.options?.map((option, i) => (
+													<div key={`${field.name}-${option}-${i}`} className="flex items-center space-x-3 group/opt">
 														<Checkbox 
 															id={`${field.name}-${option}`} 
 															className="border-2 border-muted-foreground/30 data-[state=checked]:border-none"
@@ -244,8 +243,8 @@ export function PublicFormClient({ form }: PublicFormClientProps) {
 													<SelectValue placeholder={field.placeholder || "Choose an option"} />
 												</SelectTrigger>
 												<SelectContent className="rounded-xl">
-													{field.options?.map((option) => (
-														<SelectItem key={option} value={option}>{option}</SelectItem>
+													{field.options?.map((option, i) => (
+														<SelectItem key={`${field.name}-${option}-${i}`} value={option}>{option}</SelectItem>
 													))}
 												</SelectContent>
 											</Select>

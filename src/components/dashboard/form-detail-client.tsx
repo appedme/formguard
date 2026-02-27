@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Script from "next/script";
+import { Highlight, themes } from "prism-react-renderer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -79,14 +79,6 @@ export function FormDetailClient({
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "1x00000000000000000000AA";
-
-	useEffect(() => {
-		// @ts-expect-error Prism is loaded via CDN script
-		if (typeof window !== "undefined" && window.Prism) {
-			// @ts-expect-error Prism is loaded via CDN script
-			window.Prism.highlightAll();
-		}
-	}, [initialSubmissions]);
 
 	const endpointUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/api/submit/${form.endpointId}`;
 
@@ -179,26 +171,6 @@ export function FormDetailClient({
 
 	return (
 		<div className="p-6 md:p-10 max-w-5xl mx-auto w-full">
-			<link
-				rel="stylesheet"
-				href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css"
-			/>
-			<Script
-				src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"
-				strategy="afterInteractive"
-				onLoad={() => {
-					// @ts-expect-error Prism is loaded via CDN script
-					window.Prism.highlightAll();
-				}}
-			/>
-			<Script
-				src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"
-				strategy="afterInteractive"
-			/>
-			<Script
-				src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"
-				strategy="afterInteractive"
-			/>
 			
 			{/* Header */}
 			<div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-10">
@@ -383,11 +355,23 @@ export function FormDetailClient({
 											)}
 										</Button>
 									</div>
-									<pre className="bg-muted/30! border-border/40! rounded-xl! p-4! text-[11px]! font-mono! text-foreground! overflow-x-auto whitespace-pre-wrap leading-relaxed language-${snippet.lang}">
-										<code className={`language-${snippet.lang}`}>
-											{snippet.code}
-										</code>
-									</pre>
+									<Highlight
+										theme={themes.vsDark}
+										code={snippet.code}
+										language={snippet.lang as any}
+									>
+										{({ className, style, tokens, getLineProps, getTokenProps }) => (
+											<pre className="bg-muted/30! border-border/40! rounded-xl! p-4! text-[11px]! font-mono! text-foreground! overflow-x-auto whitespace-pre-wrap leading-relaxed" style={style}>
+												{tokens.map((line, i) => (
+													<div key={i} {...getLineProps({ line })}>
+														{line.map((token, key) => (
+															<span key={key} {...getTokenProps({ token })} />
+														))}
+													</div>
+												))}
+											</pre>
+										)}
+									</Highlight>
 								</div>
 							))}
 						</div>

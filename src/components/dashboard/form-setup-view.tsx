@@ -17,7 +17,7 @@ import {
 	ExternalLink
 } from "lucide-react";
 import { toast } from "sonner";
-import Script from "next/script";
+import { Highlight, themes } from "prism-react-renderer";
 
 interface SetupViewProps {
 	form: {
@@ -96,16 +96,6 @@ export function FormSetupView({ form }: SetupViewProps) {
 
 	return (
 		<div className="space-y-10">
-			<Script
-				src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"
-				strategy="afterInteractive"
-				onLoad={() => {
-					// @ts-expect-error Prism
-					window.Prism?.highlightAll();
-				}}
-			/>
-			<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
-
 			{/* Endpoint Header */}
 			<section>
 				<h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-4 flex items-center gap-2">
@@ -162,11 +152,23 @@ export function FormSetupView({ form }: SetupViewProps) {
 										</Button>
 									</div>
 									<div className="relative rounded-2xl border border-border/60 bg-muted/40 overflow-hidden shadow-sm">
-										<pre className="p-6 text-[11px] font-mono leading-relaxed overflow-x-auto scrollbar-hide">
-											<code className={`language-${snippet.lang}`}>
-												{snippet.code}
-											</code>
-										</pre>
+										<Highlight
+											theme={themes.vsDark}
+											code={snippet.code}
+											language={snippet.lang as any}
+										>
+											{({ className, style, tokens, getLineProps, getTokenProps }) => (
+												<pre className="p-6 text-[11px] font-mono leading-relaxed overflow-x-auto scrollbar-hide" style={style}>
+													{tokens.map((line, i) => (
+														<div key={i} {...getLineProps({ line })}>
+															{line.map((token, key) => (
+																<span key={key} {...getTokenProps({ token })} />
+															))}
+														</div>
+													))}
+												</pre>
+											)}
+										</Highlight>
 									</div>
 								</div>
 							))}

@@ -45,7 +45,7 @@ export default async function BlogPage() {
             <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-8">Featured Article</p>
             <Link href={`/blog/${featured.slug}`} className="group block">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div className="bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 rounded-3xl p-12 flex items-center justify-center aspect-[4/3] lg:aspect-auto lg:h-80 relative overflow-hidden">
+                <div className="bg-linear-to-br hover:scale-105 transition-transform duration-700 ease-out from-primary/20 to-primary/5 absolute inset-0 rounded-2xl aspect-4/3 flex items-center justify-center border border-primary/10 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,hsl(var(--primary)/0.15),transparent_70%)]" />
                   <div className="text-center relative z-10">
                     <div className="text-6xl font-black text-primary/20 mb-4">FG</div>
@@ -93,7 +93,7 @@ export default async function BlogPage() {
               <Link key={post.slug} href={`/blog/${post.slug}`} className="group">
                 <article className="h-full flex flex-col border border-border/40 rounded-2xl overflow-hidden bg-card hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all">
                   {/* Category Color Banner */}
-                  <div className="h-1.5 bg-gradient-to-r from-primary/60 to-primary/20" />
+                  <div className="h-1.5 bg-linear-to-r from-primary/60 to-primary/20" />
                   
                   <div className="p-6 flex-1 flex flex-col">
                     <div className="flex items-center justify-between mb-4">
