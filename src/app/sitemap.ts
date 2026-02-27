@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { blogPosts } from "@/lib/blog";
+import { mdPosts } from "@/lib/blog-md-data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
 	const baseUrl = "https://formguard.strivio.world";
@@ -11,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 		"/pricing",
 		"/docs",
 		"/blog",
+		"/contact",
 		"/privacy",
 		"/terms",
 		"/status",
@@ -21,7 +23,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
 		priority: route === "" ? 1 : 0.8,
 	}));
 
-	const blogRoutes = blogPosts.map((post) => ({
+	const allPosts = [...blogPosts, ...mdPosts];
+
+	const blogRoutes = allPosts.map((post) => ({
 		url: `${baseUrl}/blog/${post.slug}`,
 		lastModified: new Date(post.date),
 		changeFrequency: "monthly" as const,
