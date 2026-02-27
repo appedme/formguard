@@ -1,4 +1,5 @@
 import { blogPosts } from "@/lib/blog";
+import { getMarkdownPosts, getMarkdownPostBySlug } from "@/lib/blog-engine";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, User, ChevronLeft, Clock } from "lucide-react";
@@ -11,7 +12,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = blogPosts.find((p) => p.slug === slug);
+  const post = blogPosts.find((p) => p.slug === slug) || await getMarkdownPostBySlug(slug);
   if (!post) return {};
 
   return {
@@ -34,14 +35,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = blogPosts.find((p) => p.slug === slug);
+  const post = blogPosts.find((p) => p.slug === slug) || await getMarkdownPostBySlug(slug);
 
   if (!post) {
     notFound();
   }
 
   // Find related posts (same category, different slug)
-  const related = blogPosts.filter((p) => p.category === post.category && p.slug !== post.slug).slice(0, 2);
+  const mdPosts = await getMarkdownPosts();
+  const allPosts = [...blogPosts, ...mdPosts];
+  const related = allPosts.filter((p) => p.category === post.category && p.slug !== post.slug).slice(0, 2);
 
   return (
     <div className="bg-background min-h-screen">

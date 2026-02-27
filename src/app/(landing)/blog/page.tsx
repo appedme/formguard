@@ -1,4 +1,5 @@
 import { blogPosts } from "@/lib/blog";
+import { getMarkdownPosts } from "@/lib/blog-engine";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, User, ChevronRight, Clock, BookOpen } from "lucide-react";
@@ -13,9 +14,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BlogPage() {
-  const featured = blogPosts.find((p) => p.featured);
-  const rest = blogPosts.filter((p) => p.slug !== featured?.slug);
+export default async function BlogPage() {
+  const mdPosts = await getMarkdownPosts();
+  const allPosts = [...blogPosts, ...mdPosts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const featured = allPosts.find((p) => p.featured);
+  const rest = allPosts.filter((p) => p.slug !== featured?.slug);
 
   return (
     <div className="bg-background min-h-screen">
