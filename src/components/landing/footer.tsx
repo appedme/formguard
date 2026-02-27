@@ -5,6 +5,7 @@ const links = [
 	{ label: "Pricing", href: "/pricing" },
 	{ label: "Blog", href: "/blog" },
 	{ label: "Docs", href: "/docs" },
+	{ label: "Contact", href: "/contact" },
 	{ label: "Privacy", href: "/privacy" },
 	{ label: "Terms", href: "/terms" },
 	{ label: "Status", href: "/status" },

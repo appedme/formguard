@@ -105,6 +105,19 @@ export const apiKeys = pgTable(
 	(table) => [index("api_keys_user_id_idx").on(table.userId), index("api_keys_key_idx").on(table.key)]
 );
 
+// ─── Feedback ─────────────────────────────────────────
+export const feedback = pgTable(
+	"feedback",
+	{
+		id: uuid("id").defaultRandom().primaryKey(),
+		name: text("name").notNull(),
+		email: text("email").notNull(),
+		message: text("message").notNull(),
+		createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+	},
+	(table) => [index("feedback_created_at_idx").on(table.createdAt)]
+);
+
 // ─── Type Exports ────────────────────────────────────
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
@@ -114,3 +127,5 @@ export type Submission = typeof submissions.$inferSelect;
 export type NewSubmission = typeof submissions.$inferInsert;
 export type Insight = typeof insights.$inferSelect;
 export type NewInsight = typeof insights.$inferInsert;
+export type Feedback = typeof feedback.$inferSelect;
+export type NewFeedback = typeof feedback.$inferInsert;
