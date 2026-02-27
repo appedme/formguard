@@ -94,20 +94,16 @@ export async function POST(
 		if (form.turnstileEnabled) {
 			const turnstileToken = payload["cf-turnstile-response"] as string | undefined;
 			
-			if (!turnstileToken) {
-				return NextResponse.json(
-					{ error: "Spam protection triggered. Turnstile token missing." },
-					{ status: 403 }
-				);
-			}
-
-			const verification = await verifyTurnstileToken(turnstileToken);
-			if (!verification.success) {
-				console.log(`[SPAM] Turnstile verification failed for form ${form.id}:`, (verification as any)["error-codes"]);
-				isSpam = true;
-				
-				// Optional: Block submissions entirely if verification fails
-				// return NextResponse.json({ error: "Spam protection triggered. verification failed." }, { status: 403 });
+			if (turnstileToken) {
+				// Token provided — verify it
+				const verification = await verifyTurnstileToken(turnstileToken);
+				if (!verification.success) {
+					console.log(`[SPAM] Turnstile verification failed for form ${form.id}:`, (verification as any)["error-codes"]);
+					isSpam = true;
+				}
+			} else {
+				// No token — log but don't block (playground, API, or no widget embedded)
+				console.log(`[TURNSTILE] No token provided for form ${form.id} — skipping verification`);
 			}
 		}
 
