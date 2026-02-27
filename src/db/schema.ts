@@ -44,6 +44,13 @@ export const forms = pgTable(
 		autoResponderMessage: text("auto_responder_message"),
 		allowedOrigins: text("allowed_origins"), // Comma-separated list of allowed origins
 		turnstileEnabled: boolean("turnstile_enabled").notNull().default(false),
+		// ─── Integrations ────────────────────────────
+		googleSheetsUrl: text("google_sheets_url"),
+		telegramBotToken: text("telegram_bot_token"),
+		telegramChatId: text("telegram_chat_id"),
+		notionDatabaseId: text("notion_database_id"),
+		notionToken: text("notion_token"),
+		// ─── Public Form ─────────────────────────────
 		isPublic: boolean("is_public").notNull().default(false),
 		publicFormDescription: text("public_form_description"),
 		publicFormFields: jsonb("public_form_fields").notNull().default([]),

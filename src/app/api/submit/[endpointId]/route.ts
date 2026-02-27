@@ -4,6 +4,7 @@ import { forms, submissions, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { verifyTurnstileToken } from "@/lib/turnstile";
+import { fireIntegrations } from "@/lib/integrations";
 import { Resend } from "resend";
 
 export const runtime = "edge";
@@ -187,6 +188,9 @@ export async function POST(
 				}
 			}
 		}
+
+		// --- Handle Integrations ---
+		fireIntegrations(form, payload, submission.id);
 
 		// --- Handle Email Notifications ---
 		if (form.emailNotifications && userEmail) {

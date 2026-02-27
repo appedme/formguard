@@ -9,7 +9,8 @@ import {
 	BarChart3, 
 	Globe, 
 	Play, 
-	Settings 
+	Settings,
+	Puzzle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -28,6 +29,7 @@ export function FormDashboardNav({ formId, isPublic }: FormNavProps) {
 		{ label: "Playground", href: `/dashboard/forms/${formId}/playground`, icon: Play },
 		{ label: "Analytics", href: `/dashboard/forms/${formId}/analytics`, icon: BarChart3 },
 		{ label: "AI Insights", href: `/dashboard/forms/${formId}/insights`, icon: Sparkles },
+		{ label: "Integrations", href: `/dashboard/forms/${formId}/integrations`, icon: Puzzle },
 		{ label: "Settings", href: `/dashboard/forms/${formId}/settings`, icon: Settings },
 	];
 

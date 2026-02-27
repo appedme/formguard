@@ -13,6 +13,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 		>
 			{children}
 			<Toaster position="top-right" richColors />
+			<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "8f08b788d2b847829001105bef8b347a"}'></script>
 		</ThemeProvider>
 	);
 }
