@@ -10,6 +10,13 @@ import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { 
 	Plus, 
 	Trash2, 
@@ -187,6 +194,7 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 	const [buttonText, setButtonText] = useState(form.publicFormButtonText || "Submit");
 	const [headerImage, setHeaderImage] = useState(form.publicFormHeaderImage || "");
 	const [themeColor, setThemeColor] = useState(form.publicFormThemeColor || "#6366f1");
+	const [formStyle, setFormStyle] = useState(form.publicFormStyle || "default");
 	const [isCustomColor, setIsCustomColor] = useState(false);
 
 	const sensors = useSensors(
@@ -220,6 +228,7 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 				publicFormButtonText: buttonText,
 				publicFormHeaderImage: headerImage,
 				publicFormThemeColor: themeColor,
+				publicFormStyle: formStyle,
 			});
 
 			if (success) {
@@ -334,44 +343,63 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 							</h3>
 							
 							<div className="grid gap-8 p-6 bg-muted/20 border border-border/40 rounded-2xl">
-								<div className="space-y-4">
-									<Label className="text-xs font-black uppercase tracking-widest opacity-60">Theme Color</Label>
-									<div className="flex flex-wrap gap-3">
-										{themeColors.map((color) => (
-											<button
-												key={color.value}
-												type="button"
-												className={`w-10 h-10 rounded-full border-2 transition-all hover:scale-110 flex items-center justify-center ${themeColor === color.value ? 'border-foreground ring-2 ring-primary/20' : 'border-transparent'}`}
-												style={{ backgroundColor: color.value }}
-												onClick={() => {
-													setThemeColor(color.value);
-													setIsCustomColor(false);
-												}}
-											>
-												{themeColor === color.value && <div className="w-2 h-2 rounded-full bg-white shadow-sm" />}
-											</button>
-										))}
-										<div className="flex items-center gap-2">
-											<div 
-												className="w-10 h-10 rounded-full border-2 border-border/40 relative overflow-hidden flex items-center justify-center bg-background"
-												style={{ borderColor: isCustomColor ? themeColor : undefined }}
-											>
-												<input 
-													type="color" 
-													className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-													value={themeColor}
-													onChange={(e) => {
-														setThemeColor(e.target.value);
-														setIsCustomColor(true);
-													}}
-												/>
-												<Plus className="w-4 h-4 text-muted-foreground" />
+								<div className="grid gap-6">
+									<div className="grid sm:grid-cols-2 gap-6">
+										<div className="space-y-3">
+											<Label className="text-xs font-black uppercase tracking-widest opacity-60">Form Style</Label>
+											<Select value={formStyle} onValueChange={setFormStyle}>
+												<SelectTrigger className="bg-background border-border/40 h-11 rounded-xl focus:ring-primary/20">
+													<SelectValue placeholder="Select a style" />
+												</SelectTrigger>
+												<SelectContent className="rounded-xl font-medium">
+													<SelectItem value="default">Default (Cards & Shadows)</SelectItem>
+													<SelectItem value="minimal">Minimal (Clean & Flat)</SelectItem>
+													<SelectItem value="notion">Notion (Serif & Borders)</SelectItem>
+													<SelectItem value="playful">Playful (Large & Bold)</SelectItem>
+													<SelectItem value="terminal">Terminal (Hacker vibe)</SelectItem>
+												</SelectContent>
+											</Select>
+										</div>
+
+										<div className="space-y-3">
+											<Label className="text-xs font-black uppercase tracking-widest opacity-60">Theme Color</Label>
+											<div className="flex flex-wrap gap-2">
+												{themeColors.map((color) => (
+													<button
+														key={color.value}
+														type="button"
+														className={`w-10 h-10 rounded-full border-2 transition-all hover:scale-110 flex items-center justify-center ${themeColor === color.value ? 'border-foreground ring-2 ring-primary/20' : 'border-transparent'}`}
+														style={{ backgroundColor: color.value }}
+														onClick={() => {
+															setThemeColor(color.value);
+															setIsCustomColor(false);
+														}}
+													>
+														{themeColor === color.value && <div className="w-2 h-2 rounded-full bg-white shadow-sm" />}
+													</button>
+												))}
+												<div className="flex items-center gap-2">
+													<div 
+														className="w-10 h-10 rounded-full border-2 border-border/40 relative overflow-hidden flex items-center justify-center bg-background"
+														style={{ borderColor: isCustomColor ? themeColor : undefined }}
+													>
+														<input 
+															type="color" 
+															className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+															value={themeColor}
+															onChange={(e) => {
+																setThemeColor(e.target.value);
+																setIsCustomColor(true);
+															}}
+														/>
+														<Plus className="w-4 h-4 text-muted-foreground" />
+													</div>
+													{isCustomColor && <span className="text-[10px] font-mono font-bold uppercase">{themeColor}</span>}
+												</div>
 											</div>
-											{isCustomColor && <span className="text-[10px] font-mono font-bold uppercase">{themeColor}</span>}
 										</div>
 									</div>
 								</div>
-
 								<div className="space-y-3">
 									<Label className="text-xs font-black uppercase tracking-widest opacity-60">Header Image URL (Optional)</Label>
 									<div className="flex gap-4">
