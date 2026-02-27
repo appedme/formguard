@@ -78,7 +78,7 @@ function SortableField({
 		transform,
 		transition,
 		isDragging,
-	} = useSortable({ id: field.name });
+	} = useSortable({ id: field.name || field.id || "unnamed" });
 
 	const style = {
 		transform: CSS.Transform.toString(transform),
@@ -106,7 +106,7 @@ function SortableField({
 						<Input 
 							className="h-9 bg-muted/20 border-border/40 text-sm rounded-lg"
 							value={field.label}
-							onChange={(e) => updateField(field.name, { label: e.target.value })}
+							onChange={(e) => updateField(field.name || field.id || "unnamed", { label: e.target.value })}
 						/>
 					</div>
 					<div className="sm:col-span-3 space-y-1.5">
@@ -121,15 +121,15 @@ function SortableField({
 								if (["radio", "checkbox", "select"].includes(newType) && (!field.options || field.options.length === 0)) {
 									updates.options = ["Option 1", "Option 2"];
 								}
-								updateField(field.name, updates);
+								updateField(field.name || field.id || "unnamed", updates);
 							}}
 						>
 							<option value="text">Short Text</option>
 							<option value="email">Email Address</option>
-							<option value="textarea">Long Text</option>
+							<option value="textarea">Long Text (Textarea)</option>
 							<option value="number">Number</option>
-							<option value="radio">Multiple Choice (Radio)</option>
-							<option value="checkbox">Checkboxes</option>
+							<option value="radio">Single Choice (Radio)</option>
+							<option value="checkbox">Multiple Choice (Checkbox)</option>
 							<option value="select">Dropdown (Select)</option>
 						</select>
 					</div>
@@ -139,13 +139,13 @@ function SortableField({
 							className="h-9 bg-muted/20 border-border/40 text-sm rounded-lg"
 							placeholder="e.g. Enter your name"
 							value={field.placeholder || ""}
-							onChange={(e) => updateField(field.name, { placeholder: e.target.value })}
+							onChange={(e) => updateField(field.name || field.id || "unnamed", { placeholder: e.target.value })}
 						/>
 					</div>
 					<div className="sm:col-span-2 flex items-center gap-2 pt-6">
 						<Switch 
 							checked={field.required} 
-							onCheckedChange={(val) => updateField(field.name, { required: val })}
+							onCheckedChange={(val) => updateField(field.name || field.id || "unnamed", { required: val })}
 						/>
 						<span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Req</span>
 					</div>
@@ -155,7 +155,7 @@ function SortableField({
 					variant="ghost" 
 					size="icon" 
 					className="h-8 w-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 absolute right-3 top-6 opacity-30 group-hover:opacity-100 transition-opacity"
-					onClick={() => removeField(field.name)}
+					onClick={() => removeField(field.name || field.id || "unnamed")}
 				>
 					<Trash2 className="w-3.5 h-3.5" />
 				</Button>
@@ -249,8 +249,8 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 
 		if (over && active.id !== over.id) {
 			setFields((items) => {
-				const oldIndex = items.findIndex((i) => i.name === active.id);
-				const newIndex = items.findIndex((i) => i.name === over.id);
+				const oldIndex = items.findIndex((i) => (i.name || i.id || "unnamed") === active.id);
+				const newIndex = items.findIndex((i) => (i.name || i.id || "unnamed") === over.id);
 
 				return arrayMove(items, oldIndex, newIndex);
 			});
@@ -269,11 +269,11 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 	}
 
 	function removeField(name: string) {
-		setFields(fields.filter(f => f.name !== name));
+		setFields(fields.filter(f => (f.name || f.id || "unnamed") !== name));
 	}
 
 	function updateField(name: string, data: Partial<PublicFormField>) {
-		setFields(fields.map(f => f.name === name ? { ...f, ...data } : f));
+		setFields(fields.map(f => (f.name || f.id || "unnamed") === name ? { ...f, ...data } : f));
 	}
 
 	return (
@@ -497,15 +497,15 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 										onDragEnd={handleDragEnd}
 									>
 										<SortableContext 
-											items={fields.map(f => f.name)}
+											items={fields.map(f => f.name || f.id || "unnamed")}
 											strategy={verticalListSortingStrategy}
 										>
 											<div className="space-y-4">
 												{fields.map((field) => (
 													<SortableField 
-														key={field.name} 
+														key={field.name || field.id || "unnamed"} 
 														field={field} 
-														updateField={updateField} 
+														updateField={updateField}  
 														removeField={removeField} 
 													/>
 												))}

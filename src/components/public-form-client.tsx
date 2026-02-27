@@ -127,33 +127,33 @@ export function PublicFormClient({ form }: PublicFormClientProps) {
 			headerCard: "shadow-md border-border/40 rounded-xl"
 		},
 		minimal: {
-			root: "font-sans bg-white",
+			root: "font-sans bg-white text-slate-900",
 			bgStyle: {},
 			card: "border-0 border-b border-border/20 rounded-none bg-transparent px-0 py-8 shadow-none !mb-0",
-			input: "bg-transparent border-0 border-b-2 border-muted/30 focus-visible:ring-0 rounded-none px-0 pb-2 transition-all placeholder:text-muted-foreground/40 text-xl",
-			label: "font-medium text-foreground text-xl",
+			input: "bg-transparent border-0 border-b-2 border-slate-200 focus-visible:ring-0 rounded-none px-0 pb-2 transition-all placeholder:text-slate-400 text-xl text-slate-900",
+			label: "font-medium text-slate-900 text-xl",
 			button: "rounded-none font-medium bg-black text-white hover:bg-black/90 px-8 shadow-none h-14 text-lg",
-			title: "font-medium tracking-normal text-5xl",
+			title: "font-medium tracking-normal text-5xl text-slate-900",
 			headerCard: "border-0 shadow-none rounded-none bg-transparent px-0 pb-8 border-b border-border/20"
 		},
 		notion: {
-			root: "font-serif bg-white",
+			root: "font-serif bg-white text-slate-900",
 			bgStyle: {},
 			card: "border-0 rounded-none bg-transparent px-0 py-6 shadow-none",
-			input: "bg-transparent border border-border/40 hover:border-border focus-visible:ring-1 focus-visible:ring-border rounded px-3 py-2 transition-all placeholder:text-muted-foreground/40 text-base font-serif",
-			label: "font-semibold text-foreground text-base font-serif",
-			button: "rounded font-semibold bg-white border border-border/60 text-foreground hover:bg-muted/30 px-6 font-serif shadow-sm",
-			title: "font-bold tracking-tight text-4xl font-serif",
+			input: "bg-transparent border border-slate-200 hover:border-slate-300 focus-visible:ring-1 focus-visible:ring-slate-300 rounded px-3 py-2 transition-all placeholder:text-slate-400 text-base font-serif text-slate-900",
+			label: "font-semibold text-slate-900 text-base font-serif",
+			button: "rounded font-semibold bg-white border border-slate-200 text-slate-900 hover:bg-slate-50 px-6 font-serif shadow-sm",
+			title: "font-bold tracking-tight text-4xl font-serif text-slate-900",
 			headerCard: "border-0 shadow-none rounded-none bg-transparent px-0 pb-6"
 		},
 		playful: {
-			root: "font-sans",
+			root: "font-sans text-slate-900",
 			bgStyle: { backgroundColor: `${form.publicFormThemeColor}15` },
 			card: "border-4 border-black rounded-3xl bg-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]",
-			input: "bg-white border-2 border-black focus-visible:ring-0 rounded-xl focus-visible:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-4 py-3 transition-all placeholder:text-muted-foreground/40 font-bold text-lg",
-			label: "font-black text-foreground text-xl",
+			input: "bg-white border-2 border-black focus-visible:ring-0 rounded-xl focus-visible:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-4 py-3 transition-all placeholder:text-slate-400 font-bold text-lg text-slate-900",
+			label: "font-black text-slate-900 text-xl",
 			button: "rounded-2xl font-black bg-black text-white hover:bg-black/90 px-8 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-y-1 active:shadow-none transition-all h-14 text-lg",
-			title: "font-black tracking-tighter text-5xl",
+			title: "font-black tracking-tighter text-5xl text-slate-900",
 			headerCard: "border-4 border-black rounded-3xl bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
 		},
 		terminal: {
@@ -369,12 +369,12 @@ export function PublicFormClient({ form }: PublicFormClientProps) {
 
 				<footer className={`pt-12 pb-8 flex flex-col items-center gap-6 ${isTerminal ? 'opacity-50' : ''}`}>
 					<div className="flex items-center gap-3">
-						<span className={`text-[11px] font-bold uppercase tracking-tighter ${isTerminal ? 'text-green-500' : 'text-muted-foreground'}`}>Powered by</span>
-						<div className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-tighter ${isTerminal ? 'border border-green-500 text-green-500' : 'bg-foreground text-background shadow-lg'}`}>
+						<span className={`text-[11px] font-bold uppercase tracking-tighter ${isTerminal ? 'text-green-500' : 'text-slate-500'}`}>Powered by</span>
+						<div className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-tighter ${isTerminal ? 'border border-green-500 text-green-500' : 'bg-slate-900 text-white shadow-lg'}`}>
 							FormGuard
 						</div>
 					</div>
-					<div className={`text-[10px] font-medium ${isTerminal ? 'text-green-500/50' : 'text-muted-foreground/60'}`}>
+					<div className={`text-[10px] font-medium ${isTerminal ? 'text-green-500/50' : 'text-slate-500'}`}>
 						This content is neither created nor endorsed by FormGuard.
 					</div>
 				</footer>
