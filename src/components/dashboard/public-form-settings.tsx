@@ -51,6 +51,7 @@ import { CSS } from "@dnd-kit/utilities";
 interface PublicFormField {
 	label: string;
 	name: string;
+	id?: string;
 	type: "text" | "email" | "textarea" | "number" | "radio" | "checkbox" | "select";
 	required: boolean;
 	placeholder?: string;
