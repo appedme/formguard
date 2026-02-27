@@ -50,6 +50,7 @@ export function PublicFormClient({ form }: PublicFormClientProps) {
 	const [formData, setFormData] = useState<Record<string, any>>({});
 	const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 	const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+	const [currentStep, setCurrentStep] = useState<number>(form.publicFormStyle === "typeform" ? -1 : 0);
 
 	const fields = (form.publicFormFields as PublicFormField[]) || [];
 
@@ -165,6 +166,16 @@ export function PublicFormClient({ form }: PublicFormClientProps) {
 			button: "rounded-none font-bold bg-green-500 text-black hover:bg-green-400 px-8 uppercase tracking-widest shadow-[0_0_15px_rgba(34,197,94,0.3)] h-12 text-xs",
 			title: "font-normal tracking-widest text-2xl uppercase border-b border-green-500/30 pb-4 text-green-400",
 			headerCard: "border border-green-500/30 rounded-none bg-black shadow-[0_0_20px_rgba(34,197,94,0.1)]"
+		},
+		typeform: {
+			root: "font-sans bg-white text-slate-900",
+			bgStyle: {},
+			card: "border-0 shadow-none bg-transparent px-0 py-0",
+			input: "bg-transparent border-0 border-b border-slate-300 focus-visible:ring-0 rounded-none px-0 py-4 transition-all placeholder:text-slate-300 text-3xl md:text-5xl text-slate-900 mb-4",
+			label: "font-normal text-slate-900 text-2xl md:text-4xl mb-6",
+			button: "rounded font-bold bg-slate-900 text-white hover:bg-slate-800 px-8 shadow-md h-16 text-xl transition-all active:scale-95",
+			title: "font-medium tracking-tight text-4xl md:text-6xl text-slate-900 mb-6",
+			headerCard: "border-0 shadow-none rounded-none bg-transparent px-0 pb-8 flex flex-col justify-center min-h-[50vh]"
 		}
 	};
 
@@ -172,11 +183,13 @@ export function PublicFormClient({ form }: PublicFormClientProps) {
 	const theme = styleConfig[currentStyle] || styleConfig.default;
 
 	const isTerminal = currentStyle === "terminal";
+	const isTypeform = currentStyle === "typeform";
 
 	return (
-		<div className={`w-full min-h-screen py-12 px-4 transition-colors duration-500 ${theme.root}`} style={theme.bgStyle}>
-			<div className="max-w-3xl mx-auto space-y-4">
+		<div className={`w-full min-h-screen py-12 px-4 transition-colors duration-500 ${theme.root} ${isTypeform ? 'flex flex-col justify-center' : ''}`} style={theme.bgStyle}>
+			<div className={`mx-auto space-y-4 ${isTypeform ? 'w-full max-w-4xl' : 'max-w-3xl'}`}>
 				{/* 1. Header Card */}
+				{(!isTypeform || currentStep === -1) && (
 				<Card className={`overflow-hidden relative ${theme.headerCard}`}>
 					{/* Top Accent Bar */}
 					{currentStyle !== "terminal" && currentStyle !== "minimal" && currentStyle !== "notion" && (
@@ -214,18 +227,32 @@ export function PublicFormClient({ form }: PublicFormClientProps) {
 						</h1>
 						
 						{form.publicFormDescription && (
-							<p className={`text-base font-medium whitespace-pre-wrap leading-relaxed ${isTerminal ? 'text-green-500/80' : 'text-foreground/70'}`}>
+							<p className={`text-base font-medium whitespace-pre-wrap leading-relaxed ${isTerminal ? 'text-green-500/80' : 'text-slate-600'} ${isTypeform ? 'text-xl md:text-2xl mt-4 mb-8' : ''}`}>
 								{form.publicFormDescription}
 							</p>
 						)}
 
-						{currentStyle !== "terminal" && <Separator className="mt-6 opacity-40" />}
+						{currentStyle !== "terminal" && !isTypeform && <Separator className="mt-6 opacity-40" />}
 						
-						<div className={`text-[11px] font-bold uppercase tracking-widest mt-4 ${isTerminal ? 'text-green-500/50' : 'text-red-500'}`}>
-							* Indicates required question
-						</div>
+						{isTypeform ? (
+							<div className="pt-8">
+								<Button 
+									type="button" 
+									onClick={() => setCurrentStep(0)} 
+									className={`${theme.button} px-8`}
+									style={{ backgroundColor: form.publicFormThemeColor, color: "#fff" }}
+								>
+									Start
+								</Button>
+							</div>
+						) : (
+							<div className={`text-[11px] font-bold uppercase tracking-widest mt-4 ${isTerminal ? 'text-green-500/50' : 'text-red-500'}`}>
+								* Indicates required question
+							</div>
+						)}
 					</div>
 				</Card>
+				)}
 
 				<form onSubmit={handleSubmit} className="space-y-4">
 					{fields.length === 0 ? (
@@ -233,12 +260,15 @@ export function PublicFormClient({ form }: PublicFormClientProps) {
 							<p className="text-sm text-muted-foreground font-medium">This form has no fields yet.</p>
 						</Card>
 					) : (
-						fields.map((field) => {
+						fields.map((field, index) => {
 							const fieldKey = field.name || field.id || "unnamed";
+							if (isTypeform && currentStep !== index) return null;
+							
 							return (
-							<Card key={fieldKey} className={`p-6 md:p-8 transition-all group ${theme.card}`}>
+							<Card key={fieldKey} className={`p-6 md:p-8 transition-all group ${theme.card} ${isTypeform ? 'min-h-[50vh] flex flex-col justify-center animate-in fade-in slide-in-from-bottom-8 duration-700' : ''}`}>
 								<div className="space-y-4">
 									<Label htmlFor={fieldKey} className={`flex items-start gap-1.5 leading-snug ${theme.label} ${isTerminal ? 'text-green-500' : ''}`}>
+										{isTypeform && <span className="text-slate-400 mr-2">{index + 1}.</span>}
 										{field.label}
 										{field.required && <span className={`${isTerminal ? 'text-green-500' : 'text-red-500'} text-xl font-black leading-none`}>*</span>}
 									</Label>
@@ -326,21 +356,38 @@ export function PublicFormClient({ form }: PublicFormClientProps) {
 										)}
 									</div>
 								</div>
+								
+								{isTypeform && (
+									<div className="pt-8 flex items-center gap-3">
+										{currentStep > 0 && (
+											<Button type="button" variant="outline" className="h-14 px-6 text-lg" onClick={() => setCurrentStep(currentStep - 1)}>
+												Previous
+											</Button>
+										)}
+										{currentStep < fields.length - 1 ? (
+											<Button type="button" className={`${theme.button} px-8`} style={{ backgroundColor: form.publicFormThemeColor, color: "#fff" }} onClick={() => setCurrentStep(currentStep + 1)}>
+												OK
+											</Button>
+										) : null}
+									</div>
+								)}
 							</Card>
 							);
 						})
 					)}
 
-					{form.turnstileEnabled && (
-						<div className="flex justify-start pt-2">
-							<Turnstile
-								siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
-								onSuccess={(token) => setTurnstileToken(token)}
-							/>
-						</div>
-					)}
+					{(!isTypeform || currentStep === fields.length - 1) && (
+						<div className={isTypeform ? "animate-in fade-in slide-in-from-bottom-8 duration-700 max-w-4xl mx-auto" : ""}>
+							{form.turnstileEnabled && (
+								<div className="flex justify-start pt-2 mb-6">
+									<Turnstile
+										siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
+										onSuccess={(token) => setTurnstileToken(token)}
+									/>
+								</div>
+							)}
 
-					<div className="flex items-center justify-between pt-4">
+							<div className="flex items-center justify-between pt-4">
 						<Button 
 							type="submit" 
 							disabled={status === "submitting" || fields.length === 0}
@@ -352,19 +399,24 @@ export function PublicFormClient({ form }: PublicFormClientProps) {
 							) : (
 								form.publicFormButtonText
 							)}
-						</Button>
-						<Button 
-							variant="ghost" 
-							type="button"
-							className={`text-xs font-bold uppercase tracking-widest hover:text-foreground ${isTerminal ? 'text-green-500/50 hover:text-green-500' : 'text-muted-foreground'}`}
-							onClick={() => {
-								setFormData({});
-								setStatus("idle");
-							}}
-						>
-							Clear form
-						</Button>
+							</Button>
+							{!isTypeform && (
+							<Button 
+								variant="ghost" 
+								type="button"
+								className={`text-xs font-bold uppercase tracking-widest hover:text-foreground ${isTerminal ? 'text-green-500/50 hover:text-green-500' : 'text-muted-foreground'}`}
+								onClick={() => {
+									setFormData({});
+									setStatus("idle");
+									if (isTypeform) setCurrentStep(-1);
+								}}
+							>
+								Clear form
+							</Button>
+							)}
+						</div>
 					</div>
+					)}
 				</form>
 
 				<footer className={`pt-12 pb-8 flex flex-col items-center gap-6 ${isTerminal ? 'opacity-50' : ''}`}>

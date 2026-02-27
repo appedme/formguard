@@ -358,6 +358,7 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 													<SelectItem value="notion">Notion (Serif & Borders)</SelectItem>
 													<SelectItem value="playful">Playful (Large & Bold)</SelectItem>
 													<SelectItem value="terminal">Terminal (Hacker vibe)</SelectItem>
+													<SelectItem value="typeform">Typeform (One at a time)</SelectItem>
 												</SelectContent>
 											</Select>
 										</div>
