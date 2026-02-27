@@ -20,6 +20,33 @@ export async function createForm(userId: string, name: string) {
 	return form;
 }
 
+export async function createFormFromTemplate(
+	userId: string,
+	templateId: string
+) {
+	const { formTemplates } = await import("@/lib/templates");
+	const template = formTemplates.find((t) => t.id === templateId);
+	if (!template) throw new Error("Template not found");
+
+	const endpointId = nanoid(12);
+
+	const [form] = await db
+		.insert(forms)
+		.values({
+			userId,
+			name: template.name,
+			endpointId,
+			isPublic: true,
+			publicFormDescription: template.description,
+			publicFormFields: template.fields,
+			publicFormSuccessMessage: template.successMessage,
+			publicFormButtonText: template.buttonText,
+		})
+		.returning();
+
+	return form;
+}
+
 export async function getUserForms(userId: string) {
 	const userForms = await db
 		.select({

@@ -9,7 +9,8 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { Plus, ChevronRight, Inbox, LayoutDashboard, Zap, Share2, Sparkles } from "lucide-react";
+import { Plus, ChevronRight, Inbox, LayoutDashboard, Zap, Share2, Sparkles, CheckCircle } from "lucide-react";
+import { TemplatePicker } from "@/components/dashboard/template-picker";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -138,9 +139,9 @@ export default async function DashboardPage() {
 					)}
 				</div>
 
-				{/* Sidebar/Integrations Preview */}
+				{/* Sidebar/Integrations */}
 				<div className="space-y-6">
-					<h2 className="text-sm font-medium text-foreground">Upcoming Features</h2>
+					<h2 className="text-sm font-medium text-foreground">Integrations</h2>
 					<Card className="bg-primary/5 border-primary/10 shadow-none overflow-hidden relative">
 						<CardContent className="p-6">
 							<Sparkles className="absolute -right-2 -top-2 w-16 h-16 text-primary/5" />
@@ -150,20 +151,28 @@ export default async function DashboardPage() {
 								</div>
 								<div>
 									<h3 className="text-sm font-semibold text-foreground">Connected Apps</h3>
-									<Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-[9px] h-4 px-1.5">COMING SOON</Badge>
+									<Badge variant="secondary" className="bg-green-500/10 text-green-600 border-green-500/20 text-[9px] h-4 px-1.5">LIVE</Badge>
 								</div>
 							</div>
 							<p className="text-xs text-muted-foreground leading-relaxed mb-6">
-								Automatically sync your form submissions to Notion, Google Sheets, Slack, and 100+ other apps.
+								Sync submissions to Notion, Google Sheets, Telegram, Slack, and 7,000+ apps via Zapier.
 							</p>
 							<div className="space-y-2">
 								<div className="flex items-center justify-between p-2 rounded-lg bg-background/50 border border-border/40 text-[10px] font-medium text-muted-foreground">
-									<span>Notion Database</span>
-									<span className="text-[9px] opacity-50 uppercase tracking-tighter">In Development</span>
+									<span>Google Sheets</span>
+									<CheckCircle className="w-3.5 h-3.5 text-green-500" />
 								</div>
 								<div className="flex items-center justify-between p-2 rounded-lg bg-background/50 border border-border/40 text-[10px] font-medium text-muted-foreground">
-									<span>Google Sheets</span>
-									<span className="text-[9px] opacity-50 uppercase tracking-tighter">In Development</span>
+									<span>Telegram Bot</span>
+									<CheckCircle className="w-3.5 h-3.5 text-green-500" />
+								</div>
+								<div className="flex items-center justify-between p-2 rounded-lg bg-background/50 border border-border/40 text-[10px] font-medium text-muted-foreground">
+									<span>Notion</span>
+									<CheckCircle className="w-3.5 h-3.5 text-green-500" />
+								</div>
+								<div className="flex items-center justify-between p-2 rounded-lg bg-background/50 border border-border/40 text-[10px] font-medium text-muted-foreground">
+									<span>Zapier / Make / n8n</span>
+									<CheckCircle className="w-3.5 h-3.5 text-green-500" />
 								</div>
 							</div>
 						</CardContent>
@@ -181,6 +190,11 @@ export default async function DashboardPage() {
 						</CardContent>
 					</Card>
 				</div>
+			</div>
+
+			{/* Template Picker */}
+			<div className="mt-12 pt-10 border-t border-border/40">
+				<TemplatePicker userId={dbUser.id} />
 			</div>
 		</div>
 	);
