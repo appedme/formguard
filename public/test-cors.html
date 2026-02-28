@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CORS Test - FormGuard</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        padding: 2rem;
+        max-width: 500px;
+        margin: auto;
+      }
+      .form-group {
+        margin-bottom: 1rem;
+      }
+      input {
+        width: 100%;
+        padding: 0.5rem;
+        margin-top: 0.25rem;
+      }
+      button {
+        padding: 0.5rem 1rem;
+        background: #000;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+      }
+      #log {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f4f4f4;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+      .error {
+        color: red;
+      }
+      .success {
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>FormGuard CORS Tester</h2>
+    <p>
+      Open this file directly in your browser or serve it via a local dev server
+      to test cross-origin requests.
+    </p>
+
+    <div class="form-group">
+      <label>Endpoint URL (from dashboard)</label>
+      <input
+        type="text"
+        id="endpoint"
+        placeholder="http://localhost:3000/api/submit/YOUR_ID"
+      />
+    </div>
+
+    <form id="test-form">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" value="Test Sender" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" value="test@formguard.com" />
+      </div>
+      <button type="submit">Send Test Payload</button>
+    </form>
+
+    <div id="log">Waiting for submission...</div>
+
+    <script>
+      const form = document.getElementById("test-form");
+      const log = document.getElementById("log");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const endpoint = document.getElementById("endpoint").value;
+
+        if (!endpoint) {
+          log.innerHTML =
+            "<span class='error'>Please paste your endpoint URL first!</span>";
+          return;
+        }
+
+        log.innerText = "Sending POST request to: " + endpoint + " ...";
+
+        try {
+          const formData = new FormData(form);
+          const data = Object.fromEntries(formData);
+
+          const response = await fetch(endpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json", // Crucial so the redirect handler returns JSON!
+            },
+            body: JSON.stringify(data),
+          });
+
+          const status = response.status;
+          const text = await response.text();
+
+          if (response.ok) {
+            log.innerHTML = `<span class='success'>✅ Success (Status ${status}):</span>\n\n${text}`;
+          } else {
+            log.innerHTML = `<span class='error'>❌ Failed (Status ${status}):</span>\n\n${text}`;
+          }
+
+          console.log("Headers:", [...response.headers.entries()]);
+        } catch (err) {
+          log.innerHTML = `<span class='error'>Network / CORS Error:</span>\n\n${err.message}\n\nMake sure the backend is running and allow origins is set to *`;
+        }
+      });
+    </script>
+  </body>
+</html>
