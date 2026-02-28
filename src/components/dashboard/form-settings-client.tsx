@@ -93,7 +93,7 @@ export function FormSettingsClient({ form: initialData }: FormSettingsClientProp
 			webhookUrl: initialData.webhookUrl || "",
 			slackWebhookUrl: initialData.slackWebhookUrl || "",
 			discordWebhookUrl: initialData.discordWebhookUrl || "",
-			allowedOrigins: initialData.allowedOrigins || "",
+			allowedOrigins: initialData.allowedOrigins || "*",
 			emailNotifications: initialData.emailNotifications,
 			webhookEnabled: initialData.webhookEnabled,
 			turnstileEnabled: initialData.turnstileEnabled,
@@ -229,12 +229,12 @@ export function FormSettingsClient({ form: initialData }: FormSettingsClientProp
 								name="allowedOrigins"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Allowed Domains</FormLabel>
+										<FormLabel>Allowed Domains (CORS)</FormLabel>
 										<FormControl>
 											<Input placeholder="example.com, my-site.com" {...field} />
 										</FormControl>
 										<FormDescription>
-											Comma-separated list of domains allowed to submit. Leave blank to allow all.
+											Comma-separated list of domains allowed to submit. Keep the default <code className="bg-muted px-1 py-0.5 rounded">*</code> to allow all origins.
 										</FormDescription>
 										<FormMessage />
 									</FormItem>
