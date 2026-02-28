@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { 
 	Table, 
@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
 	ChevronLeft, 
@@ -23,9 +24,12 @@ import {
 	Copy,
 	Check,
 	Eye,
-	ExternalLink
+	ExternalLink,
+	Trash2,
+	Loader2
 } from "lucide-react";
 import { toast } from "sonner";
+import { deleteSubmissions } from "@/db/actions/submission.actions";
 import { format } from "date-fns";
 import Link from "next/link";
 
@@ -48,6 +52,8 @@ export function SubmissionsListClient({
 	const [searchQuery, setSearchQuery] = useState("");
 	const [exporting, setExporting] = useState(false);
 	const [copiedId, setCopiedId] = useState<string | null>(null);
+	const [selectedIds, setSelectedIds] = useState<string[]>([]);
+	const [isPending, startTransition] = useTransition();
 
 	const { submissions, total, page, totalPages } = initialData;
 
@@ -70,14 +76,78 @@ export function SubmissionsListClient({
 		setTimeout(() => setCopiedId(null), 2000);
 	}
 
-	async function handleExport(formatType: "csv" | "json" = "csv") {
+	const handleSelectAll = (checked: boolean) => {
+		if (checked) {
+			setSelectedIds(filteredSubmissions.map(s => s.submission.id));
+		} else {
+			setSelectedIds([]);
+		}
+	};
+
+	const handleSelectRow = (id: string, checked: boolean) => {
+		if (checked) {
+			setSelectedIds(prev => [...prev, id]);
+		} else {
+			setSelectedIds(prev => prev.filter(item => item !== id));
+		}
+	};
+
+	const handleDeleteSelected = () => {
+		if (selectedIds.length === 0) return;
+		startTransition(async () => {
+			const res = await deleteSubmissions(selectedIds, userId);
+			if (res.success) {
+				toast.success(`Deleted ${res.count} submissions`);
+				setSelectedIds([]);
+				router.refresh();
+			} else {
+				toast.error(res.error || "Failed to delete submissions");
+			}
+		});
+	};
+
+	function handleExport(formatType: "csv" | "json" = "csv") {
 		setExporting(true);
 		try {
-			// This would need a global export endpoint, for now we'll just show a toast
-            // or we can implement it if critical. Given the "google forms" req, 
-            // the user might want this.
-			toast.info("Global export coming soon! For now, export from individual form settings.");
-		} catch {
+			const itemsToExport = selectedIds.length > 0 
+				? filteredSubmissions.filter(s => selectedIds.includes(s.submission.id))
+				: filteredSubmissions;
+
+			if (itemsToExport.length === 0) {
+				toast.error("No submissions to export");
+				return;
+			}
+
+			if (formatType === "json") {
+				const blob = new Blob([JSON.stringify(itemsToExport, null, 2)], { type: "application/json" });
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement("a");
+				a.href = url;
+				a.download = `submissions-export-${format(new Date(), "yyyy-MM-dd")}.json`;
+				a.click();
+				URL.revokeObjectURL(url);
+			} else {
+				// Simple CSV generation
+				const headers = ["Form Name", "Endpoint ID", "Date", "Status", "Payload"];
+				const rows = itemsToExport.map(item => [
+					`"${item.formName}"`,
+					`"${item.endpointId}"`,
+					`"${item.submission.createdAt}"`,
+					`"${item.submission.isSpam ? "SPAM" : "CLEAN"}"`,
+					`"${JSON.stringify(item.submission.payload).replace(/"/g, '""')}"`
+				]);
+				const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+				
+				const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement("a");
+				a.href = url;
+				a.download = `submissions-export-${format(new Date(), "yyyy-MM-dd")}.csv`;
+				a.click();
+				URL.revokeObjectURL(url);
+			}
+			toast.success("Export downloaded successfully");
+		} catch (e) {
 			toast.error("Failed to export submissions");
 		} finally {
 			setExporting(false);
@@ -87,23 +157,67 @@ export function SubmissionsListClient({
 	return (
 		<div className="flex flex-col gap-6 w-full">
 			{/* Table Container */}
-			<Card className="border-border/40 shadow-none overflow-hidden bg-card/30 backdrop-blur-sm rounded-2xl">
-				<CardHeader className="border-b border-border/40 bg-muted/20 px-6 py-5">
-					<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-						<div className="flex items-center gap-3">
-							<Inbox className="w-4 h-4 text-primary" />
-							<CardTitle className="text-sm font-bold tracking-tight">Recent Activity ({total})</CardTitle>
+			<Card className="border-border/40 shadow-none overflow-hidden bg-card/30 backdrop-blur-sm rounded-2xl relative">
+				<CardHeader className={`border-b border-border/40 px-6 py-5 transition-colors ${selectedIds.length > 0 ? 'bg-primary/5' : 'bg-muted/20'}`}>
+					{selectedIds.length > 0 ? (
+						<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2">
+							<div className="flex items-center gap-3">
+								<Badge variant="secondary" className="px-2 py-0.5 rounded-md text-xs font-mono font-bold bg-primary/20 text-primary border-primary/20">
+									{selectedIds.length} Selected
+								</Badge>
+							</div>
+							<div className="flex items-center gap-2">
+								<Button 
+									variant="outline" 
+									size="sm"
+									className="h-9 rounded-xl border-border/40 font-bold bg-background/50 hover:bg-background"
+									onClick={() => handleExport("csv")}
+									disabled={exporting}
+								>
+									{exporting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
+									Export CSV
+								</Button>
+								<Button 
+									variant="destructive" 
+									size="sm"
+									className="h-9 rounded-xl font-bold"
+									onClick={handleDeleteSelected}
+									disabled={isPending}
+								>
+									{isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
+									Delete Selected
+								</Button>
+							</div>
 						</div>
-						<div className="relative w-full sm:max-w-xs group">
-							<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
-							<Input 
-								placeholder="Search name or payload..." 
-								className="pl-10 h-10 bg-background/50 border-border/40 rounded-xl focus-visible:ring-primary/20 text-xs"
-								value={searchQuery}
-								onChange={(e) => setSearchQuery(e.target.value)}
-							/>
+					) : (
+						<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+							<div className="flex items-center gap-3">
+								<Inbox className="w-4 h-4 text-primary" />
+								<CardTitle className="text-sm font-bold tracking-tight">Recent Activity ({total})</CardTitle>
+							</div>
+							<div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+								<div className="relative w-full sm:max-w-xs group">
+									<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
+									<Input 
+										placeholder="Search name or payload..." 
+										className="pl-10 h-10 bg-background/50 border-border/40 rounded-xl focus-visible:ring-primary/20 text-xs"
+										value={searchQuery}
+										onChange={(e) => setSearchQuery(e.target.value)}
+									/>
+								</div>
+								<Button 
+									variant="outline" 
+									size="sm"
+									className="h-10 rounded-xl border-border/40 font-bold bg-background/50 hover:bg-background shrink-0 w-full sm:w-auto"
+									onClick={() => handleExport("csv")}
+									disabled={exporting || filteredSubmissions.length === 0}
+								>
+									{exporting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
+									Export All
+								</Button>
+							</div>
 						</div>
-					</div>
+					)}
 				</CardHeader>
 				<CardContent className="p-0">
 					{total === 0 ? (
@@ -119,7 +233,15 @@ export function SubmissionsListClient({
 							<Table>
 								<TableHeader className="bg-muted/30">
 									<TableRow className="hover:bg-transparent border-border/40">
-										<TableHead className="w-[180px] py-4 pl-6 text-[10px] uppercase tracking-[0.15em] font-black text-muted-foreground">Form</TableHead>
+										<TableHead className="w-[40px] pl-6 py-4">
+											<Checkbox 
+												checked={filteredSubmissions.length > 0 && selectedIds.length === filteredSubmissions.length}
+												onCheckedChange={handleSelectAll}
+												aria-label="Select all"
+												className="rounded-md border-border/40 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+											/>
+										</TableHead>
+										<TableHead className="w-[180px] py-4 text-[10px] uppercase tracking-[0.15em] font-black text-muted-foreground">Form</TableHead>
 										<TableHead className="min-w-[400px] text-[10px] uppercase tracking-[0.15em] font-black text-muted-foreground">Submission Data</TableHead>
 										<TableHead className="w-[120px] text-[10px] uppercase tracking-[0.15em] font-black text-muted-foreground">Status</TableHead>
 										<TableHead className="w-[180px] text-[10px] uppercase tracking-[0.15em] font-black text-muted-foreground text-right pr-6">Date</TableHead>
@@ -127,8 +249,16 @@ export function SubmissionsListClient({
 								</TableHeader>
 								<TableBody>
 									{filteredSubmissions.map((item) => (
-										<TableRow key={item.submission.id} className="border-border/40 group hover:bg-muted/10 transition-colors">
+										<TableRow key={item.submission.id} className={`border-border/40 group transition-colors ${selectedIds.includes(item.submission.id) ? 'bg-primary/5 hover:bg-primary/5 text-primary-foreground' : 'hover:bg-muted/10'}`}>
 											<TableCell className="pl-6">
+												<Checkbox 
+													checked={selectedIds.includes(item.submission.id)}
+													onCheckedChange={(checked) => handleSelectRow(item.submission.id, checked as boolean)}
+													aria-label={`Select submission ${item.submission.id}`}
+													className="rounded-md border-border/40 data-[state=checked]:bg-primary data-[state=checked]:border-primary mt-1"
+												/>
+											</TableCell>
+											<TableCell>
 												<Link 
                                                     href={`/dashboard/forms/${item.submission.formId}`}
                                                     className="flex flex-col hover:underline group/link"
