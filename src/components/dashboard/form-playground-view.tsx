@@ -82,16 +82,19 @@ export function FormPlaygroundView({ form }: PlaygroundViewProps) {
 								className="w-full h-64 bg-transparent p-8 font-mono text-sm text-foreground focus:outline-none resize-none leading-relaxed"
 								spellCheck={false}
 							/>
-							<div className="absolute bottom-6 right-6 flex items-center gap-3">
-								<Button 
-									size="lg" 
-									className="rounded-2xl h-14 px-8 font-black uppercase tracking-widest gap-3 shadow-xl shadow-primary/20 active:scale-[0.97] transition-all"
+							<div className="absolute bottom-6 right-6 flex items-center">
+								<button 
+									className={`flex items-center gap-2 text-[11px] font-black uppercase tracking-widest transition-all ${
+										isSubmitting 
+											? 'text-muted-foreground cursor-not-allowed' 
+											: 'text-primary hover:text-foreground active:scale-[0.98]'
+									}`}
 									onClick={handlePlaygroundSubmit}
 									disabled={isSubmitting}
 								>
 									{isSubmitting ? "Sending..." : "Submit Test"}
-									<Send className={`w-4 h-4 ${isSubmitting ? 'animate-pulse' : ''}`} />
-								</Button>
+									<Send className={`w-3.5 h-3.5 ${isSubmitting ? 'animate-pulse' : ''}`} />
+								</button>
 							</div>
 						</div>
 					</div>
