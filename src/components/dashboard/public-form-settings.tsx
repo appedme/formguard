@@ -91,92 +91,97 @@ function SortableField({
 		<div 
 			ref={setNodeRef} 
 			style={style} 
-			className={`flex flex-col gap-4 p-5 bg-background border border-border/60 rounded-xl group relative shadow-sm hover:shadow-md transition-shadow ${isDragging ? 'opacity-50 ring-2 ring-primary border-primary' : ''}`}
+			className={`flex flex-col gap-4 py-6 border-b border-border/40 group relative transition-all ${isDragging ? 'opacity-50 ring-2 ring-primary border-transparent rounded-xl p-6 bg-background/50' : ''} last:border-b-0`}
 		>
-			<div className="flex items-start gap-4 pr-10">
+			<div className="flex items-start gap-4 pr-8">
 				<div 
 					{...attributes} 
 					{...listeners} 
-					className="mt-2.5 cursor-grab active:cursor-grabbing opacity-30 group-hover:opacity-100 transition-opacity"
+					className="mt-2.5 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-40 transition-opacity flex-shrink-0"
 				>
 					<GripVertical className="w-4 h-4" />
 				</div>
-				<div className="flex-1 grid sm:grid-cols-12 gap-4">
+				<div className="flex-1 grid sm:grid-cols-12 gap-x-6 gap-y-4">
 					<div className="sm:col-span-4 space-y-1.5">
-						<Label className="text-[10px] font-black uppercase tracking-tighter opacity-50">Field Label</Label>
+						<Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Field Label</Label>
 						<Input 
-							className="h-9 bg-muted/20 border-border/40 text-sm rounded-lg"
+							className="h-10 bg-transparent border-t-0 border-x-0 border-b border-border/40 rounded-none px-0 text-sm focus-visible:ring-0 focus-visible:border-primary transition-colors"
 							value={field.label}
 							onChange={(e) => updateField(field.name || field.id || "unnamed", { label: e.target.value })}
 						/>
 					</div>
 					<div className="sm:col-span-3 space-y-1.5">
-						<Label className="text-[10px] font-black uppercase tracking-tighter opacity-50">Type</Label>
-						<select 
-							className="w-full h-9 bg-muted/20 border border-border/40 rounded-lg px-3 text-sm focus:ring-1 focus:ring-primary outline-none"
-							value={field.type}
-							onChange={(e) => {
-								const newType = e.target.value as any;
-								const updates: Partial<PublicFormField> = { type: newType };
-								// Initialize options if switching to a multi-choice type
-								if (["radio", "checkbox", "select"].includes(newType) && (!field.options || field.options.length === 0)) {
-									updates.options = ["Option 1", "Option 2"];
-								}
-								updateField(field.name || field.id || "unnamed", updates);
-							}}
-						>
-							<option value="text">Short Text</option>
-							<option value="email">Email Address</option>
-							<option value="textarea">Long Text (Textarea)</option>
-							<option value="number">Number</option>
-							<option value="radio">Single Choice (Radio)</option>
-							<option value="checkbox">Multiple Choice (Checkbox)</option>
-							<option value="select">Dropdown (Select)</option>
-						</select>
+						<Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Type</Label>
+						<div className="relative">
+							<select 
+								className="w-full h-10 bg-transparent border-t-0 border-x-0 border-b border-border/40 rounded-none text-sm appearance-none focus:outline-none focus:border-primary transition-colors cursor-pointer"
+								value={field.type}
+								onChange={(e) => {
+									const newType = e.target.value as any;
+									const updates: Partial<PublicFormField> = { type: newType };
+									// Initialize options if switching to a multi-choice type
+									if (["radio", "checkbox", "select"].includes(newType) && (!field.options || field.options.length === 0)) {
+										updates.options = ["Option 1", "Option 2"];
+									}
+									updateField(field.name || field.id || "unnamed", updates);
+								}}
+							>
+								<option value="text">Short Text</option>
+								<option value="email">Email</option>
+								<option value="textarea">Long Text</option>
+								<option value="number">Number</option>
+								<option value="radio">Single Choice</option>
+								<option value="checkbox">Multiple Choice</option>
+								<option value="select">Dropdown</option>
+							</select>
+						</div>
 					</div>
 					<div className="sm:col-span-3 space-y-1.5">
-						<Label className="text-[10px] font-black uppercase tracking-tighter opacity-50">Placeholder</Label>
+						<Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Placeholder</Label>
 						<Input 
-							className="h-9 bg-muted/20 border-border/40 text-sm rounded-lg"
-							placeholder="e.g. Enter your name"
+							className="h-10 bg-transparent border-t-0 border-x-0 border-b border-border/40 rounded-none px-0 text-sm focus-visible:ring-0 focus-visible:border-primary transition-colors placeholder:text-muted-foreground/30"
+							placeholder="Optional"
 							value={field.placeholder || ""}
 							onChange={(e) => updateField(field.name || field.id || "unnamed", { placeholder: e.target.value })}
 						/>
 					</div>
-					<div className="sm:col-span-2 flex items-center gap-2 pt-6">
-						<Switch 
-							checked={field.required} 
-							onCheckedChange={(val) => updateField(field.name || field.id || "unnamed", { required: val })}
-						/>
-						<span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Req</span>
+					<div className="sm:col-span-2 flex items-center justify-end gap-3 pt-6">
+						<div className="flex items-center gap-2">
+							<span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground text-right w-8">Req</span>
+							<Switch 
+								checked={field.required} 
+								onCheckedChange={(val) => updateField(field.name || field.id || "unnamed", { required: val })}
+								className="scale-90"
+							/>
+						</div>
 					</div>
 				</div>
 
-				<Button 
-					variant="ghost" 
-					size="icon" 
-					className="h-8 w-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 absolute right-3 top-6 opacity-30 group-hover:opacity-100 transition-opacity"
+				<button 
+					className="text-muted-foreground/30 hover:text-destructive absolute top-12 right-0 md:-right-8 opacity-0 group-hover:opacity-100 transition-all p-2 -my-2"
 					onClick={() => removeField(field.name || field.id || "unnamed")}
 				>
-					<Trash2 className="w-3.5 h-3.5" />
-				</Button>
+					<Trash2 className="w-4 h-4" />
+				</button>
 			</div>
 
 			{/* Options for Multi-choice fields */}
 			{["radio", "checkbox", "select"].includes(field.type) && (
-				<div className="ml-8 pt-4 border-t border-border/40 space-y-3">
-					<div className="flex items-center gap-2">
-						<Settings2 className="w-3 h-3 text-muted-foreground" />
-						<Label className="text-[10px] font-black uppercase tracking-tighter opacity-70">Options (Comma separated)</Label>
+				<div className="ml-8 md:ml-10 pt-2 pb-2">
+					<div className="flex flex-col gap-2 bg-muted/30 p-4 rounded-xl">
+						<div className="flex items-center gap-2">
+							<Settings2 className="w-3.5 h-3.5 text-muted-foreground/50" />
+							<Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Options <span className="opacity-50 lowercase font-medium tracking-normal">(comma separated)</span></Label>
+						</div>
+						<Input 
+							placeholder="Option 1, Option 2, Option 3"
+							className="h-10 bg-transparent border-t-0 border-x-0 border-b border-border/40 rounded-none px-0 text-sm focus-visible:ring-0 focus-visible:border-primary transition-colors"
+							value={field.options?.join(", ") || ""}
+							onChange={(e) => updateField(field.name, { 
+								options: e.target.value.split(",").map(s => s.trim()).filter(s => s !== "") 
+							})}
+						/>
 					</div>
-					<Input 
-						placeholder="Option 1, Option 2, Option 3"
-						className="h-9 bg-muted/20 border-border/40 text-xs rounded-lg"
-						value={field.options?.join(", ") || ""}
-						onChange={(e) => updateField(field.name, { 
-							options: e.target.value.split(",").map(s => s.trim()).filter(s => s !== "") 
-						})}
-					/>
 				</div>
 			)}
 		</div>
@@ -343,11 +348,11 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 								<Separator className="flex-1" />
 							</h3>
 							
-							<div className="grid gap-8 p-6 bg-muted/20 border border-border/40 rounded-2xl">
-								<div className="grid gap-6">
-									<div className="grid sm:grid-cols-2 gap-6">
-										<div className="space-y-3">
-											<Label className="text-xs font-black uppercase tracking-widest opacity-60">Form Style</Label>
+							<div className="grid gap-8 pt-4">
+								<div className="grid gap-8">
+									<div className="grid sm:grid-cols-2 gap-8 md:gap-12">
+										<div className="space-y-4">
+											<Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Form Style</Label>
 											<Select value={formStyle} onValueChange={setFormStyle}>
 												<SelectTrigger className="bg-background border-border/40 h-11 rounded-xl focus:ring-primary/20">
 													<SelectValue placeholder="Select a style" />
@@ -363,8 +368,8 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 											</Select>
 										</div>
 
-										<div className="space-y-3">
-											<Label className="text-xs font-black uppercase tracking-widest opacity-60">Theme Color</Label>
+										<div className="space-y-4">
+											<Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Theme Color</Label>
 											<div className="flex flex-wrap gap-2">
 												{themeColors.map((color) => (
 													<button
@@ -402,12 +407,12 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 										</div>
 									</div>
 								</div>
-								<div className="space-y-3">
-									<Label className="text-xs font-black uppercase tracking-widest opacity-60">Header Image URL (Optional)</Label>
-									<div className="flex gap-4">
+								<div className="space-y-2 mt-4">
+									<Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Header Image URL <span className="opacity-50 lowercase font-medium tracking-normal">(optional)</span></Label>
+									<div className="flex items-end gap-4 relative">
 										<Input 
 											placeholder="https://example.com/banner.jpg"
-											className="bg-background border-border/40 h-11 rounded-xl focus:ring-primary/20 flex-1"
+											className="h-10 bg-transparent border-t-0 border-x-0 border-b border-border/40 rounded-none px-0 text-sm focus-visible:ring-0 focus-visible:border-primary transition-colors flex-1"
 											value={headerImage}
 											onChange={(e) => setHeaderImage(e.target.value)}
 										/>
@@ -422,7 +427,7 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 											</Button>
 										)}
 									</div>
-									<p className="text-[10px] text-muted-foreground">Standard Google Forms header aspect ratio is about 4:1 (e.g., 1600x400).</p>
+									<p className="text-[10px] text-muted-foreground pt-1">Standard form header aspect ratio is about 4:1 (e.g., 1600x400).</p>
 								</div>
 							</div>
 						</div>
@@ -434,23 +439,23 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 								<Separator className="flex-1" />
 							</h3>
 							
-							<div className="grid gap-6">
-								<div className="space-y-3">
-									<Label className="text-xs font-black uppercase tracking-widest opacity-60">Form Description</Label>
+							<div className="grid gap-10 pt-4">
+								<div className="space-y-2">
+									<Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Form Description <span className="opacity-50 lowercase font-medium tracking-normal">(optional)</span></Label>
 									<Textarea 
 										placeholder="Tell your users what this form is for..."
-										className="bg-muted/20 border-border/40 rounded-xl min-h-[100px] text-sm focus:ring-primary/20"
+										className="bg-transparent border-t-0 border-x-0 border-b border-border/40 rounded-none px-0 min-h-[60px] text-sm focus-visible:ring-0 focus-visible:border-primary transition-colors resize-none py-2"
 										value={description}
 										onChange={(e) => setDescription(e.target.value)}
 									/>
 								</div>
 								
-								<div className="grid sm:grid-cols-2 gap-6">
-									<div className="space-y-3">
-										<Label className="text-xs font-black uppercase tracking-widest opacity-60">Submit Button Text</Label>
+								<div className="grid sm:grid-cols-2 gap-8 md:gap-12">
+									<div className="space-y-2">
+										<Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Submit Button Text</Label>
 										<Input 
 											placeholder="e.g. Join Beta"
-											className="bg-muted/20 border-border/40 h-11 rounded-xl focus:ring-primary/20 font-bold"
+											className="h-10 bg-transparent border-t-0 border-x-0 border-b border-border/40 rounded-none px-0 text-sm focus-visible:ring-0 focus-visible:border-primary transition-colors font-medium"
 											value={buttonText}
 											onChange={(e) => setButtonText(e.target.value)}
 										/>
@@ -459,7 +464,7 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 										<Label className="text-xs font-black uppercase tracking-widest opacity-60">Success Message</Label>
 										<Input 
 											placeholder="e.g. Thanks for joining!"
-											className="bg-muted/20 border-border/40 h-11 rounded-xl focus:ring-primary/20"
+											className="h-10 bg-transparent border-t-0 border-x-0 border-b border-border/40 rounded-none px-0 text-sm focus-visible:ring-0 focus-visible:border-primary transition-colors font-medium"
 											value={successMessage}
 											onChange={(e) => setSuccessMessage(e.target.value)}
 										/>
@@ -470,27 +475,29 @@ export function PublicFormSettings({ form, userId }: PublicFormSettingsProps) {
 
 						{/* Form Fields */}
 						<div className="space-y-6">
-							<div className="flex items-center justify-between">
-								<h3 className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2 flex-1 mr-4">
+							<div className="flex items-center justify-between pb-2">
+								<h3 className="text-[11px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
 									3. Form Fields
-									<Separator className="flex-1" />
 								</h3>
-								<Button 
-									variant="outline" 
-									size="sm" 
-									className="h-8 rounded-xl font-bold border-primary/20 text-primary hover:bg-primary/5"
+								<button 
+									className="text-[11px] font-black uppercase tracking-widest text-primary hover:text-foreground flex items-center transition-colors active:scale-95"
 									onClick={addField}
 								>
 									<Plus className="w-3.5 h-3.5 mr-1.5" />
 									Add Field
-								</Button>
+								</button>
 							</div>
 
 							<div className="space-y-4">
 								{fields.length === 0 ? (
-									<div className="py-12 text-center bg-muted/20 rounded-2xl border-2 border-dashed border-border/40">
-										<p className="text-sm text-muted-foreground">No fields added yet. Your public form will be empty.</p>
-										<Button variant="link" className="text-primary font-bold mt-2" onClick={addField}>Add your first field</Button>
+									<div className="py-12 flex flex-col items-center justify-center text-center bg-muted/10 rounded-2xl border border-border/40">
+										<p className="text-xs font-medium text-muted-foreground mb-3">Your form currently has no input fields.</p>
+										<button 
+											className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-foreground transition-colors py-2 px-4 bg-primary/5 hover:bg-primary/10 rounded-full" 
+											onClick={addField}
+										>
+											Start Building
+										</button>
 									</div>
 								) : (
 									<DndContext 

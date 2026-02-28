@@ -4,10 +4,36 @@ import { forms, submissions, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { verifyTurnstileToken } from "@/lib/turnstile";
-import { Resend } from "resend";
+import { fireIntegrations } from "@/lib/integrations";
 
-const resend = new Resend(process.env.RESEND_API_KEY || "re_123456789");
+// Fallback logic for Edge runtime (no Resend SDK required to prevent CJS imports crashing)
+async function sendResendEmail(payload: { from: string; to: string; subject: string; html?: string; text?: string }) {
+	const apiKey = process.env.RESEND_API_KEY;
+	if (!apiKey || apiKey === "re_fallback_key") {
+		console.warn("[EMAIL] Resend API key missing, skipping email.");
+		return;
+	}
+	
+	const res = await fetch("https://api.resend.com/emails", {
+		method: "POST",
+		headers: {
+			"Authorization": `Bearer ${apiKey}`,
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify(payload)
+	});
+	
+	if (!res.ok) {
+		const text = await res.text();
+		throw new Error(`Resend API Error ${res.status}: ${text}`);
+	}
+}
 
+const corsHeaders = {
+	"Access-Control-Allow-Origin": "*",
+	"Access-Control-Allow-Methods": "POST, OPTIONS",
+	"Access-Control-Allow-Headers": "Content-Type, Authorization, Accept",
+};
 
 export async function POST(
 	req: NextRequest,
@@ -30,28 +56,46 @@ export async function POST(
 		if (result.length === 0) {
 			return NextResponse.json(
 				{ error: "Form not found" },
-				{ status: 404 }
+				{ status: 404, headers: corsHeaders }
 			);
 		}
 
 		const { form, userEmail } = result[0];
 
 		// CORS / Allowed Origins Check
-		const origin = req.headers.get("origin") || req.headers.get("referer");
+		let origin = req.headers.get("origin") || req.headers.get("referer");
+		if (origin === "null") origin = null; // `file://` local requests
+
 		if (form.allowedOrigins) {
 			const allowedOrigins = form.allowedOrigins.split(",").map(o => o.trim());
-			if (origin) {
-				const originUrl = new URL(origin);
-				const isAllowed = allowedOrigins.some(allowed => 
-					originUrl.hostname === allowed || 
-					originUrl.origin === allowed ||
-					allowed === "*" // Allow wildcard
-				);
-
-				if (!isAllowed) {
+			
+			// If wildcard is present, allow it instantly
+			if (!allowedOrigins.includes("*")) {
+				// We must have an origin to validate if wildcard isn't used
+				if (!origin) {
 					return NextResponse.json(
-						{ error: `Origin '${origin}' not allowed` },
-						{ status: 403 }
+						{ error: "Origin missing and wildcard not allowed" },
+						{ status: 403, headers: corsHeaders }
+					);
+				}
+
+				try {
+					const originUrl = new URL(origin);
+					const isAllowed = allowedOrigins.some(allowed => 
+						originUrl.hostname === allowed || 
+						originUrl.origin === allowed
+					);
+
+					if (!isAllowed) {
+						return NextResponse.json(
+							{ error: `Origin '${origin}' not allowed` },
+							{ status: 403, headers: corsHeaders }
+						);
+					}
+				} catch (e) {
+					return NextResponse.json(
+						{ error: "Invalid origin URL" },
+						{ status: 400, headers: corsHeaders }
 					);
 				}
 			}
@@ -73,7 +117,7 @@ export async function POST(
 			} catch {
 				return NextResponse.json(
 					{ error: "Unsupported content type. Send JSON or form-data." },
-					{ status: 400 }
+					{ status: 400, headers: corsHeaders }
 				);
 			}
 		}
@@ -91,20 +135,16 @@ export async function POST(
 		if (form.turnstileEnabled) {
 			const turnstileToken = payload["cf-turnstile-response"] as string | undefined;
 			
-			if (!turnstileToken) {
-				return NextResponse.json(
-					{ error: "Spam protection triggered. Turnstile token missing." },
-					{ status: 403 }
-				);
-			}
-
-			const verification = await verifyTurnstileToken(turnstileToken);
-			if (!verification.success) {
-				console.log(`[SPAM] Turnstile verification failed for form ${form.id}:`, (verification as any)["error-codes"]);
-				isSpam = true;
-				
-				// Optional: Block submissions entirely if verification fails
-				// return NextResponse.json({ error: "Spam protection triggered. verification failed." }, { status: 403 });
+			if (turnstileToken) {
+				// Token provided — verify it
+				const verification = await verifyTurnstileToken(turnstileToken);
+				if (!verification.success) {
+					console.log(`[SPAM] Turnstile verification failed for form ${form.id}:`, (verification as any)["error-codes"]);
+					isSpam = true;
+				}
+			} else {
+				// No token — log but don't block (playground, API, or no widget embedded)
+				console.log(`[TURNSTILE] No token provided for form ${form.id} — skipping verification`);
 			}
 		}
 
@@ -125,27 +165,74 @@ export async function POST(
 		revalidatePath("/dashboard/submissions", "page");
 
 		// --- Handle Webhooks ---
-		if (form.webhookEnabled && form.webhookUrl) {
-			try {
-				await fetch(form.webhookUrl, {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({
-						formId: form.id,
-						submissionId: submission.id,
-						payload,
-						createdAt: submission.createdAt,
-					}),
-				});
-			} catch (err) {
-				console.error("Webhook failed:", err);
+		if (form.webhookEnabled) {
+			if (form.webhookUrl) {
+				try {
+					await fetch(form.webhookUrl, {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							formId: form.id,
+							submissionId: submission.id,
+							payload,
+							createdAt: submission.createdAt,
+						}),
+					});
+				} catch (err) {
+					console.error("Webhook failed:", err);
+				}
+			}
+
+			if (form.slackWebhookUrl) {
+				try {
+					const slackPayload = {
+						text: `*New Submission for ${form.name}*\n\n` + 
+							  Object.entries(payload)
+								.map(([key, value]) => `*${key}:* ${value}`)
+								.join("\n")
+					};
+					await fetch(form.slackWebhookUrl, {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify(slackPayload),
+					});
+				} catch (err) {
+					console.error("Slack Webhook failed:", err);
+				}
+			}
+
+			if (form.discordWebhookUrl) {
+				try {
+					const discordPayload = {
+						content: `**New Submission for ${form.name}**`,
+						embeds: [{
+							title: "Submission Details",
+							color: 3447003,
+							fields: Object.entries(payload).map(([key, value]) => ({
+								name: key,
+								value: String(value).substring(0, 1024),
+								inline: true
+							}))
+						}]
+					};
+					await fetch(form.discordWebhookUrl, {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify(discordPayload),
+					});
+				} catch (err) {
+					console.error("Discord Webhook failed:", err);
+				}
 			}
 		}
+
+		// --- Handle Integrations ---
+		fireIntegrations(form, payload, submission.id);
 
 		// --- Handle Email Notifications ---
 		if (form.emailNotifications && userEmail) {
 			try {
-				await resend.emails.send({
+				await sendResendEmail({
 					from: process.env.RESEND_FROM_EMAIL || "FormGuard <notifications@formguard.dev>",
 					to: userEmail,
 					subject: `New Submission: ${form.name}`,
@@ -164,8 +251,39 @@ export async function POST(
 			}
 		}
 
+		// --- Handle Auto-Responder ---
+		if (form.autoResponderEnabled) {
+			// Try to find an email field in the payload
+			const submitterEmail = 
+				(payload.email as string) || 
+				(payload.Email as string) || 
+				(payload.EMAIL as string);
+
+			if (submitterEmail && typeof submitterEmail === 'string' && submitterEmail.includes('@')) {
+				try {
+					await sendResendEmail({
+						from: process.env.RESEND_FROM_EMAIL || "FormGuard <notifications@formguard.dev>",
+						to: submitterEmail,
+						subject: form.autoResponderSubject || `Thank you for contacting ${form.name}`,
+						text: form.autoResponderMessage || "We have received your submission and will get back to you shortly.",
+					});
+				} catch (emailError) {
+					console.error("[EMAIL] Failed to send auto-responder:", emailError);
+				}
+			}
+		}
+
 		// --- Handle Redirects ---
+		const acceptHeader = req.headers.get("accept") || "";
 		if (form.redirectUrl) {
+			// If it's an AJAX request expecting JSON, return the redirectUrl in JSON
+			if (acceptHeader.includes("application/json")) {
+				return NextResponse.json(
+					{ success: true, redirectUrl: form.redirectUrl },
+					{ status: 200, headers: corsHeaders }
+				);
+			}
+			// For native HTML form posts, perform a standard 302 redirect
 			return NextResponse.redirect(form.redirectUrl, 302);
 		}
 
@@ -178,18 +296,14 @@ export async function POST(
 			},
 			{
 				status: 201,
-				headers: {
-					"Access-Control-Allow-Origin": "*",
-					"Access-Control-Allow-Methods": "POST, OPTIONS",
-					"Access-Control-Allow-Headers": "Content-Type",
-				},
+				headers: corsHeaders,
 			}
 		);
 	} catch (error) {
 		console.error("Submission error:", error);
 		return NextResponse.json(
 			{ error: "Internal server error" },
-			{ status: 500 }
+			{ status: 500, headers: corsHeaders }
 		);
 	}
 }
@@ -198,10 +312,6 @@ export async function POST(
 export async function OPTIONS() {
 	return new NextResponse(null, {
 		status: 204,
-		headers: {
-			"Access-Control-Allow-Origin": "*",
-			"Access-Control-Allow-Methods": "POST, OPTIONS",
-			"Access-Control-Allow-Headers": "Content-Type",
-		},
+		headers: corsHeaders,
 	});
 }
