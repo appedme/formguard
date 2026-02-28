@@ -45,39 +45,21 @@ export async function POST(
 		const { form, userEmail } = result[0];
 
 		// CORS / Allowed Origins Check
-		let origin = req.headers.get("origin") || req.headers.get("referer");
-		if (origin === "null") origin = null; // `file://` local requests
-
+		const origin = req.headers.get("origin") || req.headers.get("referer");
 		if (form.allowedOrigins) {
 			const allowedOrigins = form.allowedOrigins.split(",").map(o => o.trim());
-			
-			// If wildcard is present, allow it instantly
-			if (!allowedOrigins.includes("*")) {
-				// We must have an origin to validate if wildcard isn't used
-				if (!origin) {
+			if (origin) {
+				const originUrl = new URL(origin);
+				const isAllowed = allowedOrigins.some(allowed => 
+					originUrl.hostname === allowed || 
+					originUrl.origin === allowed ||
+					allowed === "*" // Allow wildcard
+				);
+
+				if (!isAllowed) {
 					return NextResponse.json(
-						{ error: "Origin missing and wildcard not allowed" },
+						{ error: `Origin '${origin}' not allowed` },
 						{ status: 403, headers: corsHeaders }
-					);
-				}
-
-				try {
-					const originUrl = new URL(origin);
-					const isAllowed = allowedOrigins.some(allowed => 
-						originUrl.hostname === allowed || 
-						originUrl.origin === allowed
-					);
-
-					if (!isAllowed) {
-						return NextResponse.json(
-							{ error: `Origin '${origin}' not allowed` },
-							{ status: 403, headers: corsHeaders }
-						);
-					}
-				} catch (e) {
-					return NextResponse.json(
-						{ error: "Invalid origin URL" },
-						{ status: 400, headers: corsHeaders }
 					);
 				}
 			}
