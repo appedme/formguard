@@ -2,7 +2,7 @@
 
 import { db } from "@/db";
 import { forms, submissions } from "@/db/schema";
-import { eq, count, desc } from "drizzle-orm";
+import { eq, count, desc, inArray, and } from "drizzle-orm";
 
 export async function getFormSubmissions(
 	formId: string,
@@ -88,4 +88,31 @@ export async function getUserSubmissions(
 		page,
 		totalPages: Math.ceil((total?.count ?? 0) / limit),
 	};
+}
+
+export async function deleteSubmissions(submissionIds: string[], userId: string) {
+	if (!submissionIds.length) return { success: false, error: "No submissions selected" };
+
+	// Find the submissions that belong to this user
+	const validSubmissions = await db
+		.select({ id: submissions.id })
+		.from(submissions)
+		.innerJoin(forms, eq(submissions.formId, forms.id))
+		.where(
+			and(
+				inArray(submissions.id, submissionIds),
+				eq(forms.userId, userId)
+			)
+		);
+
+	const validIds = validSubmissions.map((s) => s.id);
+
+	if (validIds.length === 0) {
+		return { success: false, error: "No valid submissions found to delete" };
+	}
+
+	// Delete them
+	await db.delete(submissions).where(inArray(submissions.id, validIds));
+
+	return { success: true, count: validIds.length };
 }
