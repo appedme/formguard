@@ -34,7 +34,7 @@ export function FormDashboardNav({ formId, isPublic }: FormNavProps) {
 	];
 
 	return (
-		<nav className="flex items-center gap-1 overflow-x-auto pb-1 scrollbar-hide py-3 md:py-4 border-b border-border/40 mb-6 md:mb-8 sticky top-0 bg-background/80 backdrop-blur-md z-10 -mx-6 md:-mx-10 px-6 md:px-10">
+		<nav className="flex items-center gap-6 overflow-x-auto pb-0 scrollbar-hide border-b border-border mb-6 md:mb-8 sticky top-0 bg-background/80 backdrop-blur-md z-10 -mx-6 md:-mx-10 px-6 md:px-10">
 			{tabs.map((tab) => {
 				const Icon = tab.icon;
 				const active = tab.exact 
@@ -42,20 +42,21 @@ export function FormDashboardNav({ formId, isPublic }: FormNavProps) {
 					: pathname.startsWith(tab.href);
 				
 				return (
-					<Link key={tab.href} href={tab.href}>
-						<Button
-							variant={active ? "default" : "ghost"}
-							size="sm"
-							className={`rounded-xl h-9 px-4 text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${
-								!active && 'text-muted-foreground hover:bg-muted/50'
-							} ${tab.highlight && !active ? 'bg-primary/5 text-primary border border-primary/10' : ''}`}
-						>
-							<Icon className="w-3.5 h-3.5 mr-2" />
-							{tab.label}
-							{tab.highlight && active && (
-								<div className="ml-2 w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-							)}
-						</Button>
+					<Link 
+						key={tab.href} 
+						href={tab.href}
+						className={`relative flex items-center py-4 text-sm font-medium transition-colors whitespace-nowrap ${
+							active ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
+						}`}
+					>
+						<Icon className={`w-4 h-4 mr-2 ${active ? 'text-foreground' : 'text-muted-foreground/70'}`} />
+						{tab.label}
+						{tab.highlight && active && (
+							<div className="ml-2 w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+						)}
+						{active && (
+							<div className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-primary rounded-t-full" />
+						)}
 					</Link>
 				);
 			})}
