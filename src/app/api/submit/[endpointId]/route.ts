@@ -11,6 +11,11 @@ export const runtime = "edge";
 
 const resend = new Resend(process.env.RESEND_API_KEY || "re_123456789");
 
+const corsHeaders = {
+	"Access-Control-Allow-Origin": "*",
+	"Access-Control-Allow-Methods": "POST, OPTIONS",
+	"Access-Control-Allow-Headers": "Content-Type, Authorization, Accept",
+};
 
 export async function POST(
 	req: NextRequest,
@@ -33,7 +38,7 @@ export async function POST(
 		if (result.length === 0) {
 			return NextResponse.json(
 				{ error: "Form not found" },
-				{ status: 404 }
+				{ status: 404, headers: corsHeaders }
 			);
 		}
 
@@ -54,7 +59,7 @@ export async function POST(
 				if (!isAllowed) {
 					return NextResponse.json(
 						{ error: `Origin '${origin}' not allowed` },
-						{ status: 403 }
+						{ status: 403, headers: corsHeaders }
 					);
 				}
 			}
@@ -76,7 +81,7 @@ export async function POST(
 			} catch {
 				return NextResponse.json(
 					{ error: "Unsupported content type. Send JSON or form-data." },
-					{ status: 400 }
+					{ status: 400, headers: corsHeaders }
 				);
 			}
 		}
@@ -233,7 +238,16 @@ export async function POST(
 		}
 
 		// --- Handle Redirects ---
+		const acceptHeader = req.headers.get("accept") || "";
 		if (form.redirectUrl) {
+			// If it's an AJAX request expecting JSON, return the redirectUrl in JSON
+			if (acceptHeader.includes("application/json")) {
+				return NextResponse.json(
+					{ success: true, redirectUrl: form.redirectUrl },
+					{ status: 200, headers: corsHeaders }
+				);
+			}
+			// For native HTML form posts, perform a standard 302 redirect
 			return NextResponse.redirect(form.redirectUrl, 302);
 		}
 
@@ -246,18 +260,14 @@ export async function POST(
 			},
 			{
 				status: 201,
-				headers: {
-					"Access-Control-Allow-Origin": "*",
-					"Access-Control-Allow-Methods": "POST, OPTIONS",
-					"Access-Control-Allow-Headers": "Content-Type",
-				},
+				headers: corsHeaders,
 			}
 		);
 	} catch (error) {
 		console.error("Submission error:", error);
 		return NextResponse.json(
 			{ error: "Internal server error" },
-			{ status: 500 }
+			{ status: 500, headers: corsHeaders }
 		);
 	}
 }
@@ -266,10 +276,6 @@ export async function POST(
 export async function OPTIONS() {
 	return new NextResponse(null, {
 		status: 204,
-		headers: {
-			"Access-Control-Allow-Origin": "*",
-			"Access-Control-Allow-Methods": "POST, OPTIONS",
-			"Access-Control-Allow-Headers": "Content-Type",
-		},
+		headers: corsHeaders,
 	});
 }
