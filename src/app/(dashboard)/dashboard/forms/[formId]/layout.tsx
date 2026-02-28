@@ -2,6 +2,7 @@ import { stackServerApp } from "@/stack/server";
 import { redirect, notFound } from "next/navigation";
 import { getUserByStackAuthId } from "@/db/actions/user.actions";
 import { getFormById } from "@/db/actions/form.actions";
+import { getSubmissionCount } from "@/db/actions/submission.actions";
 import { FormDashboardNav } from "@/components/dashboard/form-dashboard-nav";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
@@ -23,6 +24,8 @@ export default async function FormLayout({ params, children }: Props) {
 	const form = await getFormById(formId, dbUser.id);
 
 	if (!form) return notFound();
+
+	const submissionCount = await getSubmissionCount(form.id);
 
 	return (
 		<div className="p-6 md:p-10 max-w-6xl mx-auto w-full">
@@ -56,7 +59,7 @@ export default async function FormLayout({ params, children }: Props) {
 			</div>
 
 			{/* Navigation Tabs */}
-			<FormDashboardNav formId={form.id} isPublic={form.isPublic} />
+			<FormDashboardNav formId={form.id} isPublic={form.isPublic} submissionCount={submissionCount} />
 
 			{/* Content */}
 			<div className="animate-in fade-in slide-in-from-bottom-3 duration-500">

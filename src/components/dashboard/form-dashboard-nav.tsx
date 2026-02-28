@@ -17,15 +17,16 @@ import { Button } from "@/components/ui/button";
 interface FormNavProps {
 	formId: string;
 	isPublic: boolean;
+	submissionCount?: number;
 }
 
-export function FormDashboardNav({ formId, isPublic }: FormNavProps) {
+	export function FormDashboardNav({ formId, isPublic, submissionCount }: FormNavProps) {
 	const pathname = usePathname();
 
 	const tabs = [
 		{ label: "Integrate", href: `/dashboard/forms/${formId}`, icon: Terminal, exact: true },
 		{ label: "Public Page", href: `/dashboard/forms/${formId}/public`, icon: Globe, highlight: isPublic },
-		{ label: "Submissions", href: `/dashboard/forms/${formId}/submissions`, icon: Inbox },
+		{ label: "Submissions", href: `/dashboard/forms/${formId}/submissions`, icon: Inbox, badge: submissionCount },
 		{ label: "Playground", href: `/dashboard/forms/${formId}/playground`, icon: Play },
 		{ label: "Analytics", href: `/dashboard/forms/${formId}/analytics`, icon: BarChart3 },
 		{ label: "AI Insights", href: `/dashboard/forms/${formId}/insights`, icon: Sparkles },
@@ -51,6 +52,11 @@ export function FormDashboardNav({ formId, isPublic }: FormNavProps) {
 					>
 						<Icon className={`w-4 h-4 mr-2 ${active ? 'text-foreground' : 'text-muted-foreground/70'}`} />
 						{tab.label}
+						{tab.badge !== undefined && tab.badge > 0 && (
+							<span className={`ml-2 px-1.5 py-0.5 rounded-md text-[9px] font-mono leading-none ${active ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'}`}>
+								{tab.badge}
+							</span>
+						)}
 						{tab.highlight && active && (
 							<div className="ml-2 w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
 						)}
