@@ -11,6 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Plus, ChevronRight, Inbox, LayoutDashboard, Zap, Share2, Sparkles, CheckCircle } from "lucide-react";
 import { TemplatePicker } from "@/components/dashboard/template-picker";
+import { formatDistanceToNow } from "date-fns";
+import { CopyButton } from "@/components/ui/copy-button";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -113,13 +115,35 @@ export default async function DashboardPage() {
 														<h3 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
 															{form.name}
 														</h3>
-														<Badge variant="outline" className="text-[9px] h-4 px-1.5 font-mono uppercase tracking-tighter bg-background/50">
-															{form.endpointId}
-														</Badge>
+														<div className="flex items-center gap-1">
+															<Badge variant="outline" className="text-[9px] h-4 px-1.5 font-mono uppercase tracking-tighter bg-background/50">
+																{form.endpointId}
+															</Badge>
+															<CopyButton 
+																textToCopy={form.endpointId} 
+																className="h-5 w-5 bg-background border border-border/40 hover:bg-muted opacity-0 group-hover:opacity-100 transition-opacity" 
+																iconClassName="w-2.5 h-2.5"
+																successMessage="Endpoint ID copied"
+															/>
+														</div>
 													</div>
-													<p className="text-[11px] font-mono text-muted-foreground/70 truncate max-w-[200px] sm:max-w-md">
-														/api/submit/{form.endpointId}
-													</p>
+													<div className="flex items-center gap-2">
+														<div className="flex items-center gap-1">
+															<p className="text-[11px] font-mono text-muted-foreground/70 truncate max-w-[200px] sm:max-w-md flex items-center gap-1.5">
+																/api/submit/{form.endpointId}
+															</p>
+															<CopyButton 
+																textToCopy={`${process.env.NEXT_PUBLIC_APP_URL || "https://formguard.strivio.world"}/api/submit/${form.endpointId}`} 
+																className="h-5 w-5 bg-background border border-border/40 hover:bg-muted opacity-0 group-hover:opacity-100 transition-opacity" 
+																iconClassName="w-2.5 h-2.5"
+																successMessage="API URL copied"
+															/>
+														</div>
+														<span className="text-[10px] text-muted-foreground/40 hidden sm:inline-block">—</span>
+														<span className="text-[10px] text-muted-foreground/50 italic hidden sm:inline-block">
+															Created {formatDistanceToNow(new Date(form.createdAt), { addSuffix: true })}
+														</span>
+													</div>
 												</div>
 											</div>
 											<div className="flex items-center gap-6">

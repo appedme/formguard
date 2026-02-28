@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { 
 	Table, 
@@ -54,8 +54,20 @@ export function SubmissionsListClient({
 	const [copiedId, setCopiedId] = useState<string | null>(null);
 	const [selectedIds, setSelectedIds] = useState<string[]>([]);
 	const [isPending, startTransition] = useTransition();
+	const searchInputRef = useRef<HTMLInputElement>(null);
 
 	const { submissions, total, page, totalPages } = initialData;
+
+	useEffect(() => {
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (e.key === "/" && document.activeElement !== searchInputRef.current) {
+				e.preventDefault();
+				searchInputRef.current?.focus();
+			}
+		};
+		window.addEventListener("keydown", handleKeyDown);
+		return () => window.removeEventListener("keydown", handleKeyDown);
+	}, []);
 
 	const filteredSubmissions = submissions.filter((item) => {
 		const payloadString = JSON.stringify(item.submission.payload).toLowerCase();
@@ -199,11 +211,15 @@ export function SubmissionsListClient({
 								<div className="relative w-full sm:max-w-xs group">
 									<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
 									<Input 
+										ref={searchInputRef}
 										placeholder="Search name or payload..." 
 										className="pl-10 h-10 bg-background/50 border-border/40 rounded-xl focus-visible:ring-primary/20 text-xs"
 										value={searchQuery}
 										onChange={(e) => setSearchQuery(e.target.value)}
 									/>
+									<div className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center justify-center bg-muted/60 border border-border/40 rounded px-1.5 h-5">
+										<span className="text-[9px] font-mono text-muted-foreground font-black">/</span>
+									</div>
 								</div>
 								<Button 
 									variant="outline" 
