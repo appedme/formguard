@@ -5,36 +5,12 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { verifyTurnstileToken } from "@/lib/turnstile";
 import { fireIntegrations } from "@/lib/integrations";
+import { Resend } from "resend";
+
 export const runtime = "edge";
 
-// Fallback logic for Edge runtime (no Resend SDK required to prevent CJS imports crashing)
-async function sendResendEmail(payload: { from: string; to: string; subject: string; html?: string; text?: string }) {
-	const apiKey = process.env.RESEND_API_KEY;
-	if (!apiKey || apiKey === "re_fallback_key") {
-		console.warn("[EMAIL] Resend API key missing, skipping email.");
-		return;
-	}
-	
-	const res = await fetch("https://api.resend.com/emails", {
-		method: "POST",
-		headers: {
-			"Authorization": `Bearer ${apiKey}`,
-			"Content-Type": "application/json"
-		},
-		body: JSON.stringify(payload)
-	});
-	
-	if (!res.ok) {
-		const text = await res.text();
-		throw new Error(`Resend API Error ${res.status}: ${text}`);
-	}
-}
+const resend = new Resend(process.env.RESEND_API_KEY || "re_123456789");
 
-const corsHeaders = {
-	"Access-Control-Allow-Origin": "*",
-	"Access-Control-Allow-Methods": "POST, OPTIONS",
-	"Access-Control-Allow-Headers": "Content-Type, Authorization, Accept",
-};
 
 export async function POST(
 	req: NextRequest,
@@ -57,46 +33,28 @@ export async function POST(
 		if (result.length === 0) {
 			return NextResponse.json(
 				{ error: "Form not found" },
-				{ status: 404, headers: corsHeaders }
+				{ status: 404 }
 			);
 		}
 
 		const { form, userEmail } = result[0];
 
 		// CORS / Allowed Origins Check
-		let origin = req.headers.get("origin") || req.headers.get("referer");
-		if (origin === "null") origin = null; // `file://` local requests
-
+		const origin = req.headers.get("origin") || req.headers.get("referer");
 		if (form.allowedOrigins) {
 			const allowedOrigins = form.allowedOrigins.split(",").map(o => o.trim());
-			
-			// If wildcard is present, allow it instantly
-			if (!allowedOrigins.includes("*")) {
-				// We must have an origin to validate if wildcard isn't used
-				if (!origin) {
-					return NextResponse.json(
-						{ error: "Origin missing and wildcard not allowed" },
-						{ status: 403, headers: corsHeaders }
-					);
-				}
+			if (origin) {
+				const originUrl = new URL(origin);
+				const isAllowed = allowedOrigins.some(allowed => 
+					originUrl.hostname === allowed || 
+					originUrl.origin === allowed ||
+					allowed === "*" // Allow wildcard
+				);
 
-				try {
-					const originUrl = new URL(origin);
-					const isAllowed = allowedOrigins.some(allowed => 
-						originUrl.hostname === allowed || 
-						originUrl.origin === allowed
-					);
-
-					if (!isAllowed) {
-						return NextResponse.json(
-							{ error: `Origin '${origin}' not allowed` },
-							{ status: 403, headers: corsHeaders }
-						);
-					}
-				} catch (e) {
+				if (!isAllowed) {
 					return NextResponse.json(
-						{ error: "Invalid origin URL" },
-						{ status: 400, headers: corsHeaders }
+						{ error: `Origin '${origin}' not allowed` },
+						{ status: 403 }
 					);
 				}
 			}
@@ -118,7 +76,7 @@ export async function POST(
 			} catch {
 				return NextResponse.json(
 					{ error: "Unsupported content type. Send JSON or form-data." },
-					{ status: 400, headers: corsHeaders }
+					{ status: 400 }
 				);
 			}
 		}
@@ -233,7 +191,7 @@ export async function POST(
 		// --- Handle Email Notifications ---
 		if (form.emailNotifications && userEmail) {
 			try {
-				await sendResendEmail({
+				await resend.emails.send({
 					from: process.env.RESEND_FROM_EMAIL || "FormGuard <notifications@formguard.dev>",
 					to: userEmail,
 					subject: `New Submission: ${form.name}`,
@@ -262,7 +220,7 @@ export async function POST(
 
 			if (submitterEmail && typeof submitterEmail === 'string' && submitterEmail.includes('@')) {
 				try {
-					await sendResendEmail({
+					await resend.emails.send({
 						from: process.env.RESEND_FROM_EMAIL || "FormGuard <notifications@formguard.dev>",
 						to: submitterEmail,
 						subject: form.autoResponderSubject || `Thank you for contacting ${form.name}`,
@@ -275,16 +233,7 @@ export async function POST(
 		}
 
 		// --- Handle Redirects ---
-		const acceptHeader = req.headers.get("accept") || "";
 		if (form.redirectUrl) {
-			// If it's an AJAX request expecting JSON, return the redirectUrl in JSON
-			if (acceptHeader.includes("application/json")) {
-				return NextResponse.json(
-					{ success: true, redirectUrl: form.redirectUrl },
-					{ status: 200, headers: corsHeaders }
-				);
-			}
-			// For native HTML form posts, perform a standard 302 redirect
 			return NextResponse.redirect(form.redirectUrl, 302);
 		}
 
@@ -297,14 +246,18 @@ export async function POST(
 			},
 			{
 				status: 201,
-				headers: corsHeaders,
+				headers: {
+					"Access-Control-Allow-Origin": "*",
+					"Access-Control-Allow-Methods": "POST, OPTIONS",
+					"Access-Control-Allow-Headers": "Content-Type",
+				},
 			}
 		);
 	} catch (error) {
 		console.error("Submission error:", error);
 		return NextResponse.json(
 			{ error: "Internal server error" },
-			{ status: 500, headers: corsHeaders }
+			{ status: 500 }
 		);
 	}
 }
@@ -313,6 +266,10 @@ export async function POST(
 export async function OPTIONS() {
 	return new NextResponse(null, {
 		status: 204,
-		headers: corsHeaders,
+		headers: {
+			"Access-Control-Allow-Origin": "*",
+			"Access-Control-Allow-Methods": "POST, OPTIONS",
+			"Access-Control-Allow-Headers": "Content-Type",
+		},
 	});
 }
