@@ -1,13 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import { validateApiKey } from "@/db/actions/api-key.actions";
 import { db } from "@/db";
-import { forms, submissions, insights } from "@/db/schema";
+import { forms, submissions, insights, apiKeys } from "@/db/schema";
 import { eq, desc, and } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
+// Inline API key validation — cannot import 'use server' files in edge/Cloudflare routes
+async function validateApiKey(key: string) {
+	const result = await db
+		.select()
+		.from(apiKeys)
+		.where(eq(apiKeys.key, key))
+		.limit(1);
+	if (result.length === 0) return null;
+	// Update lastUsedAt in background (fire-and-forget)
+	void db.update(apiKeys).set({ lastUsedAt: new Date() }).where(eq(apiKeys.id, result[0].id));
+	return result[0];
+}
+
 /**
  * MCP over HTTP (Streamable HTTP) implementation for Next.js App Router
- * NOTE: Must use Node.js runtime (not edge) because validateApiKey imports a 'use server' module.
+ * Works on Cloudflare Workers — all DB calls are inlined directly (no 'use server' imports).
  */
 
 const SERVER_NAME = "formguard-server";
