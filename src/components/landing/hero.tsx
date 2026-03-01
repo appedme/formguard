@@ -70,6 +70,19 @@ export default function Hero({ user }: HeroProps) {
 					Works with plain HTML forms. No SDK required.
 				</p>
 
+				{/* Video Showcase */}
+				<div className="w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl border border-border/50 bg-muted/20 relative aspect-video mt-12 mb-10">
+					<iframe 
+						className="absolute top-0 left-0 w-full h-full"
+						src="https://www.youtube.com/embed/u6Abofkznog?rel=0" 
+						title="FormGuard Demo" 
+						frameBorder="0" 
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+						referrerPolicy="strict-origin-when-cross-origin" 
+						allowFullScreen
+					></iframe>
+				</div>
+
 				{/* Credibility strip */}
 				<div className="pt-8 border-t border-border/50">
 					<p className="text-sm text-muted-foreground font-mono">
