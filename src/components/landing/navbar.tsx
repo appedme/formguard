@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ThemeToggle } from "./theme-toggle";
 import { User } from "@stackframe/stack";
+import { MobileNav } from "./mobile-nav";
 
 interface NavbarProps {
 	user?: User | null;
@@ -39,8 +40,9 @@ export default function Navbar({ user }: NavbarProps) {
 					)}
 				</nav>
 
-				{/* Right: toggle + CTA */}
+				{/* Right: toggle + CTA + Mobile Menu */}
 				<div className="flex items-center gap-3">
+					<MobileNav user={user} />
 					<ThemeToggle />
 					{user ? (
 						<Link
