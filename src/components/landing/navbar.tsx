@@ -26,6 +26,9 @@ export default function Navbar({ user }: NavbarProps) {
 					<Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
 						Blog
 					</Link>
+					<Link href="/tools" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+						Tools
+					</Link>
 					<Link href="/docs" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
 						Docs
 					</Link>
