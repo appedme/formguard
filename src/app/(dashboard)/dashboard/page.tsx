@@ -165,6 +165,16 @@ export default async function DashboardPage() {
 
 				{/* Sidebar/Integrations */}
 				<div className="space-y-6">
+					{/* Product Hunt Badge */}
+					<div className="flex justify-start">
+						<a href="https://www.producthunt.com/products/formguard?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-formguard" target="_blank" rel="noopener noreferrer" className="dark:hidden block transition-transform hover:scale-105">
+							<img alt="FormGuard - AI Form Backend for Builders | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1086617&amp;theme=light&amp;t=1772347025205" />
+						</a>
+						<a href="https://www.producthunt.com/products/formguard?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-formguard" target="_blank" rel="noopener noreferrer" className="hidden dark:block transition-transform hover:scale-105">
+							<img alt="FormGuard - AI Form Backend for Builders | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1086617&amp;theme=neutral&amp;t=1772347025205" />
+						</a>
+					</div>
+
 					<h2 className="text-sm font-medium text-foreground">Integrations</h2>
 					<Card className="bg-primary/5 border-primary/10 shadow-none overflow-hidden relative">
 						<CardContent className="p-6">
