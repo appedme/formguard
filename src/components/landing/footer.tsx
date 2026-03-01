@@ -34,11 +34,16 @@ export default function Footer() {
 						))}
 					</nav>
 
-					<p className="text-xs font-mono text-muted-foreground">
-						Powered by Cloudflare Edge
-						<br />
-						© {new Date().getFullYear()} FormGuard
-					</p>
+					<div className="flex flex-col items-center sm:items-end gap-4">
+						<a href="https://www.producthunt.com/products/formguard?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-formguard" target="_blank" rel="noopener noreferrer" className="transition-transform hover:scale-105">
+							<img alt="FormGuard - AI Form Backend for Builders | Product Hunt" width="200" height="43" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1086617&amp;theme=neutral&amp;t=1772347025205" />
+						</a>
+						<p className="text-xs font-mono text-muted-foreground text-center sm:text-right">
+							Powered by Cloudflare Edge
+							<br />
+							© {new Date().getFullYear()} FormGuard
+						</p>
+					</div>
 				</div>
 			</footer>
 		</div>

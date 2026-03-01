@@ -27,7 +27,7 @@ export default function Hero({ user }: HeroProps) {
 				</p>
 
 				{/* CTAs */}
-				<div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
+				<div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8">
 					{user ? (
 						<Link
 							href="/dashboard"
@@ -53,6 +53,16 @@ export default function Hero({ user }: HeroProps) {
 					>
 						See How It Works →
 					</Link>
+				</div>
+
+				{/* Product Hunt Badge */}
+				<div className="mb-10 flex">
+					<a href="https://www.producthunt.com/products/formguard?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-formguard" target="_blank" rel="noopener noreferrer" className="dark:hidden block transition-transform hover:scale-105">
+						<img alt="FormGuard - AI Form Backend for Builders | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1086617&amp;theme=light&amp;t=1772347025205" />
+					</a>
+					<a href="https://www.producthunt.com/products/formguard?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-formguard" target="_blank" rel="noopener noreferrer" className="hidden dark:block transition-transform hover:scale-105">
+						<img alt="FormGuard - AI Form Backend for Builders | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1086617&amp;theme=neutral&amp;t=1772347025205" />
+					</a>
 				</div>
 
 				{/* Micro-trust line */}
