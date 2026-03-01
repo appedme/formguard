@@ -39,6 +39,30 @@ export default async function LandingPage() {
 			<Testimonials />
 			<Pricing />
 			<FAQ />
+			
+			{/* Video Showcase at Bottom */}
+			<section className="py-24 border-b border-border bg-background flex flex-col items-center justify-center px-6">
+				<div className="text-center mb-12">
+					<h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-4">
+						See FormGuard in Action
+					</h2>
+					<p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+						Watch how easy it is to set up a serverless form backend in less than 2 minutes.
+					</p>
+				</div>
+				<div className="w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl border border-border/50 bg-muted/20 relative aspect-video">
+					<iframe 
+						className="absolute top-0 left-0 w-full h-full"
+						src="https://www.youtube.com/embed/u6Abofkznog?rel=0" 
+						title="FormGuard Demo" 
+						frameBorder="0" 
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+						referrerPolicy="strict-origin-when-cross-origin" 
+						allowFullScreen
+					></iframe>
+				</div>
+			</section>
+
 			<FinalCTA user={user} />
 		</main>
 	);
