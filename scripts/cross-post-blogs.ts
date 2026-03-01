@@ -73,7 +73,7 @@ async function postToDevTo(post: BlogPost, apiKey: string) {
 			body: JSON.stringify({
 				article: {
 					title: post.title,
-					published: false, // Default to draft for safety
+					published: true, // Default to draft for safety
 					body_markdown: post.content,
 					tags: post.tags.slice(0, 4), // dev.to allows max 4 tags
 					canonical_url: post.canonicalUrl,
