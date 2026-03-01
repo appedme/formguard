@@ -1,4 +1,101 @@
 FirstName,Company,Email,Segment
-Joe,Finsweet,joe@example.com,webflow_agency
-Guillermo,Vercel,guillermo@example.com,react_studio
-Eric,Single Grain,eric@example.com,seo_agency
+Joe,Finsweet,joe@finsweet.com,webflow_agency
+Team,Refokus,hello@refokus.com,webflow_agency
+Uros,Flow Ninja,hello@flow.ninja,webflow_agency
+Team,Amply,hello@amply.com,webflow_agency
+Team,Creative Corner Studio,contact@creativecorner.studio,webflow_agency
+Stefan,Veza Digital,hello@vezadigital.com,webflow_agency
+Team,SVZ Design,hello@svz.io,webflow_agency
+Team,DevsData LLC,contact@devsdata.com,webflow_agency
+Team,8020,hello@8020.inc,webflow_agency
+Team,BRIX Agency,hello@brixagency.com,webflow_agency
+Team,Superside,hello@superside.com,webflow_agency
+Team,The Digital Panda,hello@thedigitalpanda.com,webflow_agency
+Team,Flowout,hello@flowout.com,webflow_agency
+Team,Halo Lab,hello@halo-lab.com,webflow_agency
+Team,Perpetual,hello@perpetualny.com,webflow_agency
+Team,Pragmatica,hello@pragmatica.design,webflow_agency
+Team,RSA Creative Studio,hello@rsacreativestudio.com,webflow_agency
+Team,StanVision,hello@stan.vision,webflow_agency
+Team,Uroboro,hello@uroboro.io,webflow_agency
+Team,Crew Agency,hello@crew.co,webflow_agency
+Team,Ikius,hello@ikius.com,react_studio
+Team,Bejamas,hello@bejamas.io,react_studio
+Team,OAK'S LAB,hello@oakslab.com,react_studio
+Team,STRV,hello@strv.com,react_studio
+Team,Netguru,hello@netguru.com,react_studio
+Team,Zajno,hello@zajno.com,react_studio
+Team,Significa,hello@significa.co,react_studio
+Team,Monogram,hello@monogram.io,react_studio
+Team,Formidable,hello@formidable.com,react_studio
+Team,Infinum,hello@infinum.com,react_studio
+Team,10up,hello@10up.com,react_studio
+Team,Very Good Ventures,hello@verygood.ventures,react_studio
+Guillermo,Vercel,hello@vercel.com,react_studio
+Team,We Make Websites,hello@wemakewebsites.com,react_studio
+Team,Kinsta Partners,partners@kinsta.com,react_studio
+Team,Sanity Partners,partners@sanity.io,react_studio
+Team,Contentful Partners,partners@contentful.com,react_studio
+Team,Prismic Experts,experts@prismic.io,react_studio
+Team,Medusa Partners,partners@medusajs.com,react_studio
+Team,Gatsby Agencies,hello@gatsbyjs.com,react_studio
+Marc,Marc Lou,marc@marclou.com,solo_founder
+Pieter,Levels.io,p@levels.io,solo_founder
+Tony,Tony Dinh,tony@tonydinh.com,solo_founder
+Dan,Dan Rowden,dan@danrowden.com,solo_founder
+Jon,Jon Yongfook,jon@yongfook.com,solo_founder
+Bhanu,Bhanu Teja,bhanu@pbteja1998.com,solo_founder
+Tibo,Tibo Maker,tibo@tweethunter.io,solo_founder
+Damon,Damon Chen,damon@testimonial.to,solo_founder
+Kevon,Kevon Cheung,kevon@publiclab.co,solo_founder
+Arvid,Arvid Kahl,arvid@thebootstrappedfounder.com,solo_founder
+Justin,Justin Jackson,justin@transistor.fm,solo_founder
+Courtland,Courtland Allen,courtland@indiehackers.com,solo_founder
+Channing,Channing Allen,channing@indiehackers.com,solo_founder
+Rosie,Rosie Sherry,rosie@rosiesherry.com,solo_founder
+Steph,Steph Smith,steph@stephsmith.io,solo_founder
+Daniel,Daniel Vassallo,daniel@dvassallo.com,solo_founder
+Simon,Simon Høiberg,simon@feedhive.io,solo_founder
+Goutham,Goutham,goutham@famewall.io,solo_founder
+Dagobert,Dagobert Renouf,dagobert@logology.co,solo_founder
+Founder,Indie Hacker,hello@indiehackers.com,solo_founder
+Team,WebFX,info@webfx.com,seo_agency
+Team,Ignite Visibility,info@ignitevisibility.com,seo_agency
+Team,SmartSites,contact@smartsites.com,seo_agency
+Team,Thrive Internet Marketing,info@thriveagency.com,seo_agency
+Team,Straight North,info@straightnorth.com,seo_agency
+Team,Disruptive Advertising,info@disruptiveadvertising.com,seo_agency
+Team,Titan Growth,info@titangrowth.com,seo_agency
+Team,SocialSEO,info@socialseo.com,seo_agency
+Team,OuterBox,info@outerbox.com,seo_agency
+Team,Victorious,info@victoriousseo.com,seo_agency
+Team,Power Digital,info@powerdigital.com,seo_agency
+Team,SEO Brand,info@seobrand.com,seo_agency
+Team,HigherVisibility,info@highervisibility.com,seo_agency
+Team,Searchbloom,info@searchbloom.com,seo_agency
+Team,Avalanche Creative,info@avalanchegr.com,seo_agency
+Team,Inseev Interactive,info@inseev.com,seo_agency
+Team,Directive Consulting,info@directiveconsulting.com,seo_agency
+Team,KlientBoost,info@klientboost.com,seo_agency
+Team,HawkSEM,info@hawksem.com,seo_agency
+Eric,Single Grain,eric@singlegrain.com,seo_agency
+Chris,Chris Coyier,chris@css-tricks.com,freelance_dev
+Wes,Wes Bos,wes@wesbos.com,freelance_dev
+Scott,Scott Tolinski,scott@syntax.fm,freelance_dev
+Brad,Traversy Media,brad@traversymedia.com,freelance_dev
+Kyle,Web Dev Simplified,kyle@webdevsimplified.com,freelance_dev
+Kevin,Kevin Powell,kevin@kevinpowell.co,freelance_dev
+Jeff,Fireship.io,jeff@fireship.io,freelance_dev
+Theo,t3.gg,theo@t3.gg,freelance_dev
+ThePrimeagen,Primeagen,prime@theprimeagen.com,freelance_dev
+Josh,Josh W Comeau,josh@joshwcomeau.com,freelance_dev
+Lee,Lee Robinson,lee@leerob.io,freelance_dev
+Hamed,Hamed Bahram,hamed@hamedbahram.io,freelance_dev
+Team,Daily.dev,hello@daily.dev,freelance_dev
+Team,ADPList,hello@adplist.org,freelance_dev
+Team,Frontend Masters,hello@frontendmasters.com,freelance_dev
+Contributor,React Hook Form,contact@reacthookform.com,freelance_dev
+Contributor,Formik,contact@formik.org,freelance_dev
+Developer,Upwork Freelancer 1,contact@upwork.com,freelance_dev
+Developer,Upwork Freelancer 2,hello@upwork.com,freelance_dev
+Developer,Fiverr Freelancer,hello@fiverr.com,freelance_dev

@@ -96,7 +96,8 @@ async function main() {
 
 		try {
 			const { data, error } = await resend.emails.send({
-				from: "Shaswat from FormGuard <shaswat@strivio.world>", // Update with your actual verified sending domain
+				from: process.env.RESEND_FROM_EMAIL || "Shaswat from FormGuard <formguard@strivio.world>",
+				replyTo: process.env.RESEND_REPLY_TO_EMAIL || "sh20raj@gmail.com",
 				to: [lead.Email],
 				subject: emailContent.subject,
 				html: emailContent.html,
