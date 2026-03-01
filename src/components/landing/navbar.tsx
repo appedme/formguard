@@ -42,7 +42,7 @@ export default function Navbar({ user }: NavbarProps) {
 
 				{/* Right: toggle + CTA + Mobile Menu */}
 				<div className="flex items-center gap-3">
-					<MobileNav user={user} />
+					<MobileNav hasUser={!!user} />
 					<ThemeToggle />
 					{user ? (
 						<Link

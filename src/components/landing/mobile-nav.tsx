@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { User } from "@stackframe/stack";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,10 +13,10 @@ import {
 } from "@/components/ui/sheet";
 
 interface MobileNavProps {
-	user?: User | null;
+	hasUser?: boolean;
 }
 
-export function MobileNav({ user }: MobileNavProps) {
+export function MobileNav({ hasUser }: MobileNavProps) {
 	const [open, setOpen] = useState(false);
 
 	const onNavigate = () => setOpen(false);
@@ -54,7 +53,7 @@ export function MobileNav({ user }: MobileNavProps) {
 						Docs
 					</Link>
 					<div className="h-px bg-border my-2" />
-					{!user ? (
+					{!hasUser ? (
 						<div className="flex flex-col gap-3">
 							<Link
 								href="/handler/sign-in"
