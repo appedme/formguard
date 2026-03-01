@@ -75,25 +75,26 @@ export function IntegrationsClient({ form }: IntegrationsClientProps) {
   return (
     <div className="space-y-8">
       {/* Google Sheets */}
-      <Card className="border-border/40 shadow-none rounded-2xl overflow-hidden">
-        <CardHeader className="bg-green-500/5 border-b border-border/40 p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-500/10 rounded-xl">
-                <FileSpreadsheet className="w-5 h-5 text-green-600" />
+      <Card className="border-border/40 shadow-none rounded-2xl overflow-hidden bg-card/50">
+        <CardHeader className="border-b border-border/40 p-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 w-32 h-32 bg-green-500/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none" />
+          <div className="flex items-center justify-between relative z-10">
+            <div className="flex items-center gap-4">
+              <div className="p-2.5 bg-background border border-border/60 rounded-xl shadow-sm">
+                <FileSpreadsheet className="w-5 h-5 text-foreground/80" />
               </div>
-              <div>
-                <CardTitle className="text-sm font-black">
+              <div className="space-y-0.5">
+                <CardTitle className="text-sm font-semibold tracking-tight">
                   Google Sheets
                 </CardTitle>
-                <CardDescription className="text-[10px] font-medium">
+                <CardDescription className="text-xs">
                   Auto-append submissions to a spreadsheet
                 </CardDescription>
               </div>
             </div>
             <Badge
               variant={sheetsUrl ? "default" : "secondary"}
-              className="text-[9px] uppercase font-black tracking-widest"
+              className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 shadow-none rounded-full"
             >
               {sheetsUrl ? "Connected" : "Not Configured"}
             </Badge>
@@ -120,17 +121,27 @@ export function IntegrationsClient({ form }: IntegrationsClientProps) {
               <li>
                 Paste the doPost handler code{" "}
                 <a
-                  href="https://developers.google.com/apps-script/guides/web#request_parameters"
+                  href="/docs/google-sheets"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline"
+                  className="text-primary font-bold hover:underline"
                 >
-                  (View Google Docs)
+                  (View Detailed Setup Guide)
                 </a>
                 <div className="mt-2 p-3 bg-background border border-border/40 rounded-lg">
-                  <p className="font-semibold text-foreground select-none mb-2">
-                    Apps Script Code Template:
-                  </p>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="font-semibold text-foreground select-none">
+                      Apps Script Code Template:
+                    </p>
+                    <a
+                      href="https://script.google.com/d/1wtNjTNLtq20sPau_tNBmfCR4IDWir3X8-KZR2Yuns4WoCy2BRkQR4wiT/edit?usp=sharing"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] flex items-center gap-1 bg-primary/10 text-primary px-2 py-1 rounded-md hover:bg-primary/20 transition-colors"
+                    >
+                      <ExternalLink className="w-3 h-3" /> Sample Script
+                    </a>
+                  </div>
                   <pre className="p-3 bg-muted rounded-md overflow-x-auto text-[10px] text-foreground font-mono select-all">
                     {`function doPost(e) {
   try {
@@ -184,25 +195,26 @@ export function IntegrationsClient({ form }: IntegrationsClientProps) {
       </Card>
 
       {/* Telegram */}
-      <Card className="border-border/40 shadow-none rounded-2xl overflow-hidden">
-        <CardHeader className="bg-blue-500/5 border-b border-border/40 p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-500/10 rounded-xl">
-                <Send className="w-5 h-5 text-blue-500" />
+      <Card className="border-border/40 shadow-none rounded-2xl overflow-hidden bg-card/50">
+        <CardHeader className="border-b border-border/40 p-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none" />
+          <div className="flex items-center justify-between relative z-10">
+            <div className="flex items-center gap-4">
+              <div className="p-2.5 bg-background border border-border/60 rounded-xl shadow-sm">
+                <Send className="w-5 h-5 text-foreground/80" />
               </div>
-              <div>
-                <CardTitle className="text-sm font-black">
+              <div className="space-y-0.5">
+                <CardTitle className="text-sm font-semibold tracking-tight">
                   Telegram Bot
                 </CardTitle>
-                <CardDescription className="text-[10px] font-medium">
+                <CardDescription className="text-xs">
                   Get instant submission notifications in Telegram
                 </CardDescription>
               </div>
             </div>
             <Badge
               variant={tgToken && tgChatId ? "default" : "secondary"}
-              className="text-[9px] uppercase font-black tracking-widest"
+              className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 shadow-none rounded-full"
             >
               {tgToken && tgChatId ? "Connected" : "Not Configured"}
             </Badge>
@@ -277,23 +289,24 @@ export function IntegrationsClient({ form }: IntegrationsClientProps) {
       </Card>
 
       {/* Notion */}
-      <Card className="border-border/40 shadow-none rounded-2xl overflow-hidden">
-        <CardHeader className="bg-foreground/5 border-b border-border/40 p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-foreground/10 rounded-xl">
-                <BookOpen className="w-5 h-5 text-foreground" />
+      <Card className="border-border/40 shadow-none rounded-2xl overflow-hidden bg-card/50">
+        <CardHeader className="border-b border-border/40 p-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 w-32 h-32 bg-foreground/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none" />
+          <div className="flex items-center justify-between relative z-10">
+            <div className="flex items-center gap-4">
+              <div className="p-2.5 bg-background border border-border/60 rounded-xl shadow-sm">
+                <BookOpen className="w-5 h-5 text-foreground/80" />
               </div>
-              <div>
-                <CardTitle className="text-sm font-black">Notion</CardTitle>
-                <CardDescription className="text-[10px] font-medium">
+              <div className="space-y-0.5">
+                <CardTitle className="text-sm font-semibold tracking-tight">Notion</CardTitle>
+                <CardDescription className="text-xs">
                   Create database entries from submissions
                 </CardDescription>
               </div>
             </div>
             <Badge
               variant={notionToken && notionDbId ? "default" : "secondary"}
-              className="text-[9px] uppercase font-black tracking-widest"
+              className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 shadow-none rounded-full"
             >
               {notionToken && notionDbId ? "Connected" : "Not Configured"}
             </Badge>
@@ -371,18 +384,19 @@ export function IntegrationsClient({ form }: IntegrationsClientProps) {
       </Card>
 
       {/* Zapier / Make / n8n */}
-      <Card className="border-border/40 shadow-none rounded-2xl overflow-hidden">
-        <CardHeader className="bg-orange-500/5 border-b border-border/40 p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-orange-500/10 rounded-xl">
-                <Zap className="w-5 h-5 text-orange-500" />
+      <Card className="border-border/40 shadow-none rounded-2xl overflow-hidden bg-card/50">
+        <CardHeader className="border-b border-border/40 p-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 w-32 h-32 bg-orange-500/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none" />
+          <div className="flex items-center justify-between relative z-10">
+            <div className="flex items-center gap-4">
+              <div className="p-2.5 bg-background border border-border/60 rounded-xl shadow-sm">
+                <Zap className="w-5 h-5 text-foreground/80" />
               </div>
-              <div>
-                <CardTitle className="text-sm font-black">
+              <div className="space-y-0.5">
+                <CardTitle className="text-sm font-semibold tracking-tight">
                   Zapier / Make / n8n
                 </CardTitle>
-                <CardDescription className="text-[10px] font-medium">
+                <CardDescription className="text-xs">
                   Connect to 7,000+ apps via webhook automation
                 </CardDescription>
               </div>
@@ -391,7 +405,7 @@ export function IntegrationsClient({ form }: IntegrationsClientProps) {
               variant={
                 form.webhookEnabled && form.webhookUrl ? "default" : "secondary"
               }
-              className="text-[9px] uppercase font-black tracking-widest"
+              className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 shadow-none rounded-full"
             >
               {form.webhookEnabled && form.webhookUrl
                 ? "Active"
