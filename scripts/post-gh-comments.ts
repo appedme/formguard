@@ -32,7 +32,7 @@ for (const section of sections) {
 
 console.log(`Found ${targets.length} issues to comment on.`);
 
-const TIER_1_TARGETS = targets;
+const TIER_1_TARGETS = targets.slice(7);
 
 async function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));

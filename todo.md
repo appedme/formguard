@@ -1,5 +1,7 @@
-create /contact to share feedback contact on the footer and create separate table to store all this 
+add option to get free 1 month of pro plan on producthunt code PH1MONTH - create a separate page for this and also add it to the dashboard so that users can use it and upgrade to pro plan self
 
+in here Paste the doPost handler code (see docs)
+add the link of codes or the link of docs if possible add sample link of App Script
 
 Submission Export:
 Feature: One-click download of submissions as .csv or .json.
@@ -11,7 +13,6 @@ Custom Redirects:
 Feature: Configure a specific success_url (Thank You page) and error_url per form via the dashboard, rather than solely relying on hidden form fields.
 Allowed Domains (CORS):
 Feature: Security setting to restrict which websites can send data to a simplified specific endpoint.
-
 
 ⚡ Phase 2: Integrations & Automation
 Turn FormGuard into a workflow trigger.
