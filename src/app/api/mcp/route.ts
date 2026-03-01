@@ -5,10 +5,9 @@ import { forms, submissions, insights } from "@/db/schema";
 import { eq, desc, and } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
-export const runtime = "edge";
-
 /**
- * MCP over HTTP (SSE) implementation for Next.js App Router
+ * MCP over HTTP (Streamable HTTP) implementation for Next.js App Router
+ * NOTE: Must use Node.js runtime (not edge) because validateApiKey imports a 'use server' module.
  */
 
 const SERVER_NAME = "formguard-server";
