@@ -84,6 +84,56 @@ const PLATFORMS = [
 		icon: Zap,
 		description: "X's real-time AI interface."
 	},
+	{
+		id: "meta-ai",
+		name: "Meta AI",
+		baseUrl: "https://www.meta.ai/?q=",
+		color: "text-blue-600",
+		bgColor: "bg-blue-600/5",
+		borderColor: "border-blue-600/10",
+		icon: MessageSquare,
+		description: "Meta's highly capable assistant."
+	},
+	{
+		id: "huggingchat",
+		name: "HuggingChat",
+		baseUrl: "https://huggingface.co/chat/?q=",
+		color: "text-yellow-500",
+		bgColor: "bg-yellow-500/5",
+		borderColor: "border-yellow-500/10",
+		icon: Bot,
+		description: "Open source community AI."
+	},
+	{
+		id: "mistral",
+		name: "Le Chat (Mistral)",
+		baseUrl: "https://chat.mistral.ai/chat?q=",
+		color: "text-orange-600",
+		bgColor: "bg-orange-600/5",
+		borderColor: "border-orange-600/10",
+		icon: Sparkles,
+		description: "Europe's leading AI."
+	},
+	{
+		id: "poe",
+		name: "Poe",
+		baseUrl: "https://poe.com/chat?q=",
+		color: "text-purple-500",
+		bgColor: "bg-purple-500/5",
+		borderColor: "border-purple-500/10",
+		icon: Search,
+		description: "Access multiple AI models."
+	},
+	{
+		id: "copilot",
+		name: "Copilot",
+		baseUrl: "https://copilot.microsoft.com/?q=",
+		color: "text-teal-500",
+		bgColor: "bg-teal-500/5",
+		borderColor: "border-teal-500/10",
+		icon: Cpu,
+		description: "Microsoft's integrated AI."
+	},
 ];
 
 export function PromptGeneratorClient() {
@@ -140,7 +190,7 @@ export function PromptGeneratorClient() {
 		PLATFORMS.forEach((platform) => {
 			window.open(getEncodedUrl(platform.baseUrl), "_blank");
 		});
-		toast.success("Opening 6 platforms...");
+		toast.success(`Opening ${PLATFORMS.length} platforms...`);
 	};
 
 	const clearPrompt = () => {

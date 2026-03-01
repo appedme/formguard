@@ -54,7 +54,12 @@ export default function PromptGeneratorPage() {
 									<li><strong>Gemini:</strong> Deep-linked prompt for Google's Gemini.</li>
 									<li><strong>Perplexity:</strong> Search-ready link for AI answers.</li>
 									<li><strong>DeepSeek:</strong> The newest powerhouse, supported natively.</li>
-									<li><strong>Grok:</strong> X's AI generator links included.</li>
+									<li><strong>Meta AI:</strong> Launch right into Llama 3 on Meta.</li>
+									<li><strong>HuggingChat:</strong> Open-source models accessible instantly.</li>
+									<li><strong>Mistral:</strong> Fast access to Le Chat.</li>
+									<li><strong>Poe:</strong> Easily share prompts to Quora's multi-bot interface.</li>
+									<li><strong>Copilot:</strong> Ready for Microsoft's ecosystem.</li>
+									<li><strong>Grok (X):</strong> Real-time AI access directly on X.</li>
 								</ul>
 							</div>
 							<div>
@@ -62,7 +67,7 @@ export default function PromptGeneratorPage() {
 								<ul className="space-y-2 text-muted-foreground">
 									<li><strong>Zero Friction:</strong> One link, one click, one prompt.</li>
 									<li><strong>No Sign-up:</strong> Completely free to use for any builder.</li>
-									<li><strong>Tab Storming:</strong> Open all platforms at once to compare outputs.</li>
+									<li><strong>Tab Storming:</strong> Open all 11 platforms at once to compare outputs.</li>
 									<li><strong>SEO Ready:</strong> Perfect for technical blog posts and documentation.</li>
 								</ul>
 							</div>

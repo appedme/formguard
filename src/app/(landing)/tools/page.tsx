@@ -7,6 +7,26 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
 	title: "Free Developer Tools | FormGuard",
 	description: "A collection of free developer utilities to streamline your workflow. AI Prompt Generators, Form Testers, and more.",
+	keywords: [
+		"developer tools",
+		"AI prompt generator",
+		"form tester",
+		"schema generator",
+		"free utilities",
+		"FormGuard",
+		"JSON schema",
+		"CURL tester",
+	],
+	openGraph: {
+		title: "Free Developer Tools | FormGuard",
+		description: "A collection of free developer utilities to streamline your workflow. AI Prompt Generators, Form Testers, and more.",
+		type: "website",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "Free Developer Tools | FormGuard",
+		description: "A collection of free developer utilities to streamline your workflow. AI Prompt Generators, Form Testers, and more.",
+	},
 };
 
 const tools = [
@@ -20,20 +40,20 @@ const tools = [
 		bgColor: "bg-blue-500/5",
 	},
 	{
-		title: "CURL to Form Tester",
-		description: "Instantly test your form endpoints with pre-configured CURL commands.",
-		href: "#",
+		title: "Tailwind Form Generator",
+		description: "Build beautiful, responsive HTML forms with Tailwind CSS. Copy perfectly styled code directly into your project.",
+		href: "/tools/tailwind-form-generator",
 		icon: Terminal,
-		badge: "Coming Soon",
+		badge: "New",
 		color: "text-purple-500",
 		bgColor: "bg-purple-500/5",
 	},
 	{
-		title: "Schema Generator",
-		description: "Generate JSON schemas for your form payloads in seconds.",
-		href: "#",
+		title: "Open Graph Previewer",
+		description: "Generate SEO-optimized Open Graph meta tags and instantly preview how your links will look on social media.",
+		href: "/tools/open-graph",
 		icon: Share2,
-		badge: "Planned",
+		badge: "New",
 		color: "text-green-500",
 		bgColor: "bg-green-500/5",
 	},
