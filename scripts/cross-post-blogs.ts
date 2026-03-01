@@ -184,6 +184,9 @@ async function postToMedium(post: BlogPost, apiKey: string, authorId: string) {
 	}
 }
 
+// Helper for waiting
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+
 // Main execution
 async function main() {
 	const devtoKey = process.env.DEVTO_API_KEY;
@@ -223,6 +226,8 @@ async function main() {
 			console.log("⚠️ Scalping Medium: MEDIUM_AUTHOR_ID is missing.");
 		}
 		
+		console.log("\n⏳ Waiting 30 seconds to avoid API rate limits...");
+		await sleep(30000);
 		console.log("\n");
 	}
 
