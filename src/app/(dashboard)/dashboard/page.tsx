@@ -13,6 +13,7 @@ import { Plus, ChevronRight, Inbox, LayoutDashboard, Zap, Share2, Sparkles, Chec
 import { TemplatePicker } from "@/components/dashboard/template-picker";
 import { formatDistanceToNow } from "date-fns";
 import { CopyButton } from "@/components/ui/copy-button";
+import { PhMetrics } from "@/components/dashboard/ph-metrics";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -67,6 +68,10 @@ export default async function DashboardPage() {
 						</CardContent>
 					</Card>
 				))}
+			</div>
+
+			<div className="mb-10">
+				<PhMetrics />
 			</div>
 
 			<div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
