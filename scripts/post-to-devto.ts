@@ -76,7 +76,7 @@ async function postToDevTo() {
       throw new Error(`API returned ${response.status}: ${errorText}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as any;
     console.log("✅ Success! Article created.");
     console.log(`🔗 URL: ${data.url}`);
     console.log(`📝 Status: ${data.published ? "Published" : "Draft"}`);
