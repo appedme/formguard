@@ -4,10 +4,12 @@ import Comparison from "@/components/landing/comparison";
 import FinalCTA from "@/components/landing/final-cta";
 import { stackServerApp } from "@/stack/server";
 
-export const metadata = {
-	title: "The Best reCAPTCHA Alternative for 2026 | FormGuard",
+import { constructMetadata } from "@/lib/metadata";
+
+export const metadata = constructMetadata({
+	title: "The Best reCAPTCHA Alternative for 2026",
 	description: "Stop using reCAPTCHA. FormGuard is the privacy-first, invisible alternative that doesn't ruin your conversion rates or user experience.",
-};
+});
 
 export default async function RecaptchaAlternative() {
 	const user = await stackServerApp.getUser();

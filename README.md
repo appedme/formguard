@@ -1,176 +1,69 @@
-# FormGuard
+# FormGuard — Invisible Spam Protection
 
-**Edge-Powered AI Form Backend for Builders**
+FormGuard is an elite, edge-native form protection and backend service. It stops 99% of spam submissions with invisible, AI-powered analysis—eliminating the need for traditional CAPTCHAs.
 
-Stop building form backends. Ship faster with a single endpoint that captures submissions, blocks spam, and converts raw responses into clear AI insights.
+## 🚀 Key Features
 
-Built using **Cloudflare Workers, Next.js App Router, StackAuth, shadcn/ui, and Dodo Payments** — optimized for speed, simplicity, and high profit margins.
+- **Invisible Protection:** Stops bots without bothering users. No puzzles, no friction.
+- **AI-Powered:** Uses advanced behavioral analysis to distinguish between humans and bots.
+- **Edge-Native:** Built on Cloudflare Workers for ultra-low latency and global scalability.
+- **Developer-First:** One-line HTML integration. No complex SDKs or server-side code required.
+- **Deep Analytics:** Real-time submission logs and AI-generated insights.
+- **Native Integrations:** Sync submissions to Slack, Discord, Google Sheets, Notion, and Telegram.
 
----
+## 🛠️ Tech Stack
 
-# Overview
+- **Framework:** Next.js (App Router)
+- **Runtime:** Cloudflare Workers (Edge)
+- **Database:** PostgreSQL (Neon) with Drizzle ORM
+- **Auth:** Stack Auth
+- **Styling:** Tailwind CSS
+- **Spam Engine:** Cloudflare Turnstile + AI Behavioral Analysis
+- **Email:** Resend
 
-FormGuard is a developer-first SaaS that replaces traditional form infrastructure with a lightweight edge API and a minimal dashboard.
+## 🏗️ Architecture
 
-Instead of building:
+FormGuard follows a production-grade, modular architecture designed for 10x traffic:
 
-- backend APIs
-- validation layers
-- analytics pipelines
-- messy CSV workflows
+- **Service Layer:** Isolated business logic in `src/services`.
+- **Action Layer:** Atomic, ownership-aware database operations in `src/db/actions`.
+- **Validation:** Strict input validation using Zod.
+- **Observability:** Centralized, structured JSON logging.
+- **Performance:** Optimized SQL with JOINs/GROUP BY to eliminate N+1 query patterns.
 
-You create a form, copy an endpoint, and start receiving structured insights instantly.
+## 🏁 Getting Started
 
----
+1.  **Clone & Install:**
+    ```bash
+    git clone https://github.com/sh20raj/formguard.git
+    cd formguard
+    bun install
+    ```
 
-# Core Features
+2.  **Environment Variables:**
+    Copy `.env.example` to `.env` and fill in your credentials.
 
-## Edge Form Endpoints
+3.  **Run Development Server:**
+    ```bash
+    bun dev
+    ```
 
-Create form endpoints that run globally on Cloudflare Workers.
+4.  **Database Migration:**
+    ```bash
+    bun drizzle-kit push
+    ```
 
-- Ultra-fast submissions
-- Zero server management
-- Rate limiting + validation
+5.  **Deploy:**
+    ```bash
+    bun run deploy
+    ```
 
----
+## 🔐 Security & Compliance
 
-## AI Insights
-
-Transform submissions into actionable summaries powered by **Google Gemini**.
-
-- Detect repeated requests
-- Summarize feedback
-- Highlight sentiment trends
-- On-demand AI insights per form
-
----
-
-## Spam Protection
-
-Built-in filtering at the edge.
-
-- Basic bot detection
-- Rate limiting
-- Clean data storage
-
----
-
-## Simple Dashboard
-
-Minimal brutalist UI built with shadcn.
-
-- Forms overview
-- Submission viewer
-- AI Insights tab
-- Usage analytics and plan limits
-
----
-
-## Dodo Payments Integration
-
-Secure, global, and India-friendly billing system.
-
-- Free → Pro → Growth plans
-- Edge-enforced usage limits
-- Secure checkout and webhook automation
+- **GDPR & CCPA Compliant:** We respect user privacy and do not track users across sites.
+- **CORS Hardening:** Restricted endpoint access via allowed origin lists.
+- **Rate Limiting:** Infrastructure-level protection against brute-force and DDoS.
 
 ---
 
-# Tech Stack
-
-- **Frontend**: Next.js App Router, TailwindCSS, shadcn/ui
-- **Backend**: Cloudflare Workers (Edge runtime)
-- **Auth**: StackAuth
-- **Database**: Neon Postgres with Drizzle ORM
-- **AI**: Google Gemini Pro (LLM)
-- **Payments**: Dodo Payments
-- **Language**: TypeScript
-
----
-
-# Project Structure
-
-```
-app/
-  (landing)/    - Public marketing pages
-  (dashboard)/  - Protected user dashboard
-  api/          - Billing & Submission endpoints
-components/     - Reusable UI (shadcn)
-db/             - Database schema & server actions
-lib/            - Shared utilities (AI, Plans)
-public/         - Assets, PWA manifest, Favicons
-```
-
----
-
-# Getting Started
-
-## 1. Clone Repository
-
-```bash
-git clone https://github.com/appedme/formguard
-cd formguard
-```
-
-## 2. Install Dependencies
-
-We use **Bun** for maximum performance.
-
-```bash
-bun install
-```
-
-## 3. Setup Environment Variables
-
-Create `.env` based on `.env.example`:
-
-```bash
-NEXT_PUBLIC_STACK_PROJECT_ID=
-STACK_SECRET_SERVER_KEY=
-DATABASE_URL=
-GEMINI_API_KEY=
-DODO_PAYMENTS_API_KEY=
-DODO_PAYMENTS_WEBHOOK_SECRET=
-DODO_PAYMENTS_ENVIRONMENT=test_mode
-```
-
-## 4. Run Development Server
-
-```bash
-bun dev
-```
-
-## 5. Deployment
-
-Deploy to Cloudflare via GitHub Actions or Wrangler:
-
-```bash
-bun run deploy
-```
-
----
-
-# How It Works
-
-1. **Create a Form**: Get a unique `endpointId` from the dashboard.
-2. **Post Data**: Send POST requests to `https://formguard.unstory.app/api/submit/:endpointId`.
-3. **Analyze**: Use the AI Insight engine to summarize 100s of responses in seconds.
-
----
-
-# Philosophy
-
-FormGuard is built for builders who want:
-
-- **Zero infra**: Just drop an endpoint.
-- **Clear feedback**: AI-summarized insights, not raw data.
-- **Global scale**: Runs on the edge.
-
-One endpoint. Clean insights. Ship faster.
-
----
-
-# License
-
-MIT License
+Built with precision by the **Unstory** team.

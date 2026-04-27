@@ -4,10 +4,12 @@ import Comparison from "@/components/landing/comparison";
 import FinalCTA from "@/components/landing/final-cta";
 import { stackServerApp } from "@/stack/server";
 
-export const metadata = {
-	title: "The Best Cloudflare Turnstile Alternative | FormGuard",
+import { constructMetadata } from "@/lib/metadata";
+
+export const metadata = constructMetadata({
+	title: "The Best Cloudflare Turnstile Alternative",
 	description: "Looking for a simpler Turnstile alternative? FormGuard offers invisible spam protection with easier integration and native form handling.",
-};
+});
 
 export default async function TurnstileAlternative() {
 	const user = await stackServerApp.getUser();
