@@ -1,24 +1,24 @@
 // Plan limits — single source of truth
 export const PLAN_LIMITS = {
 	free: {
-		maxForms: 1,
-		maxSubmissionsPerMonth: 100,
-		aiInsights: false,
-		aiInsightsPerMonth: 0,
-		webhooks: false,
+		maxForms: 3,
+		maxSubmissionsPerMonth: 500,
+		aiInsights: true,
+		aiInsightsPerMonth: 5,
+		webhooks: true,
 		teamWorkspace: false,
-		label: "Free",
+		label: "Starter",
 		price: 0,
 	},
 	pro: {
-		maxForms: 10,
-		maxSubmissionsPerMonth: 5000,
+		maxForms: 25,
+		maxSubmissionsPerMonth: 25000,
 		aiInsights: true,
-		aiInsightsPerMonth: 25,
-		webhooks: false,
+		aiInsightsPerMonth: 100,
+		webhooks: true,
 		teamWorkspace: false,
 		label: "Pro",
-		price: 9,
+		price: 19,
 	},
 	growth: {
 		maxForms: Infinity,
@@ -27,8 +27,8 @@ export const PLAN_LIMITS = {
 		aiInsightsPerMonth: Infinity,
 		webhooks: true,
 		teamWorkspace: true,
-		label: "Growth",
-		price: 29,
+		label: "Business",
+		price: 49,
 	},
 } as const;
 

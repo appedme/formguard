@@ -1,46 +1,33 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { stackServerApp } from "@/stack/server";
 import { getUserByStackAuthId } from "@/db/actions/user.actions";
-import { createForm, getUserForms } from "@/db/actions/form.actions";
-import { PLAN_LIMITS } from "@/lib/plans";
+import { FormService } from "@/services/form.service";
+import { handleError, AppError } from "@/lib/errors";
+import { z } from "zod";
+
+const createFormSchema = z.object({
+    name: z.string().min(1, "Form name is required").max(100, "Name is too long"),
+});
 
 export async function POST(req: NextRequest) {
 	try {
 		const stackUser = await stackServerApp.getUser();
 		if (!stackUser) {
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            throw new AppError("Unauthorized", 401);
 		}
 
 		const dbUser = await getUserByStackAuthId(stackUser.id);
 		if (!dbUser) {
-			return NextResponse.json({ error: "User not found" }, { status: 404 });
+            throw new AppError("User not found", 404);
 		}
 
-		// Enforce plan limits
-		const existingForms = await getUserForms(dbUser.id);
-		const limits = PLAN_LIMITS[dbUser.plan];
+        const body = await req.json();
+        const { name } = createFormSchema.parse(body);
 
-		if (existingForms.length >= limits.maxForms) {
-			return NextResponse.json(
-				{
-					error: `Your ${limits.label} plan allows up to ${limits.maxForms} form${limits.maxForms === 1 ? "" : "s"}. Upgrade to create more.`,
-				},
-				{ status: 403 }
-			);
-		}
+		const form = await FormService.createFormWithLimitCheck(dbUser.id, name.trim(), dbUser.plan);
 
-		const body = (await req.json()) as { name?: string };
-		const { name } = body;
-
-		if (!name || typeof name !== "string" || name.trim().length === 0) {
-			return NextResponse.json({ error: "Form name is required" }, { status: 400 });
-		}
-
-		const form = await createForm(dbUser.id, name.trim());
-
-		return NextResponse.json({ form }, { status: 201 });
+		return Response.json({ form }, { status: 201 });
 	} catch (error) {
-		console.error("Error creating form:", error);
-		return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+		return handleError(error);
 	}
 }
