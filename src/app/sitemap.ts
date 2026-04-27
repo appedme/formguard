@@ -1,9 +1,10 @@
 import { MetadataRoute } from "next";
 import { blogPosts } from "@/lib/blog";
 import { mdPosts } from "@/lib/blog-md-data";
+import { siteConfig } from "@/config/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-	const baseUrl = "https://formguard.unstory.app";
+	const baseUrl = siteConfig.url;
 	const lastModified = new Date();
 
 	const staticRoutes = [
@@ -16,6 +17,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 		"/privacy",
 		"/terms",
 		"/status",
+        "/recaptcha-alternative",
+        "/turnstile-alternative",
 	].map((route) => ({
 		url: `${baseUrl}${route}`,
 		lastModified,

@@ -31,6 +31,43 @@ export async function createForm(userId: string, name: string) {
 }
 
 /**
+ * Creates a new form from a template.
+ */
+export async function createFormFromTemplate(
+	userId: string,
+	templateId: string
+) {
+    try {
+        const { formTemplates } = await import("@/lib/templates");
+        const template = formTemplates.find((t) => t.id === templateId);
+        if (!template) throw new AppError("Template not found", 404);
+
+        const endpointId = nanoid(12);
+
+        const [form] = await db
+            .insert(forms)
+            .values({
+                userId,
+                name: template.name,
+                endpointId,
+                isPublic: true,
+                publicFormDescription: template.description,
+                publicFormFields: template.fields,
+                publicFormSuccessMessage: template.successMessage,
+                publicFormButtonText: template.buttonText,
+            })
+            .returning();
+
+        logger.info("Form created from template", { userId, formId: form.id, templateId });
+        return form;
+    } catch (error) {
+        if (error instanceof AppError) throw error;
+        logger.error("Failed to create form from template", { error, userId, templateId });
+        throw new AppError("Failed to create form from template", 500);
+    }
+}
+
+/**
  * Fetches all forms for a user with submission counts.
  * Optimized with a single JOIN and GROUP BY to avoid N+1 queries.
  */
