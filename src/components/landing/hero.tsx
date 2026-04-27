@@ -24,13 +24,11 @@ export default function Hero({ user }: HeroProps) {
 						</div>
 						
 						<h1 className="text-5xl lg:text-7xl font-black leading-[1.05] tracking-tight text-foreground mb-6">
-							The ultimate
-							<br />
-							form <span className="text-primary italic pr-2">backend.</span>
+							Stop 99% of spam in <span className="text-primary italic pr-2">60 seconds.</span>
 						</h1>
 						
 						<p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed max-w-xl">
-							Stop managing complex form infrastructure. Use our instant headless endpoint or auto-generate beautiful public pages with built-in integrations and invisible AI spam protection.
+							The modern alternative to reCAPTCHA. Privacy-first, developer-friendly, and completely invisible to your real users. No more annoying puzzles.
 						</p>
 
 						<div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-10">
@@ -46,15 +44,15 @@ export default function Hero({ user }: HeroProps) {
 									href="/handler/sign-up"
 									className="inline-flex items-center justify-center w-full sm:w-auto h-12 px-8 text-base font-semibold bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/25"
 								>
-									Start for Free
+									Start Protecting Your Forms
 									<ArrowRight className="w-4 h-4 ml-2" />
 								</Link>
 							)}
 							<Link
-								href="#comparison"
+								href="#pricing"
 								className="inline-flex items-center justify-center w-full sm:w-auto h-12 px-8 text-base font-semibold text-foreground bg-secondary/50 hover:bg-secondary rounded-lg transition-all"
 							>
-								Compare Alternates
+								Try it Free
 							</Link>
 						</div>
 

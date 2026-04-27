@@ -7,6 +7,8 @@ const links = [
 	{ label: "Tools", href: "/tools" },
 	{ label: "Docs", href: "/docs" },
 	{ label: "Contact", href: "/contact" },
+	{ label: "reCAPTCHA Alternative", href: "/recaptcha-alternative" },
+	{ label: "Turnstile Alternative", href: "/turnstile-alternative" },
 	{ label: "Privacy", href: "/privacy" },
 	{ label: "Terms", href: "/terms" },
 	{ label: "Status", href: "/status" },

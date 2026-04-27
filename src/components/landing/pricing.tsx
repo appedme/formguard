@@ -4,12 +4,17 @@ import Link from "next/link";
 
 const plans = [
 	{
-		name: "Free",
+		name: "Starter",
 		price: "$0",
 		period: "",
-		description: "Perfect for trying it out.",
-		features: ["100 submissions / month", "Basic dashboard", "1 form"],
-		cta: "Start Free",
+		description: "Perfect for personal projects and small blogs.",
+		features: [
+			"100 submissions / mo",
+			"Standard spam protection",
+			"Email notifications",
+			"CSV exports",
+		],
+		cta: "Start for Free",
 		href: "/handler/sign-up",
 		highlighted: false,
 		badge: null,
@@ -17,35 +22,35 @@ const plans = [
 	},
 	{
 		name: "Pro",
-		price: "$9",
-		period: "/month",
-		description: "Best for solo founders shipping MVPs.",
+		price: "$19",
+		period: "/mo",
+		description: "Everything you need for a growing SaaS.",
 		features: [
-			"5,000 submissions / month",
-			"AI summaries",
-			"Spam filtering",
-			"App Integrations (Notion, Sheets)",
-			"10 forms",
+			"5,000 submissions / mo",
+			"AI-powered spam engine",
+			"Custom redirect URLs",
+			"Notion & Sheets sync",
+			"Priority support",
 		],
-		cta: "Upgrade to Pro",
+		cta: "Get Started with Pro",
 		href: "/handler/sign-up",
 		highlighted: true,
-		badge: "MOST POPULAR",
+		badge: "Most Popular",
 		ctaAttr: "upgrade-pro",
 	},
 	{
-		name: "Growth",
-		price: "$29",
-		period: "/month",
-		description: "For teams shipping fast.",
+		name: "Business",
+		price: "$49",
+		period: "/mo",
+		description: "Advanced controls for high-traffic apps.",
 		features: [
 			"Unlimited submissions",
-			"Weekly insight reports",
-			"100+ App Integrations",
-			"Priority edge processing",
-			"Custom webhook automation",
+			"Advanced rate limiting",
+			"Custom webhooks",
+			"Team collaboration",
+			"White-labeled endpoints",
 		],
-		cta: "Go Growth",
+		cta: "Go Business",
 		href: "/handler/sign-up",
 		highlighted: false,
 		badge: null,
@@ -57,56 +62,56 @@ export default function Pricing() {
 	return (
 		<section id="pricing" className="py-24 border-b border-border bg-background">
 			<div className="mx-auto max-w-6xl px-6">
-				<p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-4">
-					Pricing
-				</p>
-				<h2 className="text-3xl font-semibold text-foreground mb-4">
-					Pay for what you need.
-					<br />
-					<span className="text-muted-foreground">Infrastructure that scales.</span>
-				</h2>
-				<p className="text-sm text-muted-foreground font-mono mb-14">
-					Secure billing · No hidden fees
-				</p>
+				<div className="text-center mb-16">
+					<p className="text-xs font-mono uppercase tracking-[0.2em] text-primary mb-4 font-bold">
+						Pricing
+					</p>
+					<h2 className="text-4xl md:text-5xl font-black text-foreground mb-4 tracking-tight">
+						Transparent pricing for <br /> developers of all sizes.
+					</h2>
+					<p className="text-muted-foreground text-lg max-w-2xl mx-auto font-medium">
+						No hidden fees. No credit card required to start. Cancel anytime.
+					</p>
+				</div>
 
-				<div className="grid md:grid-cols-3 gap-6">
+				<div className="grid md:grid-cols-3 gap-8">
 					{plans.map((plan) => (
 						<div
 							key={plan.name}
-							className={`relative border p-8 flex flex-col ${
+							className={`relative p-8 flex flex-col rounded-2xl border transition-all ${
 								plan.highlighted
-									? "border-foreground bg-primary text-primary-foreground"
-									: "border-border bg-card text-card-foreground"
+									? "border-primary bg-primary/5 shadow-2xl shadow-primary/10 scale-105 z-10"
+									: "border-border bg-card hover:border-primary/20 shadow-sm"
 							}`}
 						>
 							{/* Badge */}
 							{plan.badge && (
-								<span className="absolute -top-3 left-8 bg-background text-foreground text-xs font-mono font-bold px-3 py-1 border border-border">
+								<span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg">
 									{plan.badge}
 								</span>
 							)}
 
 							<div className="mb-8">
-								<p className={`text-xs font-mono uppercase tracking-widest mb-3 ${plan.highlighted ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
+								<p className="text-sm font-bold text-foreground mb-4">
 									{plan.name}
 								</p>
-								<div className="flex items-baseline gap-1 mb-2">
-									<span className="text-4xl font-black">{plan.price}</span>
-									<span className={`text-sm font-mono ${plan.highlighted ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
+								<div className="flex items-baseline gap-1 mb-4">
+									<span className="text-5xl font-black tracking-tight">{plan.price}</span>
+									<span className="text-sm font-bold text-muted-foreground">
 										{plan.period}
 									</span>
 								</div>
-								<p className={`text-sm ${plan.highlighted ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
+								<p className="text-sm text-muted-foreground leading-relaxed font-medium">
 									{plan.description}
 								</p>
 							</div>
 
-							<ul className="space-y-3 mb-10 grow">
+							<ul className="space-y-4 mb-10 grow">
 								{plan.features.map((f) => (
-									<li key={f} className="flex items-center gap-3 text-sm">
-										<span className={`font-mono ${plan.highlighted ? "text-green-300" : "text-foreground"}`}>
-											✓
-										</span>
+									<li key={f} className="flex items-center gap-3 text-sm font-medium text-foreground/80">
+										<div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+											<span className="text-primary text-[10px] font-black">✓</span>
+										</div>
 										{f}
 									</li>
 								))}
@@ -115,10 +120,10 @@ export default function Pricing() {
 							<Link
 								href={plan.href}
 								data-cta={plan.ctaAttr}
-								className={`w-full inline-flex items-center justify-center h-11 text-sm font-semibold transition-colors ${
+								className={`w-full inline-flex items-center justify-center h-12 text-sm font-bold rounded-xl transition-all ${
 									plan.highlighted
-										? "bg-background text-foreground hover:bg-accent"
-										: "bg-primary text-primary-foreground hover:bg-primary/90"
+										? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20"
+										: "bg-secondary text-foreground hover:bg-secondary/80"
 								}`}
 							>
 								{plan.cta}
@@ -127,9 +132,17 @@ export default function Pricing() {
 					))}
 				</div>
 
-				<p className="text-center text-xs text-muted-foreground font-mono mt-8">
-					Secure billing. Cancel anytime. No credit card for free plan.
-				</p>
+				<div className="mt-16 pt-8 border-t border-border flex flex-wrap justify-center gap-x-12 gap-y-6">
+					<div className="flex items-center gap-2 text-xs font-mono font-bold text-muted-foreground uppercase tracking-widest">
+						<span className="text-emerald-500">✓</span> Secure Stripe Billing
+					</div>
+					<div className="flex items-center gap-2 text-xs font-mono font-bold text-muted-foreground uppercase tracking-widest">
+						<span className="text-emerald-500">✓</span> Cancel Anytime
+					</div>
+					<div className="flex items-center gap-2 text-xs font-mono font-bold text-muted-foreground uppercase tracking-widest">
+						<span className="text-emerald-500">✓</span> 14-Day Money Back
+					</div>
+				</div>
 			</div>
 		</section>
 	);

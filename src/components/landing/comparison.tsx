@@ -2,46 +2,46 @@ import { Check, X } from "lucide-react";
 
 const comparisons = [
 	{
-		feature: "Quick Form Backend",
-		formguard: true,
-		formspree: true,
-		typeform: false,
+		feature: "User Experience",
+		formguard: "Zero Friction",
+		recaptcha: "Annoying Puzzles",
+		turnstile: "Mostly Invisible",
 	},
 	{
-		feature: "No-code Public Form Pages",
-		formguard: true,
-		formspree: false,
-		typeform: true,
+		feature: "Setup Complexity",
+		formguard: "Under 60s",
+		recaptcha: "Complex SDK",
+		turnstile: "SDK Required",
 	},
 	{
-		feature: "Multiple Hosted UI Themes (Notion, Word, Google Forms...)",
+		feature: "Privacy Focused",
 		formguard: true,
-		formspree: "No Hosted UI",
-		typeform: "Only Typeform style",
+		recaptcha: false,
+		turnstile: true,
 	},
 	{
-		feature: "Google Sheets & Notion Sync",
-		formguard: true,
-		formspree: "Paid plan only",
-		typeform: "Paid plan only",
+		feature: "Bot Protection Engine",
+		formguard: "AI-Powered",
+		recaptcha: "Heuristic",
+		turnstile: "Challenge-based",
 	},
 	{
-		feature: "AI Spam Protection (No Captcha needed by user)",
+		feature: "Real-time Analytics",
 		formguard: true,
-		formspree: false,
-		typeform: false,
+		recaptcha: "Basic",
+		turnstile: "Limited",
 	},
 	{
-		feature: "AI Submission Insights",
+		feature: "Native Integrations",
 		formguard: true,
-		formspree: false,
-		typeform: false,
+		recaptcha: false,
+		turnstile: false,
 	},
 	{
-		feature: "Generous Free Tier",
-		formguard: true,
-		formspree: "50/mo limit",
-		typeform: "10/mo limit",
+		feature: "Free Tier",
+		formguard: "Generous",
+		recaptcha: "Limited",
+		turnstile: "Generous",
 	},
 ];
 
@@ -51,13 +51,13 @@ export default function Comparison() {
 			<div className="mx-auto max-w-5xl px-6">
 				<div className="text-center mb-16">
 					<p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-4">
-						Compare
+						Benchmark
 					</p>
-					<h2 className="text-3xl font-semibold text-foreground mb-4">
-						Why choose FormGuard?
+					<h2 className="text-3xl font-black text-foreground mb-4 tracking-tight">
+						FormGuard vs The Rest
 					</h2>
-					<p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-						See how we stack up against the alternatives. Built specifically for developers and creators who value speed and simplicity.
+					<p className="text-muted-foreground text-lg max-w-2xl mx-auto font-medium">
+						We built FormGuard to be the protection we wanted for our own apps. Invisible, fast, and developer-first.
 					</p>
 				</div>
 
@@ -65,43 +65,41 @@ export default function Comparison() {
 					<table className="w-full text-left border-collapse min-w-[600px]">
 						<thead>
 							<tr>
-								<th className="p-4 border-b border-border font-semibold text-muted-foreground w-1/3">Features</th>
-								<th className="p-4 border-b border-border font-bold text-primary text-center text-lg w-1/5 bg-primary/5 rounded-t-lg">FormGuard</th>
-								<th className="p-4 border-b border-border font-semibold text-muted-foreground text-center w-1/5">Formspree</th>
-								<th className="p-4 border-b border-border font-semibold text-muted-foreground text-center w-1/5">Typeform</th>
+								<th className="p-4 border-b border-border font-bold text-muted-foreground w-1/3">Features</th>
+								<th className="p-4 border-b border-border font-black text-primary text-center text-lg w-1/5 bg-primary/5 rounded-t-xl">FormGuard</th>
+								<th className="p-4 border-b border-border font-bold text-muted-foreground text-center w-1/5">reCAPTCHA</th>
+								<th className="p-4 border-b border-border font-bold text-muted-foreground text-center w-1/5">Turnstile</th>
 							</tr>
 						</thead>
 						<tbody>
 							{comparisons.map((row, index) => (
 								<tr key={index} className="group hover:bg-muted/30 transition-colors">
-									<td className="p-4 border-b border-border/50 font-medium text-sm text-foreground">
+									<td className="p-4 border-b border-border/50 font-bold text-sm text-foreground">
 										{row.feature}
 									</td>
-									<td className="p-4 border-b border-border/50 text-center bg-primary/5">
+									<td className="p-4 border-b border-border/50 text-center bg-primary/5 font-bold text-sm text-primary">
 										{row.formguard === true ? (
 											<Check className="w-5 h-5 mx-auto text-primary" />
-										) : row.formguard === false ? (
-											<X className="w-5 h-5 mx-auto text-muted-foreground/50" />
 										) : (
-											<span className="text-sm font-medium text-primary">{row.formguard}</span>
+											row.formguard
 										)}
 									</td>
-									<td className="p-4 border-b border-border/50 text-center">
-										{row.formspree === true ? (
+									<td className="p-4 border-b border-border/50 text-center text-sm font-medium text-muted-foreground">
+										{row.recaptcha === true ? (
 											<Check className="w-5 h-5 mx-auto text-foreground/70" />
-										) : row.formspree === false ? (
-											<X className="w-5 h-5 mx-auto text-muted-foreground/40" />
+										) : row.recaptcha === false ? (
+											<X className="w-5 h-5 mx-auto text-red-500/50" />
 										) : (
-											<span className="text-sm text-muted-foreground">{row.formspree}</span>
+											row.recaptcha
 										)}
 									</td>
-									<td className="p-4 border-b border-border/50 text-center">
-										{row.typeform === true ? (
+									<td className="p-4 border-b border-border/50 text-center text-sm font-medium text-muted-foreground">
+										{row.turnstile === true ? (
 											<Check className="w-5 h-5 mx-auto text-foreground/70" />
-										) : row.typeform === false ? (
-											<X className="w-5 h-5 mx-auto text-muted-foreground/40" />
+										) : row.turnstile === false ? (
+											<X className="w-5 h-5 mx-auto text-red-500/50" />
 										) : (
-											<span className="text-sm text-muted-foreground">{row.typeform}</span>
+											row.turnstile
 										)}
 									</td>
 								</tr>

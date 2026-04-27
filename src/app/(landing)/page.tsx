@@ -13,17 +13,17 @@ import { stackServerApp } from "@/stack/server";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-	title: "FormGuard — The AI-Powered Form Backend for Developers",
-	description: "Capture form submissions, instantly publish public pages, block spam effortlessly, and sync to your favorite tools. Free tier available.",
+	title: "FormGuard — Invisible Spam Protection for Modern Forms",
+	description: "Stop 99% of spam form submissions without captchas. The modern, privacy-first alternative to reCAPTCHA for developers and SaaS founders.",
 	openGraph: {
-		title: "FormGuard — The ultimate form backend for your websites",
-		description: "Capture submissions, instantly publish public pages, block spam without captchas.",
+		title: "FormGuard — Invisible Spam Protection for Modern Forms",
+		description: "Stop bots, not users. Invisible AI-powered spam protection that installs in under 60 seconds.",
 		type: "website",
 	},
 	twitter: {
 		card: "summary_large_image",
-		title: "FormGuard — The ultimate form backend",
-		description: "Form submissions, spam protection, and powerful integrations built in.",
+		title: "FormGuard — The Ultimate reCAPTCHA Alternative",
+		description: "Invisible spam protection for your forms. High conversion, zero friction.",
 	},
 };
 
