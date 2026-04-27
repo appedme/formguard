@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Terminal, Globe, ShieldCheck, Zap, Code2, BookOpen, Cpu, ArrowRight, Bot } from "lucide-react";
+import { Terminal, ShieldCheck, Zap, Code2, ArrowRight, CheckCircle2, Globe, BookOpen } from "lucide-react";
 
 export const metadata = {
 	title: "Docs — FormGuard",

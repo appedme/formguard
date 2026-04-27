@@ -1,4 +1,4 @@
-import { generateInsight } from "./src/lib/insight-engine";
+import { generateInsight } from "./src/services/insight.service";
 
 async function main() {
   console.log("Generating insight...");

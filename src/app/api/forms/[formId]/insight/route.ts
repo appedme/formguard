@@ -3,7 +3,7 @@ import { stackServerApp } from "@/stack/server";
 import { getUserByStackAuthId } from "@/db/actions/user.actions";
 import { getFormById } from "@/db/actions/form.actions";
 import { createInsight, deleteInsight, getMonthlyInsightCount } from "@/db/actions/insight.actions";
-import { generateInsight } from "@/lib/insight-engine";
+import { generateInsight } from "@/services/insight.service";
 import { PLAN_LIMITS } from "@/lib/plans";
 
 export async function POST(
