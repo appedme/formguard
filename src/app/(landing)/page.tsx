@@ -9,61 +9,34 @@ import Pricing from "@/components/landing/pricing";
 import FAQ from "@/components/landing/faq";
 import FinalCTA from "@/components/landing/final-cta";
 import { stackServerApp } from "@/stack/server";
+import { JsonLd } from "@/components/seo/json-ld";
+import { constructMetadata } from "@/lib/metadata";
 
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-	title: "FormGuard — Invisible Spam Protection for Modern Forms",
-	description: "Stop 99% of spam form submissions without captchas. The modern, privacy-first alternative to reCAPTCHA for developers and SaaS founders.",
-	openGraph: {
-		title: "FormGuard — Invisible Spam Protection for Modern Forms",
-		description: "Stop bots, not users. Invisible AI-powered spam protection that installs in under 60 seconds.",
-		type: "website",
-	},
-	twitter: {
-		card: "summary_large_image",
-		title: "FormGuard — The Ultimate reCAPTCHA Alternative",
-		description: "Invisible spam protection for your forms. High conversion, zero friction.",
-	},
-};
+export const metadata: Metadata = constructMetadata({
+    title: "Invisible Spam Protection for Modern Forms",
+    description: "Stop 99% of spam submissions without CAPTCHAs. The developer-first alternative to reCAPTCHA."
+});
 
 export default async function LandingPage() {
 	const user = await stackServerApp.getUser();
 
 	return (
-		<main>
+		<main className="bg-background">
+            <JsonLd />
 			<Hero user={user} />
-			<ProblemSolution />
-			<HowItWorks />
-			<AiSection />
-			<Features />
-			<Comparison />
-			<Testimonials />
-			<Pricing />
-			<FAQ />
-			
-			{/* Video Showcase at Bottom */}
-			<section className="py-24 border-b border-border bg-background flex flex-col items-center justify-center px-6">
-				<div className="text-center mb-12">
-					<h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-4">
-						See FormGuard in Action
-					</h2>
-					<p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-						Watch how easy it is to set up a serverless form backend in less than 2 minutes(raw video).
-					</p>
-				</div>
-				<div className="w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl border border-border/50 bg-muted/20 relative aspect-video">
-					<iframe 
-						className="absolute top-0 left-0 w-full h-full"
-						src="https://www.youtube.com/embed/u6Abofkznog?rel=0" 
-						title="FormGuard Demo" 
-						frameBorder="0" 
-						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-						referrerPolicy="strict-origin-when-cross-origin" 
-						allowFullScreen
-					></iframe>
-				</div>
-			</section>
+            
+            {/* Minimalist Section Spacing */}
+            <div className="space-y-0">
+			    <ProblemSolution />
+			    <HowItWorks />
+			    <Features />
+			    <Comparison />
+			    <Testimonials />
+			    <Pricing />
+			    <FAQ />
+            </div>
 
 			<FinalCTA user={user} />
 		</main>

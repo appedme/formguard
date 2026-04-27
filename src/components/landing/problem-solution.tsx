@@ -9,50 +9,39 @@ const problems = [
 
 export default function ProblemSolution() {
 	return (
-		<section className="py-24 border-b border-border bg-background">
-			<div className="mx-auto max-w-6xl px-6">
-				<div className="grid md:grid-cols-2 gap-16 items-start">
+		<section className="py-32 bg-background border-t border-border/50">
+			<div className="mx-auto max-w-5xl px-6">
+				<div className="grid md:grid-cols-2 gap-20 items-center">
 					{/* Problem */}
-					<div>
-						<p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-6">
-							The Friction
-						</p>
-						<h2 className="text-3xl font-black text-foreground mb-8 tracking-tight">
-							Standard protection
-							<br />
-							<span className="text-muted-foreground">is broken.</span>
+					<div className="space-y-8">
+						<h2 className="text-4xl md:text-5xl font-black text-foreground tracking-tighter leading-[0.9]">
+							The old way <br />
+							<span className="text-muted-foreground italic">is broken.</span>
 						</h2>
 						<ul className="space-y-4">
 							{problems.map((problem) => (
 								<li key={problem} className="flex items-start gap-3">
-									<span className="mt-1 text-red-500 font-mono text-sm font-bold">✗</span>
-									<span className="text-muted-foreground text-base font-medium">{problem}</span>
+									<span className="mt-1 text-red-500 font-bold text-sm">×</span>
+									<span className="text-muted-foreground text-lg font-medium tracking-tight">{problem}</span>
 								</li>
 							))}
 						</ul>
 					</div>
 
 					{/* Solution */}
-					<div className="lg:border-l border-border lg:pl-16">
-						<p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-6">
-							The Alternative
-						</p>
-						<h2 className="text-3xl font-black text-foreground mb-8 tracking-tight">
-							Invisible.
-							<br />
-							Developer-friendly.
-							<br />
-							<span className="text-muted-foreground">High conversion.</span>
+					<div className="space-y-8">
+						<h2 className="text-4xl md:text-5xl font-black text-foreground tracking-tighter leading-[0.9]">
+							The modern <br />
+							<span className="text-primary italic">alternative.</span>
 						</h2>
-						<p className="text-muted-foreground mb-8 leading-relaxed text-sm font-medium">
-							FormGuard provides invisible, AI-powered protection that stops bots without bothering your users. No more traffic lights to click, no more blurry text to solve. Just seamless submissions.
+						<p className="text-lg text-muted-foreground font-medium leading-relaxed">
+							FormGuard provides invisible, AI-powered protection that stops bots without bothering your users. No more traffic lights to click. Just seamless submissions.
 						</p>
 						<Link
 							href="/handler/sign-up"
-							data-cta="start-free-problem"
-							className="inline-flex items-center justify-center h-12 px-8 text-sm font-bold bg-primary text-primary-foreground hover:bg-primary/90 transition-all rounded-lg"
+							className="inline-flex items-center text-sm font-black uppercase tracking-widest text-primary hover:gap-3 transition-all"
 						>
-							Start Protecting Your Forms →
+							Start Protecting Your Forms <span className="text-xl">→</span>
 						</Link>
 					</div>
 				</div>
