@@ -24,7 +24,7 @@ const plans = [
 		name: "Pro",
 		price: "$19",
 		period: "/mo",
-		description: "Everything you need for a growing SaaS.",
+		description: "Everything you need for a growing SaaS. Includes 7-day free trial.",
 		features: [
 			"25,000 submissions / mo",
 			"25 active forms",
@@ -32,7 +32,7 @@ const plans = [
 			"Custom redirect URLs",
 			"Priority support",
 		],
-		cta: "Get Started with Pro",
+		cta: "Start 7-Day Free Trial",
 		href: "/handler/sign-up",
 		highlighted: true,
 		badge: "Most Popular",
@@ -42,7 +42,7 @@ const plans = [
 		name: "Business",
 		price: "$49",
 		period: "/mo",
-		description: "Advanced controls for high-traffic apps.",
+		description: "Advanced controls for high-traffic apps. Includes 7-day free trial.",
 		features: [
 			"Unlimited submissions",
 			"Unlimited active forms",
@@ -50,7 +50,7 @@ const plans = [
 			"Team collaboration",
 			"White-labeled endpoints",
 		],
-		cta: "Go Business",
+		cta: "Start 7-Day Free Trial",
 		href: "/handler/sign-up",
 		highlighted: false,
 		badge: null,
@@ -70,7 +70,7 @@ export default function Pricing() {
 						Transparent pricing for <br /> developers of all sizes.
 					</h2>
 					<p className="text-muted-foreground text-lg max-w-2xl mx-auto font-medium">
-						No hidden fees. No credit card required to start. Cancel anytime.
+						Start a 7-day free trial on any paid plan. No hidden fees. No credit card required.
 					</p>
 				</div>
 

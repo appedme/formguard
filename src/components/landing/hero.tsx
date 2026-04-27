@@ -31,7 +31,7 @@ export default function Hero({ user }: HeroProps) {
 					The developer-first alternative to reCAPTCHA.
 				</p>
 
-				<div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+				<div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
 					{user ? (
 						<Link
 							href="/dashboard"
@@ -55,6 +55,10 @@ export default function Hero({ user }: HeroProps) {
 						See How it Works
 					</Link>
 				</div>
+
+                <p className="text-xs font-medium text-muted-foreground/60 mb-12">
+                    Start your 7-day free trial on any paid plan. No credit card required.
+                </p>
 
 				{/* Minimal Trust Signals */}
 				<div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 text-xs font-mono uppercase tracking-widest text-muted-foreground/60">

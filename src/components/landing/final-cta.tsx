@@ -39,7 +39,7 @@ export default function FinalCTA({ user }: FinalCTAProps) {
 								data-cta="start-free-final"
 								className="inline-flex items-center justify-center h-16 px-12 text-lg font-bold bg-primary text-primary-foreground hover:bg-primary/90 transition-all rounded-xl shadow-xl shadow-primary/20"
 							>
-								Start Protecting Your Forms
+								Start 7-Day Free Trial
 							</Link>
 							<p className="text-muted-foreground text-sm font-mono uppercase tracking-widest">
 								Free forever tier · No credit card required
